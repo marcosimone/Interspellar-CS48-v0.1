@@ -26,7 +26,7 @@ while 1:
 	screen.blit(stars, (0,y-720))
 	screen.blit(hills, (0,720-hills.get_height()))
 	screen.blit(logo,(254,131))
-	y+=1
+	y+=.5
 	if y==720:
 		y=0
 	for event in pygame.event.get():
