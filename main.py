@@ -2,7 +2,7 @@ import pygame, sys
 from pygame.locals import *
 from array import array
 
-pygame.mixer.pre_init(44100, -16, 1, 512)
+pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode((1280,720))
@@ -60,6 +60,7 @@ def mainMenu():
 		if y==1440:
 			y=0
 		for event in pygame.event.get():
+
 			if event.type==QUIT:
 				pygame.quit()
 				sys.exit()
