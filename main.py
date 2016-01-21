@@ -2,13 +2,14 @@ import pygame, sys
 from pygame.locals import *
 from array import array
 
+pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode((1280,720))
 fpsClock=pygame.time.Clock()
 font=pygame.font.Font('WhiteRabbit.ttf', 24)
 icon=pygame.image.load("images/icon.png").convert_alpha()
-
+click = pygame.mixer.Sound("sound/click.wav")
 def main():
 	
 	pygame.mixer.music.load("sound/Lines_of_Code.wav")
@@ -29,9 +30,11 @@ def mainMenu():
 	
 	button=pygame.image.load("images/buttons/button.png").convert_alpha()
 	button_hover=pygame.image.load("images/buttons/button_hover.png").convert_alpha()
-	buttons=[button,button,button]
-	buttons_idle=[button,button,button]
-	buttons_hover=[button_hover,button_hover,button_hover]
+	
+	buttons_idle=[pygame.image.load("images/buttons/play.png").convert_alpha(),pygame.image.load("images/buttons/options.png").convert_alpha(),pygame.image.load("images/buttons/credits.png").convert_alpha()]
+	buttons_hover=[pygame.image.load("images/buttons/play_hover.png").convert_alpha(),pygame.image.load("images/buttons/options_hover.png").convert_alpha(),pygame.image.load("images/buttons/credits_hover.png").convert_alpha()]
+	buttons=[buttons_idle[0],buttons_idle[1],buttons_idle[2]]
+	
 	y=0
 	screen.blit(stars, (0,y))
 	screen.blit(stars, (0,y-720))
@@ -63,7 +66,8 @@ def mainMenu():
 			if event.type==MOUSEBUTTONUP:
 				for index,butt in enumerate(buttons):
 					if Rect(500,300+(100*index),butt.get_width(), butt.get_height()).collidepoint(pygame.mouse.get_pos()):
-						print "button %d clicked" % (index)
+						click.play()
+						menu_choices[index]()
 		
 		
 		
@@ -72,7 +76,14 @@ def mainMenu():
 		fpsClock.tick(60)
 
 
+def play():
+	print "you clicked play"
+def options():
+	print "you clicked options"
+def credits():
+	print "you clicked credits"
 
+menu_choices=[play,options,credits]
 
 
 
