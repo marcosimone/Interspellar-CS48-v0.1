@@ -25,28 +25,34 @@ def mainMenu():
 	stars=pygame.image.load("images/stars.png").convert_alpha()
 	stars2=stars
 	hills=pygame.image.load("images/hills.png").convert_alpha()
-	button=pygame.image.load("images/button.png").convert_alpha()
-	button_hover=pygame.image.load("images/button_hover.png").convert_alpha()
-	butt=button
-	buttRect=Rect(500,300,butt.get_width(), butt.get_height())
 	
+	
+	button=pygame.image.load("images/buttons/button.png").convert_alpha()
+	button_hover=pygame.image.load("images/buttons/button_hover.png").convert_alpha()
+	buttons=[button,button,button]
+	buttons_idle=[button,button,button]
+	buttons_hover=[button_hover,button_hover,button_hover]
 	y=0
 	screen.blit(stars, (0,y))
 	screen.blit(stars, (0,y-720))
 	screen.blit(hills, (0,720-hills.get_height()))
 	screen.blit(logo,(254,131))
-	screen.blit(butt, (500, 300))
+	for index,butt in enumerate(buttons):
+		screen.blit(butt, (500, 300+(100*index)))
+
 	pygame.mixer.music.play(-1)
 	while 1:
-		if buttRect.collidepoint(pygame.mouse.get_pos()):
-			butt=button_hover
-		else:
-			butt=button
+		for index,butt in enumerate(buttons):
+			if Rect(500,300+(100*index),butt.get_width(), butt.get_height()).collidepoint(pygame.mouse.get_pos()):
+				buttons[index]=buttons_hover[index]
+			else:
+				buttons[index]=buttons_idle[index]
 		screen.blit(stars, (0,y/2))
 		screen.blit(stars, (0,y/2-720))
 		screen.blit(hills, (0,720-hills.get_height()))
 		screen.blit(logo,(254,131))
-		screen.blit(butt, (500, 300))
+		for index,butt in enumerate(buttons):
+			screen.blit(butt, (500, 300+(100*index)))
 		y+=1
 		if y==1440:
 			y=0
@@ -55,8 +61,9 @@ def mainMenu():
 				pygame.quit()
 				sys.exit()
 			if event.type==MOUSEBUTTONUP:
-				if buttRect.collidepoint(pygame.mouse.get_pos()):
-					print "button clicked"
+				for index,butt in enumerate(buttons):
+					if Rect(500,300+(100*index),butt.get_width(), butt.get_height()).collidepoint(pygame.mouse.get_pos()):
+						print "button %d clicked" % (index)
 		
 		
 		
