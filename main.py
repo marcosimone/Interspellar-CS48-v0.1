@@ -60,18 +60,15 @@ def mainMenu():
 		if y==1440:
 			y=0
 		for event in pygame.event.get():
-
 			if event.type==QUIT:
 				pygame.quit()
 				sys.exit()
-			if event.type==MOUSEBUTTONUP:
+			if event.type==MOUSEBUTTONUP and event.button==1:
 				for index,butt in enumerate(buttons):
 					if Rect(500,300+(100*index),butt.get_width(), butt.get_height()).collidepoint(pygame.mouse.get_pos()):
 						click.play()
 						menu_choices[index]()
-		
-		
-		
+			
 		pygame.display.update()
 		pygame.display.set_caption("fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60)
