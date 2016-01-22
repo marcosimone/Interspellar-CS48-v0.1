@@ -68,7 +68,7 @@ def mainMenu():
 			
 		#pygame maintains a queue of events that happen, here we loop through them 
 		for event in pygame.event.get():
-			
+			print event
 			sock.sendto(str(event),("127.0.0.1", 4637))
 			if event.type==QUIT: #checks if the close button on the window is clicked, if so, then uninitialize pygame before quitting
 				pygame.quit()
@@ -77,7 +77,7 @@ def mainMenu():
 			#check for click release and that the button was left click (button id=1 for left click)
 			if event.type==MOUSEBUTTONUP and event.button==1:
 				for index,butt in enumerate(buttons):
-					if Rect(500,300+(100*index),butt.get_width(), butt.get_height()).collidepoint(pygame.mouse.get_pos()):
+					if Rect(500,300+(100*index),butt.get_width(), butt.get_height()).collidepoint(event.pos):
 						click.play() #if a button was clicked, then we will play our clicking sound
 						menu_choices[index]() #array of functions (weird, i know) and we call a different function depending on what button was clicked
 			
@@ -95,6 +95,11 @@ def credits():
 
 menu_choices=[play,options,credits] #our array of functions
 
+
+lol=("                        ","                        ","                        ","                        ","         xxxx           ","       xx....xx         ","      xx......xx        ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","      xxx....xxx        ","     xxx......xxx       ","    xx..........xx      ","   xx............xx     ","  xx..............xx    ","   xx.....xx.....xx     ","     xxxxx  xxxxx       ","                        ","                        ","                        ","                        ","                        ","                        ")
+cursor = pygame.cursors.compile(lol,'o', white='.', xor='x')
+pygame.mouse.set_cursor((24,24),(4,9),*cursor)
+  
 #this is what calls our main function to kick off the whole thing.  the reason we do it like this is because in python you cant use a function unless it is defined above.  so this means that all the functions will be defined then main will be called here.
 if __name__=="__main__":
    main()
