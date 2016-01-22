@@ -98,7 +98,7 @@ menu_choices=[play,options,credits] #our array of functions
 
 lol=("         xxxx           ","       xx....xx         ","      xx......xx        ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","      xxx....xxx        ","     xxx......xxx       ","    xx..........xx      ","   xx............xx     ","  xx..............xx    ","   xx.....xx.....xx     ","     xxxxx  xxxxx       ","                        ","                        ","                        ","                        ","                        ","                        ")
 cursor = pygame.cursors.compile(lol,'o', white='.', xor='x')
-pygame.mouse.set_cursor((24,24),(4,9),*cursor)
+pygame.mouse.set_cursor((24,24),(0,10),*cursor)
   
 #this is what calls our main function to kick off the whole thing.  the reason we do it like this is because in python you cant use a function unless it is defined above.  so this means that all the functions will be defined then main will be called here.
 if __name__=="__main__":
