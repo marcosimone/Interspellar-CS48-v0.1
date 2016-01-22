@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, socket
 from pygame.locals import *
 from array import array
 
@@ -10,6 +10,9 @@ fpsClock=pygame.time.Clock() #start clock (used to regulate fps)
 font=pygame.font.Font('WhiteRabbit.ttf', 24)
 icon=pygame.image.load("images/icon.png").convert_alpha() #loading icon 
 click = pygame.mixer.Sound("sound/click.wav") #loading click sound to use later
+
+sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 def main(): #NOTE: python doesnt actually call main to start, at the bottom I am calling it.  if you want more detail why then just ask
 	
 	pygame.mixer.music.load("sound/Lines_of_Code.wav") #loading menu music
@@ -65,6 +68,8 @@ def mainMenu():
 			
 		#pygame maintains a queue of events that happen, here we loop through them 
 		for event in pygame.event.get():
+			
+			sock.sendto(str(event),("127.0.0.1", 4637))
 			if event.type==QUIT: #checks if the close button on the window is clicked, if so, then uninitialize pygame before quitting
 				pygame.quit()
 				sys.exit()
