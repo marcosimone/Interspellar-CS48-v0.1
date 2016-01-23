@@ -1,6 +1,8 @@
 import pygame, sys, socket
 from pygame.locals import *
 from array import array
+from bullet import Bullet
+from player import Player
 
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -92,32 +94,18 @@ def mainMenu():
 def play():
 	print "you clicked play"
 def credits():
-	floater=[pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
+	floater_sprite=[pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
+	player=Player(screen, floater_sprite, (640, 650))
+	bullets=[]
 	global y
-	xpos=640
-	ypos=370
-	x=0
 	back=back_idle
 	while 1:
 		screen.blit(stars, (0,y/2))
 		screen.blit(stars, (0,y/2-720))
 		screen.blit(hills, (0,720-hills.get_height()))
 		screen.blit(back, (100, 575))
-		x+=1
-		screen.blit(floater[(x/30)%2], (xpos,ypos))
 		
-		if pygame.key.get_pressed()[119]==1:
-			if ypos!=0:
-				ypos-=1
-		if pygame.key.get_pressed()[97]==1:
-			if xpos!=0:
-				xpos-=1
-		if pygame.key.get_pressed()[115]==1:
-			if ypos!=720:
-				ypos+=1
-		if pygame.key.get_pressed()[100]==1:
-			if xpos!=0:
-				xpos+=1
+		
 		
 		y+=1
 		if y==1440:
@@ -137,6 +125,18 @@ def credits():
 				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
 					click.play()
 					return
+			if event.type==MOUSEBUTTONDOWN and event.button==3:
+				bullets.append(Bullet(screen, pygame.image.load("images/animations/bullet.png").convert_alpha(),event.pos, player.getPos()))
+		
+		for bullet in enumerate(bullets):
+			if bullet[1].isDead():
+				del bullets[bullet[0]]
+			else:
+				bullet[1].update()
+				bullet[1].draw()
+		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]		
+		player.update(input)
+		player.draw()
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60) 
