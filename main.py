@@ -91,14 +91,34 @@ def mainMenu():
 
 def play():
 	print "you clicked play"
-def options():
+def credits():
+	floater=[pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
 	global y
+	xpos=640
+	ypos=370
+	x=0
 	back=back_idle
 	while 1:
 		screen.blit(stars, (0,y/2))
 		screen.blit(stars, (0,y/2-720))
 		screen.blit(hills, (0,720-hills.get_height()))
 		screen.blit(back, (100, 575))
+		x+=1
+		screen.blit(floater[(x/30)%2], (xpos,ypos))
+		
+		if pygame.key.get_pressed()[119]==1:
+			if ypos!=0:
+				ypos-=1
+		if pygame.key.get_pressed()[97]==1:
+			if xpos!=0:
+				xpos-=1
+		if pygame.key.get_pressed()[115]==1:
+			if ypos!=720:
+				ypos+=1
+		if pygame.key.get_pressed()[100]==1:
+			if xpos!=0:
+				xpos+=1
+		
 		y+=1
 		if y==1440:
 			y=0
@@ -109,6 +129,7 @@ def options():
 			back=back_idle
 		
 		for event in pygame.event.get():
+			
 			if event.type==QUIT:
 				pygame.quit()
 				sys.exit()
@@ -119,7 +140,7 @@ def options():
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60) 
-def credits():
+def options():
 	walker=[pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_2.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_3.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_4.png").convert_alpha())]
 	global y
 	x=0
