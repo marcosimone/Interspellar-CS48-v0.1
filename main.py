@@ -120,7 +120,7 @@ def options():
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60) 
 def credits():
-	walker=[pygame.transform.scale2x(pygame.image.load("work/mages/shadowmage walk_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("work/mages/shadowmage walk_2.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("work/mages/shadowmage walk_3.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("work/mages/shadowmage walk_4.png").convert_alpha())]
+	walker=[pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_2.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_3.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_4.png").convert_alpha())]
 	global y
 	x=0
 	back=back_idle
