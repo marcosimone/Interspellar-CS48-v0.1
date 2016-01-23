@@ -120,13 +120,22 @@ def options():
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60) 
 def credits():
+	walker=[pygame.transform.scale2x(pygame.image.load("work/mages/shadowmage walk_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("work/mages/shadowmage walk_2.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("work/mages/shadowmage walk_3.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("work/mages/shadowmage walk_4.png").convert_alpha())]
 	global y
+	x=0
 	back=back_idle
 	while 1:
 		screen.blit(stars, (0,y/2))
 		screen.blit(stars, (0,y/2-720))
 		screen.blit(hills, (0,720-hills.get_height()))
 		screen.blit(back, (100, 575))
+		x+=1
+		if x>=1280+64:
+			screen.blit(pygame.transform.flip(walker[(x/9)%4],True,False), ((x-1280-64-64),650))
+			if x==2*(1280+64):
+				x=0
+		else:
+			screen.blit(walker[(x/9)%4], (1280-x,650))
 		y+=1
 		if y==1440:
 			y=0
