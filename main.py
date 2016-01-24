@@ -3,6 +3,7 @@ from pygame.locals import *
 from array import array
 from bullet import Bullet
 from player import Player
+from soundboard import soundboard
 
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -11,9 +12,9 @@ screen = pygame.display.set_mode((1280,720))
 fpsClock=pygame.time.Clock() 
 font=pygame.font.Font('WhiteRabbit.ttf', 24)
 icon=pygame.image.load("images/icon.png").convert_alpha()
+sounds = soundboard()
 y=0
-#sound
-click = pygame.mixer.Sound("sound/click.wav")
+
 
 #background stuff
 logo=pygame.image.load("images/logo.png").convert_alpha()
@@ -81,7 +82,7 @@ def mainMenu():
 			if event.type==MOUSEBUTTONUP and event.button==1:
 				for index,butt in enumerate(buttons):
 					if Rect(500,300+(100*index),butt.get_width(), butt.get_height()).collidepoint(event.pos):
-						click.play()
+						sounds.click.play()
 						menu_choices[index]() 
 						
 			if pygame.key.get_pressed()==(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0):
@@ -94,8 +95,8 @@ def mainMenu():
 def play():
 	print "you clicked play"
 def credits():
-	floater_sprite=[pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
-	player=Player(screen, floater_sprite, (640, 650))
+	level=[Rect((100,575),(300,70))]
+	player=Player(screen, sounds, level, (640, 650))
 	bullets=[]
 	global y
 	back=back_idle
@@ -104,9 +105,7 @@ def credits():
 		screen.blit(stars, (0,y/2-720))
 		screen.blit(hills, (0,720-hills.get_height()))
 		screen.blit(back, (100, 575))
-		
-		
-		
+	
 		y+=1
 		if y==1440:
 			y=0
@@ -123,13 +122,14 @@ def credits():
 				sys.exit()
 			if event.type==MOUSEBUTTONUP and event.button==1:
 				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
-					click.play()
+					sounds.click.play()
 					return
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
-				bullets.append(Bullet(screen, pygame.image.load("images/animations/bullet.png").convert_alpha(),event.pos, player.getPos()))
+				bullets.append(Bullet(screen, sounds, level, event.pos, player.getPos()))
 		
 		for bullet in enumerate(bullets):
 			if bullet[1].isDead():
+				sounds.explode.play()
 				del bullets[bullet[0]]
 			else:
 				bullet[1].update()
@@ -172,7 +172,7 @@ def options():
 				sys.exit()
 			if event.type==MOUSEBUTTONUP and event.button==1:
 				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
-					click.play()
+					sounds.click.play()
 					return
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
