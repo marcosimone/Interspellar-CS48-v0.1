@@ -4,6 +4,7 @@ from array import array
 from bullet import Bullet
 from player import Player
 from soundboard import soundboard
+import pickle
 
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -74,7 +75,7 @@ def mainMenu():
 			y=0
 			
 		for event in pygame.event.get():
-			sock.sendto(str(event),("127.0.0.1", 4637))
+			#sock.sendto(str(event),("127.0.0.1", 4637))
 			if event.type==QUIT: 
 				pygame.quit()
 				sys.exit()
@@ -97,6 +98,7 @@ def play():
 def credits():
 	level=[Rect((100,575),(300,70))]
 	player=Player(screen, sounds, level, (640, 650))
+	other_players=[Player(screen, sounds, level, (700, 750))]
 	bullets=[]
 	global y
 	back=back_idle
@@ -134,8 +136,13 @@ def credits():
 			else:
 				bullet[1].update()
 				bullet[1].draw()
-		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]		
+		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
 		player.update(input)
+		sock.sendto(pickle.dumps(input),("127.0.0.1", 4637))
+		for other in other_players:	
+			data, addr = sock.recvfrom(1024)
+			other.update(pickle.loads(data))
+			other.draw()
 		player.draw()
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
