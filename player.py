@@ -34,22 +34,25 @@ class Player:
 			self.velocity =-20
 		if col_index!=-1:
 			plat=self.level[col_index]
-			if self.velocity<0:
-				self.velocity=0
+			#if self.velocity<0:
+			#	self.velocity=0
 				
-			elif self.velocity==0 or self.velocity==15:
+			if self.velocity==0:
 				if inputs[0]:
 					if(body.bottom<plat.top+15):
 						
 						ypos=plat.top-5
 					self.velocity=15
 			else:
-				self.velocity=0
+				#self.velocity=0
 				ypos+=5
+				
 			if body.bottom>plat.top-3 and body.top<plat.bottom+3:
 				if fabs(body.right-plat.left)<5:
+					self.velocity-=0.3
 					xpos=plat.left-32
 				elif fabs(body.left-plat.right)<5:
+					self.velocity-=0.3
 					xpos=plat.right+32
 		else:
 			if ypos < 720:
@@ -59,7 +62,7 @@ class Player:
 					self.velocity=15
 				else:
 					self.velocity=0
-			ypos=ypos-self.velocity
+		ypos=ypos-self.velocity
 		if inputs[1]:
 			xpos-=4
 		if inputs[3]:
