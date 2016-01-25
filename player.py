@@ -91,10 +91,10 @@ class Player:
 			xpos-=4
 		if inputs[3]:
 			xpos+=4
-		if xpos < 0:
-			xpos=0
-		if xpos > 1280:
-			xpos=1280
+		if xpos < 32:
+			xpos=32
+		if xpos > 1248:
+			xpos=1248
 		if ypos > 720:
 			ypos=720
 		self.pos=(xpos, ypos)
