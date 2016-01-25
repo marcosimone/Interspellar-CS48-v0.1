@@ -95,9 +95,9 @@ def mainMenu():
 def play():
 	print "you clicked play"
 def credits():
-	level=[Rect((100,575),(300,70))]
+	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
 	player=Player(screen, sounds, level, (640, 650))
-	other_players=[Player(screen, sounds, level, (700, 750))]
+	other_players=[]
 	bullets=[]
 	global y
 	back=back_idle
