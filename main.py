@@ -1,7 +1,7 @@
 import pygame, sys, socket
 from pygame.locals import *
 from array import array
-from bullet import Bullet
+from bullet import *
 from player import Player
 from soundboard import soundboard
 import pickle
@@ -16,6 +16,7 @@ font=pygame.font.Font('WhiteRabbit.ttf', 24)
 icon=pygame.image.load("images/icon.png").convert_alpha()
 sounds = soundboard()
 y=0
+gothreadgo=True
 
 #background stuff
 logo=pygame.image.load("images/logo.png").convert_alpha()
@@ -109,12 +110,13 @@ def blit():
 	del toDraw_background[:]
 	del toDraw_bullets[:]
 	
-def play():
-	print "you clicked play"
 def credits():
+	print "you clicked credits"
+def play():
 	player=Player(screen, sounds, level, (640, 650))
 	toDraw_players.append(player.draw())
 	bullets=[]
+	gothreadgo=True
 	t = threading.Thread(target=update_foes)
 	t.daemon = True
 	t.start()
@@ -144,9 +146,12 @@ def credits():
 				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
 					sounds.click.play()
 					del toDraw_players[:]
+					gothreadgo=False
 					return
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
-				bullets.append(Bullet(screen, sounds, level, event.pos, player.getPos()))
+				bull=Bullet(screen, sounds, level, event.pos, player.getPos())
+				bullets.append(bull)
+				sock.sendto(pickle.dumps("bullet:" + bull.toString()),("192.168.1.10", 4637))
 		
 		for bullet in enumerate(bullets):
 			if bullet[1].isDead():
@@ -171,16 +176,21 @@ def update_foes():
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)
-		print str(data)
-		if data[0] != '192.168.1.10':
-			if not other_players.has_key(data[0]):
-				other_players[data[0]]=Player(screen, sounds, level, (640, 650))
-				toDraw_players.append(other_players[data[0]])
-			other_players[data[0]].update(data[1])
-		count=0
-		for key in other_players:
-			toDraw_players[1+count]=other_players[key].draw()
-			count+=1
+		if data[0]=='b':
+			bull=Bullet(screen, sounds, level, data[7:])
+			bullets.append(bull)
+		else:
+
+			if data[0] != '192.168.1.10':
+				if not other_players.has_key(data[0]):
+					other_players[data[0]]=Player(screen, sounds, level, (640, 650))
+					toDraw_players.append(other_players[data[0]])
+				other_players[data[0]].update(data[1])
+			count=0
+			for key in other_players:
+				
+				toDraw_players[1+count]=other_players[key].draw()
+				count+=1
 def options():
 	walker=[pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_2.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_3.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_4.png").convert_alpha())]
 	global y

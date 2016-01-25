@@ -25,6 +25,7 @@ class Bullet:
 		self.pos=player_pos
 		self.level=level
 		self.sounds=sound
+
 	
 	def draw(self):
 		return (self.image,self.pos)
@@ -40,3 +41,24 @@ class Bullet:
 	def update(self):
 		rad=radians(self.angle)
 		self.pos=(self.pos[0]+(self.speed*cos(rad)), self.pos[1]-(self.speed*sin(rad)))
+
+	def toString(self):
+		return "%d,%d,%d" % (self.pos[0],self.pos[1],self.angle)
+		
+class enemyBullet(Bullet):
+	speed=10
+	
+	def __init__(self, screen, sound, level, bulletString):
+		params=bulletString.split(',')
+		self.pos=(float(params[0]),float(params[1]))
+		sound.fire.play()
+		self.screen=screen
+		self.angle = float(params[2])
+		image=pygame.image.load("images/animations/bullet.png").convert_alpha()
+		self.image = pygame.transform.rotate(image,-45)
+		self.image = pygame.transform.rotate(image,self.angle-45)
+		self.pos=bullet_pos
+		self.level=level
+		self.sounds=sound
+	
+	
