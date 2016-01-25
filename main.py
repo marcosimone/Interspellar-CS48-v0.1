@@ -75,7 +75,6 @@ def mainMenu():
 			y=0
 			
 		for event in pygame.event.get():
-			#sock.sendto(str(event),("127.0.0.1", 4637))
 			if event.type==QUIT: 
 				pygame.quit()
 				sys.exit()
@@ -138,11 +137,13 @@ def credits():
 				bullet[1].draw()
 		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
 		player.update(input)
-		sock.sendto(pickle.dumps(input),("127.0.0.1", 4637))
-		for other in other_players:	
+		sock.sendto(pickle.dumps(input),("192.168.1.10", 4637))
+		for other in other_players:
 			data, addr = sock.recvfrom(1024)
-			other.update(pickle.loads(data))
-			other.draw()
+			data=pickle.loads(data)
+			if data[0] != '192.168.1.10':
+				other.update(data[1])
+				other.draw()
 		player.draw()
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
