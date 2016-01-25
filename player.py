@@ -26,7 +26,7 @@ class Player:
 		return (self.pos[0]-32, self.pos[1]-64)
 	
 	def setPos(self, pos):
-		self.pos=pos
+		self.pos=(pos[0]+32,pos[1]+64)
 	
 	def update(self, inputs):
 		body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
