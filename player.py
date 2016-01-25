@@ -17,7 +17,7 @@ class Player:
 		self.sounds=sound
 	
 	def draw(self):
-		self.screen.blit(self.image[(self.x/30)%2], (self.pos[0]-32,self.pos[1]-64))
+		return (self.image[(self.x/30)%2], (self.pos[0]-32,self.pos[1]-64))
 	
 	def isDead(self):
 		return (self.health<=0)
@@ -29,8 +29,8 @@ class Player:
 		body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
 		xpos=self.pos[0]
 		ypos=self.pos[1]
-		for platform in self.level:
-			pygame.draw.rect(self.screen,Color("red"),platform)
+		#for platform in self.level:
+			#pygame.draw.rect(self.screen,Color("red"),platform)
 		col_index=body.collidelist(self.level)
 		if self.velocity < -15:
 			self.velocity =-15

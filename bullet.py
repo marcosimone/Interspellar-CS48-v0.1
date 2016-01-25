@@ -27,7 +27,7 @@ class Bullet:
 		self.sounds=sound
 	
 	def draw(self):
-		self.screen.blit(self.image,self.pos)
+		return (self.image,self.pos)
 	
 	def isDead(self):
 		isDead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0)
