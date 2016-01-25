@@ -5,6 +5,7 @@ from bullet import Bullet
 from player import Player
 from soundboard import soundboard
 import pickle
+import threading
 
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -55,7 +56,7 @@ def mainMenu():
 	for index,butt in enumerate(buttons):
 		screen.blit(butt, (500, 300+(100*index)))
 
-	pygame.mixer.music.play(-1) 
+	#pygame.mixer.music.play(-1) 
 	while 1: 
 	
 		for index,butt in enumerate(buttons):
@@ -97,8 +98,10 @@ def play():
 def credits():
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
 	player=Player(screen, sounds, level, (640, 650))
-	other_players={}
 	bullets=[]
+	t = threading.Thread(target=update_foes)
+	t.daemon = True
+	t.start()
 	global y
 	back=back_idle
 	while 1:
@@ -138,20 +141,25 @@ def credits():
 		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
 		player.update(input)
 		sock.sendto(pickle.dumps(input),("192.168.1.10", 4637))
-		
-		#data, addr = sock.recvfrom(1024)
-		#data=pickle.loads(data)
-		#if data[0] != '192.168.1.10':
-		#	if not other_players.has_key(data[0]):
-		#		other_players[data[0]]=Player(screen, sounds, level, (640, 650))
-			
-		#	other_players[data[0]].update(data[1])
-		#for key in other_players:
-		#	other_players[key].draw()
 		player.draw()
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60) 
+
+		
+def update_foes():
+	other_players={}
+	sock.sendto(pickle.dumps([False,False,False,False]),("192.168.1.10", 4637))
+	while True:
+		data, addr = sock.recvfrom(1024)
+		data=pickle.loads(data)
+		if data[0] != '192.168.1.10':
+			if not other_players.has_key(data[0]):
+				other_players[data[0]]=Player(screen, sounds, level, (640, 650))
+			other_players[data[0]].update(data[1])
+		for key in other_players:
+			other_players[key].draw()	
+			
 def options():
 	walker=[pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_2.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_3.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_4.png").convert_alpha())]
 	global y

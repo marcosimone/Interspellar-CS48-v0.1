@@ -37,7 +37,7 @@ class Player:
 		if col_index!=-1:
 			plat=self.level[col_index]
 			
-			if fabs(body.bottom-plat.top) < 15:
+			if fabs(body.bottom-plat.top) < 17:
 				self.velocity=0
 				if inputs[0]:
 					ypos=plat.top-10
