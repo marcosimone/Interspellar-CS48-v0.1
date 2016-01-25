@@ -57,7 +57,6 @@ class enemyBullet(Bullet):
 		image=pygame.image.load("images/animations/bullet.png").convert_alpha()
 		self.image = pygame.transform.rotate(image,-45)
 		self.image = pygame.transform.rotate(image,self.angle-45)
-		self.pos=bullet_pos
 		self.level=level
 		self.sounds=sound
 	

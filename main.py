@@ -28,6 +28,8 @@ level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,2
 back_hover=pygame.image.load("images/buttons/back_hover.png").convert_alpha()
 back_idle=pygame.image.load("images/buttons/back.png").convert_alpha()
 
+bullets=[]
+
 #networking
 sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -115,7 +117,7 @@ def credits():
 def play():
 	player=Player(screen, sounds, level, (640, 650))
 	toDraw_players.append(player.draw())
-	bullets=[]
+	
 	gothreadgo=True
 	t = threading.Thread(target=update_foes)
 	t.daemon = True
@@ -176,8 +178,9 @@ def update_foes():
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)
-		if data[0]=='b':
-			bull=Bullet(screen, sounds, level, data[7:])
+		
+		if data[1][0]=='b':
+			bull=enemyBullet(screen, sounds, level, data[1][7:])
 			bullets.append(bull)
 		else:
 
