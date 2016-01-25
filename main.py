@@ -164,7 +164,7 @@ def play():
 				toDraw_bullets.append(bullet[1].draw())
 		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
 		player.update(input)
-		sock.sendto(pickle.dumps(input),("192.168.1.10", 4637))
+		sock.sendto(pickle.dumps(player.getPos()),("192.168.1.10", 4637))
 		toDraw_players[0]=player.draw()
 		blit()
 		pygame.display.update() 
@@ -188,7 +188,7 @@ def update_foes():
 				if not other_players.has_key(data[0]):
 					other_players[data[0]]=Player(screen, sounds, level, (640, 650))
 					toDraw_players.append(other_players[data[0]])
-				other_players[data[0]].update(data[1])
+				other_players[data[0]].setPos(data[1])
 			count=0
 			for key in other_players:
 				

@@ -17,13 +17,16 @@ class Player:
 		self.sounds=sound
 	
 	def draw(self):
-		return (self.image[(self.x/30)%2], (self.pos[0]-32,self.pos[1]-64))
+		return (self.image[(self.x/30)%2], self.getPos())
 	
 	def isDead(self):
 		return (self.health<=0)
 	
 	def getPos(self):
 		return (self.pos[0]-32, self.pos[1]-64)
+	
+	def getPos(self, pos):
+		self.pos=pos
 	
 	def update(self, inputs):
 		body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
@@ -102,3 +105,4 @@ class Player:
 		if self.x==9000:
 			self.x=0
 		return
+		
