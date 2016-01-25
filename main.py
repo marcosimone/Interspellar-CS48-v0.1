@@ -97,7 +97,7 @@ def play():
 def credits():
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
 	player=Player(screen, sounds, level, (640, 650))
-	other_players=[]
+	other_players={}
 	bullets=[]
 	global y
 	back=back_idle
@@ -139,13 +139,15 @@ def credits():
 		player.update(input)
 		sock.sendto(pickle.dumps(input),("192.168.1.10", 4637))
 		
-		for other in other_players:
-			data, addr = sock.recvfrom(1024)
-			data=pickle.loads(data)
-			#print data[0]
-			if data[0] != '192.168.1.110':
-				other.update(data[1])
-				other.draw()
+		data, addr = sock.recvfrom(1024)
+		data=pickle.loads(data)
+		if data[0] != '192.168.1.10':
+			if not other_players.has_key(data[0]):
+				other_players[data[0]]=Player(screen, sounds, level, (640, 650))
+			
+			other_players[data[0]].update(data[1])
+		for key in other_players:
+			other_players[key].draw()
 		player.draw()
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
