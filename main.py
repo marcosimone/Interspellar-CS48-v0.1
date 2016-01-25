@@ -143,6 +143,7 @@ def credits():
 			if event.type==MOUSEBUTTONUP and event.button==1:
 				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
 					sounds.click.play()
+					del toDraw_players[:]
 					return
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
 				bullets.append(Bullet(screen, sounds, level, event.pos, player.getPos()))
