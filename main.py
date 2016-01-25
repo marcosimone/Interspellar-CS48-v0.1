@@ -138,10 +138,12 @@ def credits():
 		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
 		player.update(input)
 		sock.sendto(pickle.dumps(input),("192.168.1.10", 4637))
+		
 		for other in other_players:
 			data, addr = sock.recvfrom(1024)
 			data=pickle.loads(data)
-			if data[0] != '192.168.1.10':
+			#print data[0]
+			if data[0] != '192.168.1.110':
 				other.update(data[1])
 				other.draw()
 		player.draw()
