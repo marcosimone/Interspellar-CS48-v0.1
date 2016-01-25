@@ -86,6 +86,8 @@ class Player:
 			self.xvelocity-=0.4
 		if self.xvelocity < 0:
 			self.xvelocity+=0.4
+		if fabs(self.xvelocity) < 0.5:
+			self.xvelocity = 0
 		if inputs[1]:
 			xpos-=4
 		if inputs[3]:
