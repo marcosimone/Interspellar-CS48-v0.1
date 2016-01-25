@@ -25,7 +25,7 @@ class Player:
 	def getPos(self):
 		return (self.pos[0]-32, self.pos[1]-64)
 	
-	def getPos(self, pos):
+	def setPos(self, pos):
 		self.pos=pos
 	
 	def update(self, inputs):
