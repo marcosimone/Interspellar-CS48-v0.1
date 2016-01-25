@@ -4,7 +4,7 @@ import pickle
 
 port = 4637
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(("192.168.1.10", port))
+sock.bind(("192.168.43.194", port))
 print "waiting on port:", port
 clients=[]
 while 1:

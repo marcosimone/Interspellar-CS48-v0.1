@@ -14,7 +14,7 @@ if len(sys.argv)==1:
 	sys.exit()
 
 ip=sys.argv[1]
-
+server_ip="192.168.43.194"
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
 pygame.font.init()
@@ -161,7 +161,7 @@ def play():
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
 				bull=Bullet(screen, sounds, level, event.pos, player.getPos())
 				bullets.append(bull)
-				sock.sendto(pickle.dumps("bullet:" + bull.toString()),("192.168.1.10", 4637))
+				sock.sendto(pickle.dumps("bullet:" + bull.toString()),(server_ip, 4637))
 		
 		for bullet in enumerate(bullets):
 			if bullet[1].isDead():
@@ -172,7 +172,7 @@ def play():
 				toDraw_bullets.append(bullet[1].draw())
 		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
 		player.update(input)
-		sock.sendto(pickle.dumps(player.getPos()),("192.168.1.10", 4637))
+		sock.sendto(pickle.dumps(player.getPos()),(server_ip, 4637))
 		toDraw_players[0]=player.draw()
 		blit()
 		pygame.display.update() 
@@ -182,7 +182,7 @@ def play():
 		
 def update_foes():
 	other_players={}
-	sock.sendto(pickle.dumps([False,False,False,False]),("192.168.1.10", 4637))
+	sock.sendto(pickle.dumps([False,False,False,False]),(server_ip, 4637))
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)
