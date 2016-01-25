@@ -139,15 +139,15 @@ def credits():
 		player.update(input)
 		sock.sendto(pickle.dumps(input),("192.168.1.10", 4637))
 		
-		data, addr = sock.recvfrom(1024)
-		data=pickle.loads(data)
-		if data[0] != '192.168.1.10':
-			if not other_players.has_key(data[0]):
-				other_players[data[0]]=Player(screen, sounds, level, (640, 650))
+		#data, addr = sock.recvfrom(1024)
+		#data=pickle.loads(data)
+		#if data[0] != '192.168.1.10':
+		#	if not other_players.has_key(data[0]):
+		#		other_players[data[0]]=Player(screen, sounds, level, (640, 650))
 			
-			other_players[data[0]].update(data[1])
-		for key in other_players:
-			other_players[key].draw()
+		#	other_players[data[0]].update(data[1])
+		#for key in other_players:
+		#	other_players[key].draw()
 		player.draw()
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
