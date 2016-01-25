@@ -29,49 +29,48 @@ class Player:
 		body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
 		xpos=self.pos[0]
 		ypos=self.pos[1]
-		pygame.draw.rect(self.screen,Color("red"),self.level[0])
+		for platform in self.level:
+			pygame.draw.rect(self.screen,Color("red"),platform)
 		col_index=body.collidelist(self.level)
-		if self.velocity < -20:
-			self.velocity =-20
+		if self.velocity < -15:
+			self.velocity =-15
 		if col_index!=-1:
 			plat=self.level[col_index]
-			#if self.velocity<0:
-			#	self.velocity=0
-				
-			if self.velocity==0:
+			
+			if fabs(body.bottom-plat.top) < 15:
+				self.velocity=0
 				if inputs[0]:
-					if(body.bottom<plat.top+15):
-						
-						ypos=plat.top-5
+					ypos=plat.top-10
 					self.velocity=15
-			#else:
-				#self.velocity=0
-			#	ypos+=5
+			if fabs(body.top-plat.bottom)<10:
+				self.velocity=-1.0
 				
-			if body.bottom>plat.top-3 and body.top<plat.bottom+3:
-				if fabs(body.right-plat.left)<5:
+			
+			elif body.bottom>plat.top-3 and body.top<plat.bottom+3:
+				if fabs(body.right-plat.left)<8:
 					if self.velocity > 5:
-						self.velocity-=1.3
+						self.velocity-=1.5
 					else:
-						self.velocity-=0.25
-					if self.velocity < -8:
-						self.velocity = -8
+						self.velocity-=0.1
+					if self.velocity < -5:
+						self.velocity = -5
 					xpos=plat.left-32
 					if inputs[0]:
 						self.velocity = 10
 						self.xvelocity = -8
 						
-				elif fabs(body.left-plat.right)<5:
+				elif fabs(body.left-plat.right)<8:
 					if self.velocity > 5:
-						self.velocity-=1.3
+						self.velocity-=1.5
 					else:
-						self.velocity-=0.25
-					if self.velocity < -8:
-						self.velocity = -8
+						self.velocity-=0.1
+					if self.velocity < -5:
+						self.velocity = -5
 					xpos=plat.right+32
 					if inputs[0]:
 						self.velocity = 10
 						self.xvelocity = 8
+						
 		else:
 			if ypos < 720:
 				self.velocity-=.5
