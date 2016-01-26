@@ -8,12 +8,6 @@ import pickle
 import threading
 
 
-if len(sys.argv)==1:
-	print "USAGE: python ./main.py [ip address]"
-	print "EXAMPLE: python ./main.py 192.168.1.10"
-	sys.exit()
-
-ip=sys.argv[1]
 server_ip="192.168.43.194"
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -191,12 +185,11 @@ def update_foes():
 			bull=enemyBullet(screen, sounds, level, data[1][7:])
 			bullets.append(bull)
 		else:
-
-			if data[0] != ip:
-				if not other_players.has_key(data[0]):
-					other_players[data[0]]=Player(screen, sounds, level, (640, 650))
-					toDraw_players.append(other_players[data[0]])
-				other_players[data[0]].setPos(data[1])
+			
+			if not other_players.has_key(data[0]):
+				other_players[data[0]]=Player(screen, sounds, level, (640, 650))
+				toDraw_players.append(other_players[data[0]])
+			other_players[data[0]].setPos(data[1])
 			count=0
 			for key in other_players:
 				
