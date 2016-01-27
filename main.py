@@ -14,7 +14,7 @@ if len(sys.argv)==1:
 	sys.exit()
 
 ip=sys.argv[1]
-server_ip="192.168.43.194"
+server_ip="127.0.0.1"
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
 pygame.font.init()
