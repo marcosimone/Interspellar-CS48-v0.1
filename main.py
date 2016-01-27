@@ -8,8 +8,8 @@ import pickle
 import threading
 
 
-server_ip="interspellar-liquidtoaster.rhcloud.com"
-server_port=8080
+server_ip="127.0.0.1"
+server_port=4637
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
 pygame.font.init()
