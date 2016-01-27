@@ -9,7 +9,10 @@ print "waiting on port:", port
 clients=[]
 while 1:
 	data, addr = sock.recvfrom(1024)
-	if addr not in clients:
+	if data=="QUIT":
+		sock.close()
+		sys.exit()
+	if not any(addr[0] in client for client in clients):
 		clients.append(addr)
 		print clients
 		
@@ -18,6 +21,3 @@ while 1:
 		if client!=addr:
 			sock.sendto(pickle.dumps((addr[0], pickle.loads(data))),client)
 	
-	if data=="QUIT":
-		sock.close()
-		sys.exit()

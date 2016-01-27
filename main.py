@@ -177,7 +177,7 @@ def play():
 		
 def update_foes():
 	other_players={}
-	sock.sendto(pickle.dumps([False,False,False,False]),(server_ip, 4637))
+	sock.sendto(pickle.dumps(),(server_ip, 4637))
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)
