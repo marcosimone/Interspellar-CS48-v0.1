@@ -26,7 +26,7 @@ logo=pygame.image.load("images/logo.png").convert_alpha()
 stars=pygame.image.load("images/stars.png").convert_alpha()
 stars2=stars
 hills=pygame.image.load("images/hills.png").convert_alpha()
-level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
+level=[]
 #buttons
 back_hover=pygame.image.load("images/buttons/back_hover.png").convert_alpha()
 back_idle=pygame.image.load("images/buttons/back.png").convert_alpha()
@@ -51,7 +51,6 @@ def main():
 
 	
 def mainMenu():
-	
 	buttons_idle=[pygame.image.load("images/buttons/play.png").convert_alpha(),pygame.image.load("images/buttons/options.png").convert_alpha(),pygame.image.load("images/buttons/credits.png").convert_alpha()]
 	buttons_hover=[pygame.image.load("images/buttons/play_hover.png").convert_alpha(),pygame.image.load("images/buttons/options_hover.png").convert_alpha(),pygame.image.load("images/buttons/credits_hover.png").convert_alpha()]
 	buttons=[buttons_idle[0],buttons_idle[1],buttons_idle[2]] 
@@ -103,9 +102,14 @@ def mainMenu():
 		fpsClock.tick(60)
 
 def blit():
+	global level
 	for pic in toDraw_background:
 		if pic is not None:
 			screen.blit(pic[0], pic[1])
+			
+	for plat in level:
+		pygame.draw.rect(screen, Color("grey"), plat)
+		
 	for pic in toDraw_bullets:
 		if pic is not None:
 			screen.blit(pic[0], pic[1])
@@ -118,6 +122,8 @@ def blit():
 def credits():
 	print "you clicked credits"
 def play():
+	global level
+	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
 	player=Player(screen, sounds, level, (640, 650))
 	toDraw_players.append(player.draw())
 	
@@ -152,6 +158,7 @@ def play():
 					sounds.click.play()
 					del toDraw_players[:]
 					gothreadgo=False
+					level=[]
 					return
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
 				bull=Bullet(screen, sounds, level, event.pos, player.getPos())
