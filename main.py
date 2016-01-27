@@ -8,8 +8,8 @@ import pickle
 import threading
 
 
-server_ip="127.0.0.1"
-
+server_ip="interspellar-liquidtoaster.rhcloud.com"
+server_port=8080
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
 pygame.font.init()
@@ -156,7 +156,7 @@ def play():
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
 				bull=Bullet(screen, sounds, level, event.pos, player.getPos())
 				bullets.append(bull)
-				sock.sendto(pickle.dumps("bullet:" + bull.toString()),(server_ip, 4637))
+				sock.sendto(pickle.dumps("bullet:" + bull.toString()),(server_ip, server_port))
 		
 		for bullet in enumerate(bullets):
 			if bullet[1].isDead():
@@ -167,7 +167,7 @@ def play():
 				toDraw_bullets.append(bullet[1].draw())
 		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
 		player.update(input)
-		sock.sendto(pickle.dumps(player.getPos()),(server_ip, 4637))
+		sock.sendto(pickle.dumps(player.getPos()),(server_ip, server_port))
 		toDraw_players[0]=player.draw()
 		blit()
 		pygame.display.update() 
@@ -177,7 +177,7 @@ def play():
 		
 def update_foes():
 	other_players={}
-	sock.sendto(pickle.dumps(),(server_ip, 4637))
+	sock.sendto(pickle.dumps(None),(server_ip, server_port))
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)

@@ -1,5 +1,4 @@
 import socket, sys
-import pygame
 import pickle
 
 port = 4637
