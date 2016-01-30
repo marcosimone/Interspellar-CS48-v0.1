@@ -3,12 +3,13 @@ from pygame.locals import *
 from array import array
 from bullet import *
 from player import Player
+from dank_wiz import DankWizard
 from soundboard import soundboard
 import pickle
 import threading
 
 
-server_ip="127.0.0.1"
+server_ip="169.231.125.133"
 server_port=4637
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -124,7 +125,7 @@ def credits():
 def play():
 	global level
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
-	player=Player(screen, sounds, level, (640, 650))
+	player=DankWizard(screen, sounds, level, (640, 650)) 
 	toDraw_players.append(player.draw())
 	
 	gothreadgo=True

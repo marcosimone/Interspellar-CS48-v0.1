@@ -8,7 +8,7 @@ class Player:
 	health = 1000
 	velocity=0
 	xvelocity=0
-	x=0
+	anim_frame=0
 	def __init__(self, screen, sound, level, player_pos):
 		self.screen=screen
 		self.image = [pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
@@ -17,7 +17,7 @@ class Player:
 		self.sounds=sound
 	
 	def draw(self):
-		return (self.image[(self.x/30)%2], self.getPos())
+		return (self.image[(self.anim_frame/30)%2], self.getPos())
 	
 	def isDead(self):
 		return (self.health<=0)
@@ -40,7 +40,7 @@ class Player:
 		if col_index!=-1:
 			plat=self.level[col_index]
 			
-			if fabs(body.bottom-plat.top) < 17:
+			if fabs(body.bottom-plat.top)<17:
 				self.velocity=0
 				if inputs[0]:
 					ypos=plat.top-10
@@ -75,6 +75,8 @@ class Player:
 						self.xvelocity = 8
 						
 		else:
+			if ypos <=32:
+				self.velocity=-1
 			if ypos < 720:
 				self.velocity-=.5
 			else:
@@ -101,8 +103,8 @@ class Player:
 		if ypos > 720:
 			ypos=720
 		self.pos=(xpos, ypos)
-		self.x+=1
-		if self.x==9000:
-			self.x=0
+		self .anim_frame+=1
+		if self .anim_frame==9000:
+			self .anim_frame=0
 		return
 		
