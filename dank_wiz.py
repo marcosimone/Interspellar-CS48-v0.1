@@ -67,12 +67,14 @@ class DankWizard(Player):
 			if ypos < 720:
 				self.animation=3
 			else:
-				self.animation=1
+				self.animation=0
+				if inputs[1]==1 or inputs[3]==1:
+					self.animation=1
 				self.jump=0
 			if self.jump > 0:
 				self.animation=2
 				self.jump+=1
-			if self.jump >12:
+			if self.jump >30:
 				self.jump=-1
 		self.pos=(xpos, ypos)
 		self.anim_frames+=1
@@ -93,11 +95,11 @@ class DankWizard(Player):
 		if self.animation==0:
 			return self.stand_sprite[0]
 		elif self.animation==1:
-			return self.walk_sprites[(self.anim_frames/5)%len(self.walk_sprites)]
+			return self.walk_sprites[(self.anim_frames/10)%len(self.walk_sprites)]
 		elif self.animation==2:
-			return self.jump_sprites[(self.jump)%len(self.jump_sprites)]
+			return self.jump_sprites[(self.jump/3)%len(self.jump_sprites)]
 		elif self.animation==3:
-			return self.fall_sprites[(self.anim_frames/5)%len(self.fall_sprites)]
+			return self.fall_sprites[(self.anim_frames/10)%len(self.fall_sprites)]
 		elif self.animation==4:
 			return self.slide_sprite[0]
 		
