@@ -9,7 +9,7 @@ import pickle
 import threading
 
 
-server_ip="169.231.125.133"
+server_ip="192.168.1.10"
 server_port=4637
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -185,11 +185,11 @@ def play():
 		
 def update_foes():
 	other_players={}
-	sock.sendto(pickle.dumps(None),(server_ip, server_port))
+	sock.sendto(pickle.dumps("bullet:" + (Bullet(screen, sounds, level, (-1,-1), (-1,-1))).toString()),(server_ip, server_port))
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)
-		
+		print data
 		if data[1][0]=='b':
 			bull=enemyBullet(screen, sounds, level, data[1][7:])
 			bullets.append(bull)

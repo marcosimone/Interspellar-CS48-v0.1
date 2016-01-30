@@ -11,12 +11,14 @@ while 1:
 	if data=="QUIT":
 		sock.close()
 		sys.exit()
-	if not any(addr[0] in client for client in clients):
-		clients.append(addr)
-		print clients
+	else:
+		if not any(addr[0] in client for client in clients):
+			clients.append(addr)
+			print clients
+			
+		print ("        %s, %s") % (pickle.loads(data), addr[0])
+		for client in clients:
+			if client!=addr:
+				sock.sendto(pickle.dumps((addr[0], pickle.loads(data))),client)
 		
-	print ("        %s, %s") % (pickle.loads(data), addr[0])
-	for client in clients:
-		if client!=addr:
-			sock.sendto(pickle.dumps((addr[0], pickle.loads(data))),client)
-	
+		
