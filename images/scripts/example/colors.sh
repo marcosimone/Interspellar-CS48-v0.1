@@ -1,5 +1,13 @@
 #!/bin/bash
 
+if [ "$#" -ne 2 ]
+then
+    echo "USAGE: $0 [hex color code]"
+    echo "example: $0 004d00"
+    exit
+fi
+
+
 dir=pwd
 color=$1
 mkdir $color
