@@ -5,7 +5,7 @@ from math import *
 from soundboard import soundboard
 from player import Player
 
-class DankWizard(Player):
+class DarkWizard(Player):
 	
 	anim_frames=0
 	animation=0
@@ -16,18 +16,21 @@ class DankWizard(Player):
 	def __init__(self, screen, sound, level, player_pos):
 		self.screen=screen
 		self.pos=player_pos
-		self.stand_sprites = [pygame.transform.scale2x(pygame.image.load("images/animations/dankwiz/wizard.png")).convert_alpha()]
+		self.stand_sprites = []
+		for i in range(1,6):
+			string = "images/animations/darkwiz/dark_idle_" + str(i) + ".png"
+			self.stand_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
 		self.slide_sprite = [pygame.transform.scale2x(pygame.image.load("images/animations/dankwiz/wiz_slide.png")).convert_alpha()]
 		self.walk_sprites = []
 		for i in range(1,6):
-			string = "images/animations/dankwiz/wiz_walk_" + str(i) + ".png"
+			string = "images/animations/darkwiz/dark_walk_" + str(i) + ".png"
 			self.walk_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
 		self.jump_sprites = []
-		for i in range(1,13):
+		for i in range(1,12):
 			string = "images/animations/dankwiz/wiz_jump_" + str(i) + ".png"
 			self.jump_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
 		self.fall_sprites = []
-		for i in range(1,7):
+		for i in range(1,6):
 			string = "images/animations/dankwiz/wiz_fall_" + str(i) + ".png"
 			self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
 		
