@@ -38,8 +38,8 @@ class DarkWizard(Player):
 		self.sounds=sound
 	
 		
-	def update(self, inputs):
-		Player.update(self,inputs)
+	def update(self, inputs, bullets):
+		Player.update(self,inputs, bullets)
 		body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
 		xpos=self.pos[0]
 		ypos=self.pos[1]
