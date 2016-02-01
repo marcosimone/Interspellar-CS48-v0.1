@@ -11,15 +11,14 @@ class DankWizard(Player):
 	animation=0
 	direction=0
 	jump=0
-	color="cc5200"
+	color="000080"
 	#COLORS SUPPORTED SO FAR:
-	# 004d00 : green
+	# 004c00 : green
 	# 0066cc : light blue
 	# 460099 : purple
 	# 800000 : red
 	# e5e600 : yellow
 	# 000080 : blue
-	# ffffff : white
 	# cc5200 : orange
 	
 	def __init__(self, screen, sound, level, player_pos):
