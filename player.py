@@ -28,12 +28,19 @@ class Player:
 	def setPos(self, pos):
 		self.pos=(pos[0]+32,pos[1]+64)
 	
-	def update(self, inputs):
+	def update(self, inputs, bullets):
 		body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
 		xpos=self.pos[0]
 		ypos=self.pos[1]
-		#for platform in self.level:
-			#pygame.draw.rect(self.screen,Color("red"),platform)
+		
+		for bullet in bullets:
+			if body.collidepoint(bullet.getPos()) and (bullet.player!="me"):
+				bullet.selfDestruct()
+				self.health-=100
+				print self.health
+				if isDead():
+					sys.exit()
+		
 		col_index=body.collidelist(self.level)
 		if self.velocity < -15:
 			self.velocity =-15
