@@ -194,7 +194,7 @@ def update_foes():
 		data=pickle.loads(data)
 		#print data
 		if  data[0].equals("s"):
-			
+			print 0
 		elif data[0].equals("b"):
 			bull=enemyBullet(screen, sounds, level, data[1])
 			bullets.append(bull)
