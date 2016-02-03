@@ -3,12 +3,16 @@ from pygame.locals import *
 from array import array
 from bullet import *
 from player import Player
+from dank_wiz import DankWizard
+from dark_wiz import DarkWizard
 from soundboard import soundboard
 import pickle
 import threading
 
 
 server_ip="127.0.0.1"
+#server_ip="169.231.72.75"
+
 server_port=4637
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -26,7 +30,7 @@ logo=pygame.image.load("images/logo.png").convert_alpha()
 stars=pygame.image.load("images/stars.png").convert_alpha()
 stars2=stars
 hills=pygame.image.load("images/hills.png").convert_alpha()
-level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
+level=[]
 #buttons
 back_hover=pygame.image.load("images/buttons/back_hover.png").convert_alpha()
 back_idle=pygame.image.load("images/buttons/back.png").convert_alpha()
@@ -51,7 +55,6 @@ def main():
 
 	
 def mainMenu():
-	
 	buttons_idle=[pygame.image.load("images/buttons/play.png").convert_alpha(),pygame.image.load("images/buttons/options.png").convert_alpha(),pygame.image.load("images/buttons/credits.png").convert_alpha()]
 	buttons_hover=[pygame.image.load("images/buttons/play_hover.png").convert_alpha(),pygame.image.load("images/buttons/options_hover.png").convert_alpha(),pygame.image.load("images/buttons/credits_hover.png").convert_alpha()]
 	buttons=[buttons_idle[0],buttons_idle[1],buttons_idle[2]] 
@@ -103,9 +106,14 @@ def mainMenu():
 		fpsClock.tick(60)
 
 def blit():
+	global level
 	for pic in toDraw_background:
 		if pic is not None:
 			screen.blit(pic[0], pic[1])
+			
+	for plat in level:
+		pygame.draw.rect(screen, Color("grey"), plat)
+		
 	for pic in toDraw_bullets:
 		if pic is not None:
 			screen.blit(pic[0], pic[1])
@@ -114,9 +122,11 @@ def blit():
 			screen.blit(pic[0], pic[1])
 	del toDraw_background[:]
 	del toDraw_bullets[:]
-		
+	
 def play():
-	player=Player(screen, sounds, level, (640, 650))
+	global level
+	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
+	player=DarkWizard(screen, sounds, level, (640, 650)) 
 	toDraw_players.append(player.draw())
 	
 	gothreadgo=True
@@ -150,6 +160,7 @@ def play():
 					sounds.click.play()
 					del toDraw_players[:]
 					gothreadgo=False
+					level=[]
 					return
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
 				bull=Bullet(screen, sounds, level, event.pos, player.getPos())
@@ -164,7 +175,7 @@ def play():
 				bullet[1].update()
 				toDraw_bullets.append(bullet[1].draw())
 		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
-		player.update(input)
+		player.update(input, bullets)
 		sock.sendto(pickle.dumps(player.getPos()),(server_ip, server_port))
 		toDraw_players[0]=player.draw()
 		blit()
@@ -175,11 +186,11 @@ def play():
 		
 def update_foes():
 	other_players={}
-	sock.sendto(pickle.dumps(None),(server_ip, server_port))
+	sock.sendto(pickle.dumps("bullet:" + (Bullet(screen, sounds, level, (-1,-1), (-1,-1))).toString()),(server_ip, server_port))
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)
-		
+		#print data
 		if data[1][0]=='b':
 			bull=enemyBullet(screen, sounds, level, data[1][7:])
 			bullets.append(bull)
@@ -230,7 +241,7 @@ def options():
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60) 
-	
+		
 def credits():
 	char_idle=[pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha()]
 	char_hover=[pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha()]
@@ -320,9 +331,7 @@ def credits():
 		pygame.display.update()
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60)
-	
 
-	
 menu_choices=[play,options,credits]
 
 
