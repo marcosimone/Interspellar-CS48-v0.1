@@ -128,7 +128,7 @@ def credits():
 def play():
 	global level
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
-	player=DarkWizard(screen, sounds, level, (640, 650)) 
+	player=DankWizard(screen, sounds, level, (640, 650)) 
 	toDraw_players.append(player.draw())
 	
 	gothreadgo=True
@@ -167,7 +167,7 @@ def play():
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
 				bull=Bullet(screen, sounds, level, event.pos, player.getPos())
 				bullets.append(bull)
-				sock.sendto(pickle.dumps("bullet:" + bull.toString()),(server_ip, server_port))
+				sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
 		
 		for bullet in enumerate(bullets):
 			if bullet[1].isDead():
@@ -188,13 +188,15 @@ def play():
 		
 def update_foes():
 	other_players={}
-	sock.sendto(pickle.dumps("bullet:" + (Bullet(screen, sounds, level, (-1,-1), (-1,-1))).toString()),(server_ip, server_port))
+	sock.sendto(pickle.dumps((("b"),(Bullet(screen, sounds, level, (-1,-1), (-1,-1))).toString())),(server_ip, server_port))
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)
 		#print data
-		if data[1][0]=='b':
-			bull=enemyBullet(screen, sounds, level, data[1][7:])
+		if  data[0].equals("s"):
+			
+		elif data[0].equals("b"):
+			bull=enemyBullet(screen, sounds, level, data[1])
 			bullets.append(bull)
 		else:
 			if not other_players.has_key(data[0]):
@@ -203,8 +205,8 @@ def update_foes():
 			other_players[data[0]].setPos(data[1])
 			count=0
 			for key in other_players:
-				
 				toDraw_players[1+count]=other_players[key].draw()
+				
 				count+=1
 def options():
 	walker=[pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_2.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_3.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_4.png").convert_alpha())]

@@ -11,7 +11,7 @@ class DarkWizard(Player):
 	animation=0
 	direction=0
 	jump=0
-	color="0066cc"
+	color="original"
 	#COLORS SUPPORTED SO FAR:
 	# 004c00 : green
 	# 0066cc : light blue

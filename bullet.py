@@ -17,6 +17,7 @@ class Bullet:
 	speed=10
 	died=False
 	player="me"
+	id=0 #will determine speed and damage
 	def __init__(self, screen, sound, level, mouse_pos, player_pos):
 		sound.fire.play()
 		self.screen=screen
@@ -54,14 +55,15 @@ class Bullet:
 		return self.pos
 		
 class enemyBullet(Bullet):
-	speed=10
 	player="enemy"
 	def __init__(self, screen, sound, level, bulletString):
 		params=bulletString.split(',')
-		self.pos=(float(params[0]),float(params[1]))
+		self.id=params[0]
+		self.pos=(float(params[1]),float(params[2]))
 		sound.fire.play()
 		self.screen=screen
-		self.angle = float(params[2])
+		self.angle = float(params[3])
+		self.sender= params[4]
 		image=pygame.image.load("images/animations/bullet.png").convert_alpha()
 		self.image = pygame.transform.rotate(image,-45)
 		self.image = pygame.transform.rotate(image,self.angle-45)
