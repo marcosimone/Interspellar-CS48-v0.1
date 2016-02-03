@@ -123,8 +123,6 @@ def blit():
 	del toDraw_background[:]
 	del toDraw_bullets[:]
 	
-def credits():
-	print "you clicked credits"
 def play():
 	global level
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
@@ -245,6 +243,96 @@ def options():
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60) 
+		
+def credits():
+	char_idle=[pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha()]
+	char_hover=[pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha()]
+	char_sel=[char_idle[0],char_idle[1],char_idle[2],char_idle[3]] 
+	title=pygame.image.load("images/class_sel.png").convert_alpha()
+	back=back_idle
+	start_game=[pygame.image.load("images/buttons/startgame.png").convert_alpha(), pygame.image.load("images/buttons/startgame_hover.png").convert_alpha()]
+	start_button=start_game[0]
+		
+	global y
+	toDraw_background.append((stars, (0,y)))
+	toDraw_background.append((stars, (0,y-720)))
+	#toDraw_background.append((hills, (0,720-hills.get_height())))
+	toDraw_background.append((back, (100, 575)))
+	toDraw_background.append((start_button, (680, 575)))
+	toDraw_background.append((title, (268, 25)))
+	global t
+	t=0
+	global c
+	c=1
+	global s
+	s=0
+	for index,char in enumerate(char_sel):
+		toDraw_background.append((char, (40+(300*index), 100)))
+	blit()
+	while 1: 
+	
+		for index,char in enumerate(char_sel):
+			if Rect(40+(300*index), 100, char.get_width(), char.get_height()).collidepoint(pygame.mouse.get_pos()):
+				char_sel[index]=char_hover[index]
+			else:
+				char_sel[index]=char_idle[index]
+		
+		toDraw_background.append((stars, (0,y/2)))
+		toDraw_background.append((stars, (0,y/2-720)))
+		#toDraw_background.append((hills, (0,720-hills.get_height())))
+		toDraw_background.append((back, (100, 575)))
+		toDraw_background.append((start_button, (680, 575)))
+		"""t+=1
+		if s==5:
+			c= (-1)
+		if s==0:
+			c= 1
+		if t==6 & c==1:
+			s+=c
+			t=0
+		if t==6 & c==(-1):
+			s+=c
+			t=0
+		
+		toDraw_background.append((title, (268, 25+s)))"""
+		
+		toDraw_background.append((title, (268, 25)))
+		for index,char in enumerate(char_sel):
+			toDraw_background.append((char, (40+(300*index),100)))
+		y+=1
+		if y==1440: 
+			y=0
+				
+		if Rect(100,575,back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
+			back=back_hover
+		else:
+			back=back_idle
+		
+		if Rect(680, 575, start_button.get_width(), start_button.get_height()).collidepoint(pygame.mouse.get_pos()):
+			start_button = start_game[1]
+		else:
+			start_button = start_game[0]
+		
+		for event in pygame.event.get():
+			if event.type==QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type==MOUSEBUTTONUP and event.button==1:
+				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
+					sounds.click.play()
+					return
+					
+			#implement action
+			if event.type==MOUSEBUTTONUP and event.button==1:
+				if Rect(680,575, start_button.get_width(), start_button.get_height()).collidepoint(event.pos):
+					sounds.click.play()
+					menu_choices[0]()
+						
+
+		blit()
+		pygame.display.update()
+		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
+		fpsClock.tick(60)
 
 menu_choices=[play,options,credits]
 
