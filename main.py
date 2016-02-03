@@ -3,16 +3,12 @@ from pygame.locals import *
 from array import array
 from bullet import *
 from player import Player
-from dank_wiz import DankWizard
-from dark_wiz import DarkWizard
 from soundboard import soundboard
 import pickle
 import threading
 
 
 server_ip="127.0.0.1"
-#server_ip="169.231.72.75"
-
 server_port=4637
 pygame.mixer.pre_init(44100, -16, 2, 512) 
 pygame.init() 
@@ -30,7 +26,7 @@ logo=pygame.image.load("images/logo.png").convert_alpha()
 stars=pygame.image.load("images/stars.png").convert_alpha()
 stars2=stars
 hills=pygame.image.load("images/hills.png").convert_alpha()
-level=[]
+level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
 #buttons
 back_hover=pygame.image.load("images/buttons/back_hover.png").convert_alpha()
 back_idle=pygame.image.load("images/buttons/back.png").convert_alpha()
@@ -55,6 +51,7 @@ def main():
 
 	
 def mainMenu():
+	
 	buttons_idle=[pygame.image.load("images/buttons/play.png").convert_alpha(),pygame.image.load("images/buttons/options.png").convert_alpha(),pygame.image.load("images/buttons/credits.png").convert_alpha()]
 	buttons_hover=[pygame.image.load("images/buttons/play_hover.png").convert_alpha(),pygame.image.load("images/buttons/options_hover.png").convert_alpha(),pygame.image.load("images/buttons/credits_hover.png").convert_alpha()]
 	buttons=[buttons_idle[0],buttons_idle[1],buttons_idle[2]] 
@@ -106,14 +103,9 @@ def mainMenu():
 		fpsClock.tick(60)
 
 def blit():
-	global level
 	for pic in toDraw_background:
 		if pic is not None:
 			screen.blit(pic[0], pic[1])
-			
-	for plat in level:
-		pygame.draw.rect(screen, Color("grey"), plat)
-		
 	for pic in toDraw_bullets:
 		if pic is not None:
 			screen.blit(pic[0], pic[1])
@@ -122,13 +114,9 @@ def blit():
 			screen.blit(pic[0], pic[1])
 	del toDraw_background[:]
 	del toDraw_bullets[:]
-	
-def credits():
-	print "you clicked credits"
+		
 def play():
-	global level
-	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
-	player=DarkWizard(screen, sounds, level, (640, 650)) 
+	player=Player(screen, sounds, level, (640, 650))
 	toDraw_players.append(player.draw())
 	
 	gothreadgo=True
@@ -162,7 +150,6 @@ def play():
 					sounds.click.play()
 					del toDraw_players[:]
 					gothreadgo=False
-					level=[]
 					return
 			if event.type==MOUSEBUTTONDOWN and event.button==3:
 				bull=Bullet(screen, sounds, level, event.pos, player.getPos())
@@ -177,7 +164,7 @@ def play():
 				bullet[1].update()
 				toDraw_bullets.append(bullet[1].draw())
 		input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
-		player.update(input, bullets)
+		player.update(input)
 		sock.sendto(pickle.dumps(player.getPos()),(server_ip, server_port))
 		toDraw_players[0]=player.draw()
 		blit()
@@ -188,11 +175,11 @@ def play():
 		
 def update_foes():
 	other_players={}
-	sock.sendto(pickle.dumps("bullet:" + (Bullet(screen, sounds, level, (-1,-1), (-1,-1))).toString()),(server_ip, server_port))
+	sock.sendto(pickle.dumps(None),(server_ip, server_port))
 	while True:
 		data, addr = sock.recvfrom(1024)
 		data=pickle.loads(data)
-		#print data
+		
 		if data[1][0]=='b':
 			bull=enemyBullet(screen, sounds, level, data[1][7:])
 			bullets.append(bull)
@@ -243,7 +230,99 @@ def options():
 		pygame.display.update() 
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60) 
+	
+def credits():
+	char_idle=[pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha()]
+	char_hover=[pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha()]
+	char_sel=[char_idle[0],char_idle[1],char_idle[2],char_idle[3]] 
+	title=pygame.image.load("images/class_sel.png").convert_alpha()
+	back=back_idle
+	start_game=[pygame.image.load("images/buttons/startgame.png").convert_alpha(), pygame.image.load("images/buttons/startgame_hover.png").convert_alpha()]
+	start_button=start_game[0]
+		
+	global y
+	toDraw_background.append((stars, (0,y)))
+	toDraw_background.append((stars, (0,y-720)))
+	#toDraw_background.append((hills, (0,720-hills.get_height())))
+	toDraw_background.append((back, (100, 575)))
+	toDraw_background.append((start_button, (680, 575)))
+	toDraw_background.append((title, (268, 25)))
+	global t
+	t=0
+	global c
+	c=1
+	global s
+	s=0
+	for index,char in enumerate(char_sel):
+		toDraw_background.append((char, (40+(300*index), 100)))
+	blit()
+	while 1: 
+	
+		for index,char in enumerate(char_sel):
+			if Rect(40+(300*index), 100, char.get_width(), char.get_height()).collidepoint(pygame.mouse.get_pos()):
+				char_sel[index]=char_hover[index]
+			else:
+				char_sel[index]=char_idle[index]
+		
+		toDraw_background.append((stars, (0,y/2)))
+		toDraw_background.append((stars, (0,y/2-720)))
+		#toDraw_background.append((hills, (0,720-hills.get_height())))
+		toDraw_background.append((back, (100, 575)))
+		toDraw_background.append((start_button, (680, 575)))
+		"""t+=1
+		if s==5:
+			c= (-1)
+		if s==0:
+			c= 1
+		if t==6 & c==1:
+			s+=c
+			t=0
+		if t==6 & c==(-1):
+			s+=c
+			t=0
+		
+		toDraw_background.append((title, (268, 25+s)))"""
+		
+		toDraw_background.append((title, (268, 25)))
+		for index,char in enumerate(char_sel):
+			toDraw_background.append((char, (40+(300*index),100)))
+		y+=1
+		if y==1440: 
+			y=0
+				
+		if Rect(100,575,back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
+			back=back_hover
+		else:
+			back=back_idle
+		
+		if Rect(680, 575, start_button.get_width(), start_button.get_height()).collidepoint(pygame.mouse.get_pos()):
+			start_button = start_game[1]
+		else:
+			start_button = start_game[0]
+		
+		for event in pygame.event.get():
+			if event.type==QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type==MOUSEBUTTONUP and event.button==1:
+				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
+					sounds.click.play()
+					return
+					
+			#implement action
+			if event.type==MOUSEBUTTONUP and event.button==1:
+				if Rect(680,575, start_button.get_width(), start_button.get_height()).collidepoint(event.pos):
+					sounds.click.play()
+					menu_choices[0]()
+						
 
+		blit()
+		pygame.display.update()
+		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
+		fpsClock.tick(60)
+	
+
+	
 menu_choices=[play,options,credits]
 
 
