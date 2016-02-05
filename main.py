@@ -157,7 +157,7 @@ def blit():
 def play():
 	global level
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
-	player=DarkWizard(screen, sounds, level, (640, 650)) 
+	player=DankWizard(screen, sounds, level, (640, 650)) 
 	toDraw_players.append(player.draw())
 	
 	gothreadgo=True
@@ -235,8 +235,77 @@ def update_foes():
 			count=0
 			for key in other_players:
 				toDraw_players[1+count]=other_players[key].draw()
-				
 				count+=1
+				
+def ip():
+	back=back_idle
+	overlay = pygame.image.load("images/buttons/ip_label.png").convert_alpha()
+	collection_idle = [pygame.image.load("images/buttons/ipbox.png").convert_alpha(), pygame.image.load("images/buttons/portbox.png").convert_alpha(), pygame.image.load("images/buttons/namebox.png").convert_alpha()]
+	collection_hover = [pygame.image.load("images/buttons/ipbox_hover.png").convert_alpha(), pygame.image.load("images/buttons/portbox_hover.png").convert_alpha(), pygame.image.load("images/buttons/namebox_hover.png").convert_alpha()]
+	collection = [collection_idle[0], collection_idle[1], collection_idle[2]]
+	
+	global y
+	toDraw_background.append((stars, (0,y/2)))
+	toDraw_background.append((stars, (0,y/2-720)))
+	#toDraw_background.append((hills, (0,720-hills.get_height())))
+	toDraw_background.append((back, (100, 575)))
+	toDraw_background.append((overlay, (300, 150)))
+	
+	for index,coll in enumerate(collection):
+		toDraw_background.append((coll, (300,150)))
+
+	blit()
+	pygame.display.update()
+	while 1:
+		toDraw_background.append((stars, (0,y/2)))
+		toDraw_background.append((stars, (0,y/2-720)))
+		#toDraw_background.append((hills, (0,720-hills.get_height())))
+		toDraw_background.append((back, (100, 575)))
+		toDraw_background.append((overlay, (300, 150)))
+		
+
+	
+		if Rect(300+241, 150+4, 243, 60).collidepoint(pygame.mouse.get_pos()):
+			collection[0]=collection_hover[0]
+		else:
+			collection[0]=collection_idle[0]
+			
+		if Rect(300+610, 150+4, 86, 60).collidepoint(pygame.mouse.get_pos()):
+			collection[1]=collection_hover[1]
+		else:
+			collection[1]=collection_idle[1]
+			
+		if Rect(300+177, 150+119,472, 60).collidepoint(pygame.mouse.get_pos()):
+			collection[2]=collection_hover[2]
+		else:
+			collection[2]=collection_idle[2]
+			
+		for index,coll in enumerate(collection):
+			toDraw_background.append((coll, (300,150)))
+			
+		y+=1
+		if y==1440: 
+			y=0
+				
+		if Rect(100,575,back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
+			back=back_hover
+		else:
+			back=back_idle
+		
+		for event in pygame.event.get():
+			if event.type==QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type==MOUSEBUTTONUP and event.button==1:
+				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
+					sounds.click.play()
+					return
+						
+
+		blit()
+		pygame.display.update()
+		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
+		fpsClock.tick(60)
 def options():
 	walker=[pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_2.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_3.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_4.png").convert_alpha())]
 	global y
@@ -357,7 +426,7 @@ def credits():
 			if event.type==MOUSEBUTTONUP and event.button==1:
 				if Rect(680,575, start_button.get_width(), start_button.get_height()).collidepoint(event.pos):
 					sounds.click.play()
-					menu_choices[0]()
+					ip()
 						
 
 		blit()
