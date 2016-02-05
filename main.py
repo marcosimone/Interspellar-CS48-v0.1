@@ -18,6 +18,7 @@ pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init() 
 pygame.font.init()
 screen = pygame.display.set_mode((1280,720)) 
+background = pygame.Surface((screen.get_rect().width, screen.get_rect().height)).convert()
 fpsClock=pygame.time.Clock() 
 font=pygame.font.Font('WhiteRabbit.ttf', 24)
 icon=pygame.image.load("images/icon.png").convert_alpha()
@@ -26,6 +27,8 @@ y=0
 gothreadgo=True
 
 #background stuff
+splash=pygame.image.load("images/liquid_toaster.png").convert()
+click_continue=pygame.image.load("images/continue.png").convert()
 logo=pygame.image.load("images/logo.png").convert_alpha()
 stars=pygame.image.load("images/stars.png").convert_alpha()
 stars2=stars
@@ -48,7 +51,34 @@ def main():
 	
 	pygame.mixer.music.load("sound/Lines_of_Code.wav")
 	pygame.display.set_icon(icon)
-
+	loading=True
+	click=False
+	alpha=0
+	alpha2=12
+	while loading:
+		
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				loading = False
+			if event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
+				#if click:
+				loading = False
+		splash.set_alpha(alpha%2)
+		toDraw_background.append((splash, (500,150)))
+		click_continue.set_alpha(alpha2)
+		if click:
+			toDraw_background.append((click_continue, (500, 460)))
+		blit()
+		alpha+=1
+		if alpha >= 510:
+			alpha=510
+			click=True
+			alpha2+=1
+		
+		pygame.display.update()
+		pygame.display.set_caption("Loading Interspellar")
+		fpsClock.tick(60)
+		
 	mainMenu() 
 
 
@@ -60,6 +90,7 @@ def mainMenu():
 	buttons=[buttons_idle[0],buttons_idle[1],buttons_idle[2]] 
 	
 	global y
+	
 	toDraw_background.append((stars, (0,y)))
 	toDraw_background.append((stars, (0,y-720)))
 	toDraw_background.append((hills, (0,720-hills.get_height())))
@@ -126,7 +157,7 @@ def blit():
 def play():
 	global level
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
-	player=DankWizard(screen, sounds, level, (640, 650)) 
+	player=DarkWizard(screen, sounds, level, (640, 650)) 
 	toDraw_players.append(player.draw())
 	
 	gothreadgo=True
