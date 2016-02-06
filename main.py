@@ -345,6 +345,8 @@ def options():
 		fpsClock.tick(60) 
 		
 def credits():
+	charSelect()
+def charSelect():
 	char_idle=[pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha()]
 	char_hover=[pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha()]
 	char_sel=[char_idle[0],char_idle[1],char_idle[2],char_idle[3]] 
@@ -352,11 +354,19 @@ def credits():
 	back=back_idle
 	start_game=[pygame.image.load("images/buttons/startgame.png").convert_alpha(), pygame.image.load("images/buttons/startgame_hover.png").convert_alpha()]
 	start_button=start_game[0]
+	idle_anim=[]
+	for i in range(4):
+		names=["dankwiz/", "wiz_atk_", "darkwiz/", "dark_idle_", "healer/","healer_idle_", "dankwiz/", "wiz_atk_"]
+		for j in range(5):
+			anim_string = "images/animations/" + names[2*i] + names[2*i+1] + str(j+1) + ".png"
+			idle_anim.append(pygame.transform.smoothscale(pygame.image.load(anim_string).convert_alpha(),(128,128)))
 		
 	global y
-	toDraw_background.append((stars, (0,y)))
-	toDraw_background.append((stars, (0,y-720)))
-	#toDraw_background.append((hills, (0,720-hills.get_height())))
+	toDraw_background.append((stars, (0,y/2)))
+	toDraw_background.append((stars, (0,y/2-720)))
+	toDraw_background.append((hills, (0,720-hills.get_height())))
+	toDraw_background.append((back, (100, 575)))
+	
 	toDraw_background.append((back, (100, 575)))
 	toDraw_background.append((start_button, (680, 575)))
 	toDraw_background.append((title, (268, 25)))
@@ -369,17 +379,25 @@ def credits():
 	for index,char in enumerate(char_sel):
 		toDraw_background.append((char, (40+(300*index), 100)))
 	blit()
+
+	idle_anim_frame=0
+	anim_hover=0
 	while 1: 
-	
+		anim_hover=-1
 		for index,char in enumerate(char_sel):
 			if Rect(40+(300*index), 100, char.get_width(), char.get_height()).collidepoint(pygame.mouse.get_pos()):
 				char_sel[index]=char_hover[index]
+				anim_hover=index
+				idle_anim_frame+=1
 			else:
 				char_sel[index]=char_idle[index]
-		
+		if idle_anim_frame >=25:
+			idle_anim_frame=0
 		toDraw_background.append((stars, (0,y/2)))
 		toDraw_background.append((stars, (0,y/2-720)))
-		#toDraw_background.append((hills, (0,720-hills.get_height())))
+		toDraw_background.append((hills, (0,720-hills.get_height())))
+		toDraw_background.append((back, (100, 575)))
+		
 		toDraw_background.append((back, (100, 575)))
 		toDraw_background.append((start_button, (680, 575)))
 		"""t+=1
@@ -395,10 +413,13 @@ def credits():
 			t=0
 		
 		toDraw_background.append((title, (268, 25+s)))"""
-		
 		toDraw_background.append((title, (268, 25)))
 		for index,char in enumerate(char_sel):
 			toDraw_background.append((char, (40+(300*index),100)))
+			toDraw_background.append((idle_anim[index*5], (150+(300*index), 250)))
+			if anim_hover>=0:
+				toDraw_background.append((char, (40+(300*(anim_hover)), 100)))
+				toDraw_background.append((idle_anim[(anim_hover)*5+idle_anim_frame/5],(150+(300*(anim_hover)), 250)))
 		y+=1
 		if y==1440: 
 			y=0
@@ -433,6 +454,8 @@ def credits():
 		pygame.display.update()
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60)
+						
+
 
 menu_choices=[play,options,credits]
 
