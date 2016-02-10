@@ -7,7 +7,6 @@ from dank_wiz import DankWizard
 from dark_wiz import DarkWizard
 from healer import Healer
 from soundboard import soundboard
-import inputbox
 import pickle
 import threading
 
