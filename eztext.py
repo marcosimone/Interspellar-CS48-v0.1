@@ -38,19 +38,19 @@ class Input:
     def set_font(self, font):
         """ Set the font for the input """
         self.font = font
-
+		
     def draw(self, surface):
         """ Draw the text input to a surface """
         text = self.font.render(self.prompt+self.value, 1, self.color)
         surface.blit(text, (self.x, self.y))
-
+		
     def update(self, events):
         """ Update the input based on passed events """
         for event in events:
             if event.type == KEYUP:
                 if event.key == K_LSHIFT or event.key == K_RSHIFT: self.shifted = False
             if event.type == KEYDOWN:
-                if event.key == K_BACKSPACE: self.value = self.value[:-1]
+                if event.key == K_BACKSPACE:	self.value = self.value[:-1]
                 elif event.key == K_LSHIFT or event.key == K_RSHIFT: self.shifted = True
                 elif event.key == K_SPACE: self.value += ' '
                 if not self.shifted:

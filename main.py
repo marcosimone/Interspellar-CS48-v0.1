@@ -1,4 +1,4 @@
-import pygame, sys, socket
+import pygame, sys, socket, eztext
 from pygame.locals import *
 from array import array
 from bullet import *
@@ -7,6 +7,7 @@ from dank_wiz import DankWizard
 from dark_wiz import DarkWizard
 from healer import Healer
 from soundboard import soundboard
+import inputbox
 import pickle
 import threading
 
@@ -21,12 +22,19 @@ pygame.font.init()
 screen = pygame.display.set_mode((1280,720)) 
 background = pygame.Surface((screen.get_rect().width, screen.get_rect().height)).convert()
 fpsClock=pygame.time.Clock() 
-font=pygame.font.Font('WhiteRabbit.ttf', 24)
+font=pygame.font.Font('fipps.ttf', 18)
 icon=pygame.image.load("images/icon.png").convert_alpha()
 sounds = soundboard()
 y=0
 gothreadgo=True
 
+#storage variables
+global player_ip 
+global player_port
+global player_name
+global hosting
+# 0 is dankwiz; 1 is darkwiz; 2 is healer; 3 (as of now) is also dankwiz
+global class_id
 #background stuff
 splash=pygame.image.load("images/liquid_toaster.png").convert()
 click_continue=pygame.image.load("images/continue.png").convert()
@@ -158,7 +166,15 @@ def blit():
 def play():
 	global level
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
-	player=Healer(screen, sounds, level, (640, 650)) 
+	if class_id == 0:
+		player=DankWizard(screen, sounds, level, (640, 650)) 
+	elif class_id == 1:
+		player=DarkWizard(screen, sounds, level, (640, 650)) 
+	elif class_id == 2:
+		player=Healer(screen, sounds, level, (640, 650)) 
+	elif class_id == 3:
+		player=DankWizard(screen, sounds, level, (640, 650)) 
+	
 	toDraw_players.append(player.draw())
 	
 	gothreadgo=True
@@ -239,11 +255,22 @@ def update_foes():
 				count+=1
 				
 def ip():
-	back=back_idle
-	overlay = pygame.image.load("images/buttons/ip_label.png").convert_alpha()
+	back = back_idle
+	host_idle = pygame.image.load("images/buttons/host.png").convert_alpha()
+	host_hover = pygame.image.load("images/buttons/host_hover.png").convert_alpha()
+	host = host_idle
+	join_idle = pygame.image.load("images/buttons/join.png").convert_alpha()
+	join_hover = pygame.image.load("images/buttons/join_hover.png").convert_alpha()
+	join = join_idle
+	
 	collection_idle = [pygame.image.load("images/buttons/ipbox.png").convert_alpha(), pygame.image.load("images/buttons/portbox.png").convert_alpha(), pygame.image.load("images/buttons/namebox.png").convert_alpha()]
 	collection_hover = [pygame.image.load("images/buttons/ipbox_hover.png").convert_alpha(), pygame.image.load("images/buttons/portbox_hover.png").convert_alpha(), pygame.image.load("images/buttons/namebox_hover.png").convert_alpha()]
 	collection = [collection_idle[0], collection_idle[1], collection_idle[2]]
+
+	overlay = pygame.image.load("images/buttons/ip_label.png").convert_alpha()
+	ip_input = eztext.Input(restricted="0123456789.", maxlength=15,color=(0,0,0), x=300+241+11, y=150+4+8, font=font)
+	port_input = eztext.Input(restricted="0123456789", maxlength=4,color=(0,0,0), x=300+610+8, y=150+4+8, font=font)
+	name_input = eztext.Input(maxlength=16,color=(0,0,0), x=300+177+14, y=150+119+8, font=font)
 	
 	global y
 	toDraw_background.append((stars, (0,y/2)))
@@ -251,20 +278,31 @@ def ip():
 	#toDraw_background.append((hills, (0,720-hills.get_height())))
 	toDraw_background.append((back, (100, 575)))
 	toDraw_background.append((overlay, (300, 150)))
+	toDraw_background.append((host, (450, 575)))
+	toDraw_background.append((join, (800, 575)))
 	
 	for index,coll in enumerate(collection):
 		toDraw_background.append((coll, (300,150)))
-
+	
 	blit()
 	pygame.display.update()
 	while 1:
+		y+=1
+		if y==1440: 
+			y=0
+			
 		toDraw_background.append((stars, (0,y/2)))
 		toDraw_background.append((stars, (0,y/2-720)))
 		#toDraw_background.append((hills, (0,720-hills.get_height())))
 		toDraw_background.append((back, (100, 575)))
 		toDraw_background.append((overlay, (300, 150)))
-		
-
+		toDraw_background.append((host, (500, 575)))
+		toDraw_background.append((join, (900, 575)))
+			
+		if Rect(100,575,back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
+			back=back_hover
+		else:
+			back=back_idle
 	
 		if Rect(300+241, 150+4, 243, 60).collidepoint(pygame.mouse.get_pos()):
 			collection[0]=collection_hover[0]
@@ -283,16 +321,16 @@ def ip():
 			
 		for index,coll in enumerate(collection):
 			toDraw_background.append((coll, (300,150)))
-			
-		y+=1
-		if y==1440: 
-			y=0
-				
-		if Rect(100,575,back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
-			back=back_hover
+
+		if Rect(500, 575, host.get_width(), host.get_height()).collidepoint(pygame.mouse.get_pos()):
+			host = host_hover
 		else:
-			back=back_idle
-		
+			host = host_idle
+		if Rect(900, 575, join.get_width(), join.get_height()).collidepoint(pygame.mouse.get_pos()):
+			join = join_hover
+		else:
+			join = join_idle
+			
 		for event in pygame.event.get():
 			if event.type==QUIT:
 				pygame.quit()
@@ -301,10 +339,68 @@ def ip():
 				if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
 					sounds.click.play()
 					return
-						
 
+				if Rect(500,575,back.get_width(), back.get_height()).collidepoint(event.pos):
+					sounds.click.play()
+					player_ip = ip_input.value
+					player_port = port_input.value
+					player_name = name_input.value
+					hosting = True
+					charSelect()
+					
+				if Rect(900,575,back.get_width(), back.get_height()).collidepoint(event.pos):
+					sounds.click.play()
+					player_ip = ip_input.value
+					player_port = port_input.value
+					player_name = name_input.value
+					hosting = False
+					charSelect()
+					
+			if Rect(300+241, 150+4, 243, 60).collidepoint(pygame.mouse.get_pos()) and event.type==MOUSEBUTTONUP and event.button==1:
+					while True:	
+						ip_input.update(pygame.event.get())
+						ip_input.draw(screen)
+						port_input.draw(screen)
+						name_input.draw(screen)
+						pygame.display.flip()
+						if event.type==QUIT:
+							pygame.quit()
+							sys.exit()
+						if ( event.button==1 and event.type==MOUSEBUTTONUP and not(Rect(300+241, 150+4, 243, 60).collidepoint(pygame.mouse.get_pos()))):
+							break
+						
+			if Rect(300+610, 150+4, 243, 60).collidepoint(pygame.mouse.get_pos()) and event.type==MOUSEBUTTONUP and event.button==1:
+					while True:	
+						port_input.update(pygame.event.get())
+						ip_input.draw(screen)
+						port_input.draw(screen)
+						name_input.draw(screen)
+						pygame.display.flip()
+						if event.type==QUIT:
+							pygame.quit()
+							sys.exit()
+						if ( event.button==1 and event.type==MOUSEBUTTONUP and not(Rect(300+610, 150+4, 243, 60).collidepoint(pygame.mouse.get_pos()))):
+							break
+							
+			if Rect(300+177, 150+119, 243, 60).collidepoint(pygame.mouse.get_pos()) and event.type==MOUSEBUTTONUP and event.button==1:
+					while True:	
+						name_input.update(pygame.event.get())
+						ip_input.draw(screen)
+						port_input.draw(screen)
+						name_input.draw(screen)
+						pygame.display.flip()
+						if event.type==QUIT:
+							pygame.quit()
+							sys.exit()
+						if ( event.button==1 and event.type==MOUSEBUTTONUP and not(Rect(300+177, 150+119, 243, 60).collidepoint(pygame.mouse.get_pos()))):
+							break
+							
+		ip_input.draw(screen)
+		port_input.draw(screen)
+		name_input.draw(screen)
+		
+		pygame.display.flip()
 		blit()
-		pygame.display.update()
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60)
 def options():
@@ -348,6 +444,7 @@ def options():
 def credits():
 	charSelect()
 def charSelect():
+	global class_id
 	char_idle=[pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha(),pygame.image.load("images/buttons/char.png").convert_alpha()]
 	char_hover=[pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha(),pygame.image.load("images/buttons/char_hover.png").convert_alpha()]
 	char_sel=[char_idle[0],char_idle[1],char_idle[2],char_idle[3]] 
@@ -444,11 +541,28 @@ def charSelect():
 					sounds.click.play()
 					return
 					
-			#implement action
-			if event.type==MOUSEBUTTONUP and event.button==1:
+				if Rect(40, 100, char_sel[0].get_width(), char_sel[0].get_height()).collidepoint(pygame.mouse.get_pos()):
+						sounds.click.play()
+						char_sel[0]=char_hover[0]
+						class_id = 0
+				if Rect(340, 100, char_sel[0].get_width(), char_sel[0].get_height()).collidepoint(pygame.mouse.get_pos()):
+						sounds.click.play()
+						char_sel[1]=char_hover[1]
+						class_id = 1
+				if Rect(640, 100, char_sel[0].get_width(), char_sel[0].get_height()).collidepoint(pygame.mouse.get_pos()):
+						sounds.click.play()
+						char_sel[2]=char_hover[2]
+						class_id = 2
+				if Rect(940, 100, char_sel[0].get_width(), char_sel[0].get_height()).collidepoint(pygame.mouse.get_pos()):
+						sounds.click.play()
+						char_sel[0]=char_hover[0]
+						class_id = 0
+
+					
+			#implement action:
 				if Rect(680,575, start_button.get_width(), start_button.get_height()).collidepoint(event.pos):
 					sounds.click.play()
-					ip()
+					play()
 						
 
 		blit()
@@ -458,7 +572,7 @@ def charSelect():
 						
 
 
-menu_choices=[play,options,credits]
+menu_choices=[ip,options,credits]
 
 
 lol=("         xxxx           ","       xx....xx         ","      xx......xx        ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","      xxx....xxx        ","     xxx......xxx       ","    xx..........xx      ","   xx............xx     ","  xx..............xx    ","   xx.....xx.....xx     ","     xxxxx  xxxxx       ","                        ","                        ","                        ","                        ","                        ","                        ")
