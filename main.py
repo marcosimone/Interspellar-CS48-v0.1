@@ -24,7 +24,7 @@ icon=pygame.image.load("images/icon.png").convert_alpha()
 sounds = soundboard()
 y=0
 gothreadgo=True
-
+lobby_players={}
 #background stuff
 logo=pygame.image.load("images/logo.png").convert_alpha()
 stars=pygame.image.load("images/stars.png").convert_alpha()
@@ -92,7 +92,7 @@ def mainMenu():
 				pygame.quit()
 				sys.exit()
 				
-			if event.type==MOUSEBUTTONUP and event.button==1:
+			elif event.type==MOUSEBUTTONUP and event.button==1:
 				for index,butt in enumerate(buttons):
 					if Rect(500,300+(100*index),butt.get_width(), butt.get_height()).collidepoint(event.pos):
 						sounds.click.play()
@@ -123,6 +123,113 @@ def blit():
 	del toDraw_background[:]
 	del toDraw_bullets[:]
 	
+def join_server():
+	global y
+	#Box = (surface, text)
+	join_idle=pygame.image.load("images/buttons/join.png").convert_alpha()
+	join_hover=pygame.image.load("images/buttons/join_hover.png").convert_alpha()
+	join=join_idle
+	joinPos=((screen.get_width()-join.get_width())/2, 500)
+	
+	screen.blit(stars, (0,y))
+	screen.blit(stars, (0,y-720))
+	screen.blit(hills, (0,720-hills.get_height()))
+	ipBox = [pygame.Surface((300, 40)), ""]
+	ipBox[0].fill(Color(255,255,255))
+	portBox = [pygame.Surface((150, 40)), ""]
+	portBox[0].fill(Color(196,196,196))
+	ipPos=((screen.get_width()-ipBox[0].get_width())/2,(screen.get_height()-ipBox[0].get_height())/2-80)
+	portPos=((screen.get_width()-ipBox[0].get_width())/2,(screen.get_height()-portBox[0].get_height())/2-20)
+	
+	screen.blit(ipBox[0], ipPos)
+	screen.blit(portBox[0], portPos)
+	back=back_idle
+	screen.blit(join, ((screen.get_width()-join.get_width())/2, 500))
+	screen.blit(back, (100, 575))
+	focus=ipBox
+	
+	while 1:
+		
+		ipText=font.render(ipBox[1], True, Color(0,0,0))
+		portText=font.render(portBox[1], True, Color(0,0,0))
+		screen.blit(stars, (0,y/2))
+		screen.blit(stars, (0,y/2-720))
+		screen.blit(hills, (0,720-hills.get_height()))
+		screen.blit(ipBox[0], ipPos)
+		screen.blit(ipText, (ipPos[0]+10,ipPos[1]+ipText.get_height()/2))
+		screen.blit(portBox[0], (portPos))
+		screen.blit(portText, (portPos[0]+10,portPos[1]+portText.get_height()/2))
+		screen.blit(join, joinPos)
+		screen.blit(back, (100, 575))
+		
+		if Rect(100,575,back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
+			back=back_hover
+		else:
+			back=back_idle
+			
+		if Rect(joinPos,(join.get_width(), join.get_height())).collidepoint(pygame.mouse.get_pos()):
+			join=join_hover
+		else:
+			join=join_idle
+		
+		
+		y+=1
+		if y==1440: 
+			y=0
+		
+		for event in pygame.event.get():
+			if event.type==MOUSEBUTTONUP and event.button==1:
+				if Rect(ipPos, (ipBox[0].get_width(), ipBox[0].get_height())).collidepoint(event.pos):
+					focus=ipBox
+					ipBox[0].fill(Color(255,255,255))
+					portBox[0].fill(Color(196,196,196))
+				elif Rect(portPos, (portBox[0].get_width(), portBox[0].get_height())).collidepoint(event.pos):
+					focus=portBox
+					ipBox[0].fill(Color(196,196,196))
+					portBox[0].fill(Color(255,255,255))
+				elif Rect(joinPos,(back.get_width(), back.get_height())).collidepoint(event.pos):
+					sounds.click.play()
+					try:
+						socket.inet_aton(ipBox[1])
+						int(portBox[1])
+						sock.sendto(pickle.dumps(("j")), (ipBox[1], int(portBox[1])))
+						sock.settimeout(3.0)
+						ldata=sock.recvfrom(1024)
+						lobby_players=pickle.loads(data)
+						print 'joining %s:%s' % (ipBox[1], portBox[1])
+					except socket.timeout:
+						print 'server could not be found'
+					except socket.error:
+						print 'invalid ip'
+					except ValueError:
+						print 'invalid port'
+				elif Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
+					sounds.click.play()
+					return
+			elif event.type==KEYDOWN:
+				if((event.key >= 48 and event.key <=57) or event.key==46):
+					focus[1]+=str(chr(event.key))
+				elif((event.key >= 256 and event.key <=266)):
+					if(event.key==266):
+						focus[1]+=str(chr(46))
+					else:
+						focus[1]+=str(chr(event.key-208))
+				elif (event.key==8):
+					focus[1] = focus[1][:-1]
+					
+			elif event.type==QUIT: 
+				pygame.quit()
+				sys.exit()
+		
+		#blit()
+		pygame.display.update()
+		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
+		fpsClock.tick(60)
+	
+
+def lobby_thread():
+	return
+
 def play():
 	global level
 	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
@@ -166,6 +273,7 @@ def play():
 				bull=Bullet(screen, sounds, level, event.pos, player.getPos())
 				bullets.append(bull)
 				sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
+				
 		
 		for bullet in enumerate(bullets):
 			if bullet[1].isDead():
@@ -334,7 +442,7 @@ def credits():
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60)
 
-menu_choices=[play,options,credits]
+menu_choices=[join_server,options,credits]
 
 
 lol=("         xxxx           ","       xx....xx         ","      xx......xx        ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","       xx....xx         ","      xxx....xxx        ","     xxx......xxx       ","    xx..........xx      ","   xx............xx     ","  xx..............xx    ","   xx.....xx.....xx     ","     xxxxx  xxxxx       ","                        ","                        ","                        ","                        ","                        ","                        ")
