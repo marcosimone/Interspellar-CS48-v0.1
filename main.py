@@ -189,20 +189,7 @@ def join_server():
 					portBox[0].fill(Color(255,255,255))
 				elif Rect(joinPos,(back.get_width(), back.get_height())).collidepoint(event.pos):
 					sounds.click.play()
-					try:
-						socket.inet_aton(ipBox[1])
-						int(portBox[1])
-						sock.sendto(pickle.dumps(("j")), (ipBox[1], int(portBox[1])))
-						sock.settimeout(3.0)
-						ldata=sock.recvfrom(1024)
-						lobby_players=pickle.loads(data)
-						print 'joining %s:%s' % (ipBox[1], portBox[1])
-					except socket.timeout:
-						print 'server could not be found'
-					except socket.error:
-						print 'invalid ip'
-					except ValueError:
-						print 'invalid port'
+					try_join(ipBox, portBox)
 				elif Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
 					sounds.click.play()
 					return
@@ -216,6 +203,18 @@ def join_server():
 						focus[1]+=str(chr(event.key-208))
 				elif (event.key==8):
 					focus[1] = focus[1][:-1]
+				elif (event.key==13 or event.key==271):
+					sounds.click.play()
+					try_join(ipBox, portBox)
+				elif (event.key==9):
+					if (focus==ipBox):
+						focus = portBox 
+						ipBox[0].fill(Color(196,196,196))
+						portBox[0].fill(Color(255,255,255))
+					else:
+						focus = ipBox
+						ipBox[0].fill(Color(255,255,255))
+						portBox[0].fill(Color(196,196,196))
 					
 			elif event.type==QUIT: 
 				pygame.quit()
@@ -226,7 +225,23 @@ def join_server():
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 		fpsClock.tick(60)
 	
-
+def try_join(ipBox, portBox):
+	try:
+		socket.inet_aton(ipBox[1])
+		int(portBox[1])
+		sock.sendto(pickle.dumps(("j")), (ipBox[1], int(portBox[1])))
+		sock.settimeout(3.0)
+		data, addr=sock.recvfrom(1024)
+		print data
+		lobby_players=pickle.loads(data)
+		print lobby_players
+		print 'joining %s:%s' % (ipBox[1], portBox[1])
+	except socket.timeout:
+		print 'server could not be found'
+	except socket.error:
+		print 'invalid ip'
+	except ValueError:
+		print 'invalid port'
 def lobby_thread():
 	return
 
