@@ -248,6 +248,12 @@ def try_join(ipBox, portBox):
         print 'invalid port'
 
 def lobby(players):
+    char_select = pygame.image.load("images/buttons/lobby_char.png").convert_alpha()
+	char_hover = pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()
+	select = char_select
+	while 1:
+		
+	
     print 'lobby'
 
 def lobby_thread():
