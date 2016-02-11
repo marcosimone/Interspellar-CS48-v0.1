@@ -164,7 +164,8 @@ def blit():
 	
 def play():
 	global level
-	level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
+	level=[Rect((100,575),(300,70)), Rect((880,575),(300,70)), Rect((490,350),(300,70)), Rect((200,375),(100,20)), Rect((980,375),(100,20)), 
+		Rect((-75,200),(100,500)), Rect((1255,200),(100,500))]
 	if class_id == 0:
 		player=DankWizard(screen, sounds, level, (640, 650)) 
 	elif class_id == 1:
