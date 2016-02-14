@@ -99,15 +99,5 @@ class DankWizard(Player):
 			return (pygame.transform.flip(self.getAnimation(), True, False), self.getPos())
 		
 		
-	def getAnimation(self):
-		if self.animation==0:
-			return self.stand_sprites[(self.anim_frames/10)%len(self.stand_sprites)]
-		elif self.animation==1:
-			return self.walk_sprites[(self.anim_frames/10)%len(self.walk_sprites)]
-		elif self.animation==2:
-			return self.jump_sprites[(self.jump/3)%len(self.jump_sprites)]
-		elif self.animation==3:
-			return self.fall_sprites[(self.anim_frames/10)%len(self.fall_sprites)]
-		elif self.animation==4:
-			return self.slide_sprite[0]
+	
 		

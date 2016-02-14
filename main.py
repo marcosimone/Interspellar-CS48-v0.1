@@ -22,7 +22,9 @@ icon = pygame.image.load("images/icon.png").convert_alpha()
 sounds = soundboard()
 y = 0
 gothreadgo = True
-lobby_players = {}
+server_ip=""
+server_port=0
+
 #background stuff
 logo = pygame.image.load("images/logo.png").convert_alpha()
 stars = pygame.image.load("images/stars.png").convert_alpha()
@@ -234,10 +236,12 @@ def try_join(ipBox, portBox):
         sock.sendto(pickle.dumps(("j")), (ipBox[1], int(portBox[1])))
         sock.settimeout(3.0)
         data, addr = sock.recvfrom(1024)
-        print data
         lobby_players = pickle.loads(data)
         print 'joining %s:%s' % (ipBox[1], portBox[1])
-
+        global server_ip
+        server_ip=ipBox[1]
+        global server_port
+        server_port=int(portBox[1])
         lobby(lobby_players)
 
     except socket.timeout:
@@ -249,15 +253,31 @@ def try_join(ipBox, portBox):
 
 def lobby(players):
     char_select = pygame.image.load("images/buttons/lobby_char.png").convert_alpha()
-	char_hover = pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()
-	select = char_select
-	while 1:
-		
-	
-    print 'lobby'
+    char_hover = pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()
+    select = char_select
+    #print players
+    t = threading.Thread(target=lobby_thread, args=(players,))
+    t.daemon = True
+    t.start()
+    while 1:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                sys.exit()
 
-def lobby_thread():
-    return
+def lobby_thread(players):
+    sock.settimeout(None)
+    sock.sendto(pickle.dumps("t"), (server_ip, server_port))
+    
+    while True:
+        data, addr = sock.recvfrom(1024)
+        data=pickle.loads(data)
+        src=data[1]
+        cmd=data[0]
+        if cmd[0] == "j":
+            print 'player joined'
+    
+    
+    
 '''
 def play():
     global level
