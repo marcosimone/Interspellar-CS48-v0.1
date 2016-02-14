@@ -35,13 +35,14 @@ def main():
             elif data[0] == "q":# ("q")
                 del clients[addr[0]]
 
-            elif data[0] == "*": # ("*")
-                raise GameStart
 
             for client in clients:
                 if not client == addr[0]:
-                    SOCK.sendto(pickle.dumps((data, addr[0])), (client, clients[client][0]))
+                    SOCK.sendto(pickle.dumps((data, addr)), (client, clients[client][0]))
 
+            if data[0] == "*": # ("*")
+                raise GameStart
+                    
     except GameStart:
         pass
 

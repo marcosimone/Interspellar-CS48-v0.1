@@ -273,8 +273,17 @@ def lobby_thread(players):
         data=pickle.loads(data)
         src=data[1]
         cmd=data[0]
-        if cmd[0] == "j":
-            print 'player joined'
+        
+        if cmd[0] == "c":
+            pass
+        elif cmd[0] == "u":
+            pass
+        elif cmd[0] == "j":
+            players[src[0]] = (addr[1], addr[0], "default", "default")
+            print '%s joined' % (src[0])
+            print players
+        elif cmd[0] == "q":
+            pass
     
     
     
