@@ -252,6 +252,8 @@ def try_join(ipBox, portBox):
         print 'invalid port'
 
 def lobby(players):
+	team=0
+	wizard=0
 	t = threading.Thread(target=lobby_thread, args=(players,))
 	t.daemon = True
 	t.start()
@@ -267,8 +269,6 @@ def lobby(players):
 		for j in range(5):
 			anim_string = "images/animations/" + names[2*i] + names[2*i+1] + str(j+1) + ".png"
 			idle_anim.append(pygame.image.load(anim_string).convert_alpha())
-	for index,box in enumerate(team_char_select):
-		toDraw_background.append((box, (544 + (index%2) * 64, 200 +(100 * index))))
 	idle_anim_frame=0
 	anim_hover=0
 	while 1:
@@ -289,6 +289,13 @@ def lobby(players):
 			if event.type==QUIT:
 				pygame.quit()
 				sys.exit()
+			if event.type == MOUSEBUTTONUP and event.button == 1:
+				for index,box in enumerate(team_char_select):
+					if Rect(544 + (index%2) * 64, 200+(100*(index/2)), box.get_width(), box.get_height()).collidepoint(event.pos):
+						team = index%2
+						wizard = index/2
+						print wizard
+						print team
 		blit()
 		pygame.display.update()
 		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
