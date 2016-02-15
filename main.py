@@ -136,15 +136,11 @@ def join_server():
     screen.blit(stars, (0, y))
     screen.blit(stars, (0, y-720))
     screen.blit(hills, (0, 720-hills.get_height()))
-<<<<<<< HEAD
+
     ipBox = [pygame.Surface((300, 40)), "127.0.0.1"] #DEBUG
     ipBox[0].fill(Color(255, 255, 255)) 
     portBox = [pygame.Surface((150, 40)), "4637"] #DEBUG
-=======
-    ipBox = [pygame.Surface((300, 40)), "192.168.0.6"]
-    ipBox[0].fill(Color(255, 255, 255))
-    portBox = [pygame.Surface((150, 40)), "4637"]
->>>>>>> 2d94c4a8ee8d51e9c71c196e75dadbf250f4c5cb
+    
     portBox[0].fill(Color(196, 196, 196))
     ipPos = ((screen.get_width()-ipBox[0].get_width())/2,
              (screen.get_height()-ipBox[0].get_height())/2-80)
