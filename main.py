@@ -136,9 +136,15 @@ def join_server():
     screen.blit(stars, (0, y))
     screen.blit(stars, (0, y-720))
     screen.blit(hills, (0, 720-hills.get_height()))
+<<<<<<< HEAD
     ipBox = [pygame.Surface((300, 40)), "127.0.0.1"] #DEBUG
     ipBox[0].fill(Color(255, 255, 255)) 
     portBox = [pygame.Surface((150, 40)), "4637"] #DEBUG
+=======
+    ipBox = [pygame.Surface((300, 40)), "192.168.0.6"]
+    ipBox[0].fill(Color(255, 255, 255))
+    portBox = [pygame.Surface((150, 40)), "4637"]
+>>>>>>> 2d94c4a8ee8d51e9c71c196e75dadbf250f4c5cb
     portBox[0].fill(Color(196, 196, 196))
     ipPos = ((screen.get_width()-ipBox[0].get_width())/2,
              (screen.get_height()-ipBox[0].get_height())/2-80)
@@ -252,20 +258,52 @@ def try_join(ipBox, portBox):
         print 'invalid port'
 
 def lobby(players):
+
     game_start=False
     chat=[]
-    char_select = pygame.image.load("images/buttons/lobby_char.png").convert_alpha()
-    char_hover = pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()
-    select = char_select
     t = threading.Thread(target=lobby_thread, args=(players, chat, game_start))
     t.daemon = True
     t.start()
-    while 1:
 
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                sys.exit()
-
+	arrow = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char.png").convert_alpha(), True, False), pygame.image.load("images/buttons/lobby_char.png").convert_alpha()]
+	arrow_hover = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha(), True, False), pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()]
+	team_char_select=[]
+	for i in range(0,4):
+		team_char_select.append(arrow[0])
+		team_char_select.append(arrow[1])
+	idle_anim=[]
+	for i in range(4):
+		names=["dankwiz/", "wiz_atk_", "darkwiz/", "dark_idle_", "healer/","healer_idle_", "dankwiz/", "wiz_atk_"]
+		for j in range(5):
+			anim_string = "images/animations/" + names[2*i] + names[2*i+1] + str(j+1) + ".png"
+			idle_anim.append(pygame.image.load(anim_string).convert_alpha())
+	for index,box in enumerate(team_char_select):
+		toDraw_background.append((box, (544 + (index%2) * 64, 200 +(100 * index))))
+	idle_anim_frame=0
+	anim_hover=0
+	while 1:
+		anim_hover=-1
+		
+		for index,box in enumerate(team_char_select):
+			if Rect(544 + (index%2) * 64, 200+(100*(index/2)), box.get_width(), box.get_height()).collidepoint(pygame.mouse.get_pos()):
+				team_char_select[index]=arrow_hover[index%2]
+				anim_hover=index/2
+				idle_anim_frame+=1
+			else:
+				team_char_select[index]=arrow[index%2]
+			toDraw_background.append((box, (544 + (index%2) * 64, 200+(100*(index/2)))))
+			toDraw_background.append((idle_anim[index*5/2], (576, 200+(100*(index/2)))))
+		if idle_anim_frame>=25:
+			idle_anim_frame=0
+		for event in pygame.event.get():
+			if event.type==QUIT:
+				pygame.quit()
+				sys.exit()
+		blit()
+		pygame.display.update()
+		pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
+		fpsClock.tick(60)
+	
 def lobby_thread(players, chat, start):
     sock.settimeout(None)
     sock.sendto(pickle.dumps("t"), (server_ip, server_port))
