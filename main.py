@@ -136,9 +136,9 @@ def join_server():
     screen.blit(stars, (0, y))
     screen.blit(stars, (0, y-720))
     screen.blit(hills, (0, 720-hills.get_height()))
-    ipBox = [pygame.Surface((300, 40)), ""]
-    ipBox[0].fill(Color(255, 255, 255))
-    portBox = [pygame.Surface((150, 40)), ""]
+    ipBox = [pygame.Surface((300, 40)), "127.0.0.1"] #DEBUG
+    ipBox[0].fill(Color(255, 255, 255)) 
+    portBox = [pygame.Surface((150, 40)), "4637"] #DEBUG
     portBox[0].fill(Color(196, 196, 196))
     ipPos = ((screen.get_width()-ipBox[0].get_width())/2,
              (screen.get_height()-ipBox[0].get_height())/2-80)
@@ -252,19 +252,21 @@ def try_join(ipBox, portBox):
         print 'invalid port'
 
 def lobby(players):
+    game_start=False
+    chat=[]
     char_select = pygame.image.load("images/buttons/lobby_char.png").convert_alpha()
     char_hover = pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()
     select = char_select
-    #print players
-    t = threading.Thread(target=lobby_thread, args=(players,))
+    t = threading.Thread(target=lobby_thread, args=(players, chat, game_start))
     t.daemon = True
     t.start()
     while 1:
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 sys.exit()
 
-def lobby_thread(players):
+def lobby_thread(players, chat, start):
     sock.settimeout(None)
     sock.sendto(pickle.dumps("t"), (server_ip, server_port))
     
@@ -275,17 +277,17 @@ def lobby_thread(players):
         cmd=data[0]
         
         if cmd[0] == "c":
-            pass
+            chat.append(cmd[1])
         elif cmd[0] == "u":
-            pass
+            players[src[0]] = (src[1], cmd[1], cmd[2], cmd[3])
         elif cmd[0] == "j":
             players[src[0]] = (addr[1], addr[0], "default", "default")
             print '%s joined' % (src[0])
             print players
         elif cmd[0] == "q":
-            pass
-    
-    
+            del clients[src[0]]
+        elif cmd[0] == "*":
+            start=True
     
 '''
 def play():
