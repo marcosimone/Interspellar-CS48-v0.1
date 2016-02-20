@@ -262,6 +262,8 @@ def lobby(players):
     global x
     game_start=False
     chat=[]
+    font = pygame.font.SysFont('lucidaconsole', 16)
+    chat_render=pygame.Surface((524, 0))
     t = threading.Thread(target=lobby_thread, args=(players, chat, game_start))
     t.daemon = True
     t.start()
@@ -282,14 +284,37 @@ def lobby(players):
     idle_anim_frame=0
     anim_hover=0
     while 1:
-
+        
+        if len(chat)!=0:
+            text=chat.pop()
+            text='%s: %s' % (players[text[0][0]][1], text[1])
+            size=font.size(text)
+            if size[0] > 524:
+                linenum=size[0]/542+1
+                split_length=int(len(text)/((size[0]+.0)/(524+.0)))
+                text_split=[text[i:i+split_length] for i in range(0, len(text), split_length)]
+                msg=pygame.Surface((524, size[1]*linenum))
+                msg.fill(Color(255, 255, 255))
+                for index,sub in enumerate(text_split):
+                    msg.blit(font.render(sub, True, Color(0, 0, 0), Color(255, 255, 255)), (0, index*size[1]))
+            else:
+                msg=font.render(text, True, Color(0, 0, 0), Color(255, 255, 255))
+            
+            old_render=chat_render
+            chat_render=pygame.Surface((524, old_render.get_height()+msg.get_height()))
+            chat_render.fill(Color(255, 255, 255))
+            chat_render.blit(old_render, (0,0))
+            chat_render.blit(msg, (0, old_render.get_height()))
+            #print chat_render.get_height()
+            
+        
         screen.blit(lobby_back, (0, 720-lobby_back.get_height()))
         screen.blit(mist, (x/8,0))
         screen.blit(mist, (x/8-1280,-50))
         screen.blit(mountains, (0,0))
         screen.blit(clouds, (x/2, 0))
         screen.blit(clouds, (x/2-1280, 0))
-		
+        screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()))
         x+=1
         if x > 10240:
             x = 0;
@@ -333,7 +358,7 @@ def lobby_thread(players, chat, start):
         cmd=data[0]
         
         if cmd[0] == "c":
-            chat.append(cmd[1])
+            chat.append((src, cmd[1]))
         elif cmd[0] == "u":
             players[src[0]] = (src[1], cmd[1], cmd[2], cmd[3])
         elif cmd[0] == "j":
