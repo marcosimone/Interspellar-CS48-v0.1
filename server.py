@@ -25,9 +25,10 @@ def main():
 
 
             if data[0] == "j": # ("j")
-                SOCK.sendto(pickle.dumps(clients), addr)
+                
                 #name, sprite, team
                 clients[addr[0]] = (addr[1], addr[0], "default", "default")
+                SOCK.sendto(pickle.dumps(clients), addr)
                 
             elif data[0] == "u": # ("u", name, sprite, team)
                 clients[addr[0]] = (addr[1], data[1], data[2], data[3])
@@ -35,10 +36,13 @@ def main():
             elif data[0] == "q":# ("q")
                 del clients[addr[0]]
 
-
-            for client in clients:
-                if not client == addr[0]:
+            if data[0] == "c" or data[0]=="u":
+                for client in clients:
                     SOCK.sendto(pickle.dumps((data, addr)), (client, clients[client][0]))
+            else:            
+                for client in clients:
+                    if not client == addr[0]:
+                        SOCK.sendto(pickle.dumps((data, addr)), (client, clients[client][0]))
 
             if data[0] == "*": # ("*")
                 raise GameStart

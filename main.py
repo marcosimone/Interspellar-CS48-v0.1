@@ -263,12 +263,25 @@ def lobby(players):
     game_start=False
     chat=[]
     font = pygame.font.SysFont('lucidaconsole', 16)
-    chat_render=pygame.Surface((524, 0))
+    chat_full=pygame.Surface((524, 0))
+    chat_render=chat_full
     t = threading.Thread(target=lobby_thread, args=(players, chat, game_start))
     t.daemon = True
     t.start()
     team=0
     wizard=0
+    name="unnamed"
+    chat_box = [pygame.Surface((524, 25)), ""]
+    chat_box[0].fill(Color(255, 255, 255)) 
+    name_box = [pygame.Surface((150, 30)), name] 
+    name_box[0].fill(Color(196, 196, 196))
+    
+    chatPos = ((screen.get_width()-chat_box[0].get_width())/2,(screen.get_height()-chat_box[0].get_height()-10))
+    namePos = ((screen.get_width()-name_box[0].get_width())/2,10)
+    screen.blit(chat_box[0], chatPos)
+    screen.blit(name_box[0], namePos)
+    focus = chat_box
+    
     arrow = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char.png").convert_alpha(), True, False), 
              pygame.image.load("images/buttons/lobby_char.png").convert_alpha()]
     arrow_hover = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha(), True, False),
@@ -290,30 +303,41 @@ def lobby(players):
             idle_anim.append(pygame.transform.scale(pygame.image.load(anim_string).convert_alpha(), (64, 64)))
     idle_anim_frame=[0,0,0,0]
     info=-1
+    chat_label=font.render(' chat ', True, Color("#749DCF"), Color(0, 0, 0))
     while 1:
+        
+        chatText = font.render(chat_box[1], True, Color(0, 0, 0))
+        nameText = font.render(name_box[1], True, Color(0, 0, 0))
         
         if len(chat)!=0:
             text=chat.pop()
             text='%s: %s' % (players[text[0][0]][1], text[1])
             size=font.size(text)
-            if size[0] > 524:
+            if size[0]+3 > 524:
                 linenum=size[0]/542+1
                 split_length=int(len(text)/((size[0]+.0)/(524+.0)))
                 text_split=[text[i:i+split_length] for i in range(0, len(text), split_length)]
                 msg=pygame.Surface((524, size[1]*linenum))
-                msg.fill(Color(255, 255, 255))
                 for index,sub in enumerate(text_split):
-                    msg.blit(font.render(sub, True, Color(0, 0, 0), Color(255, 255, 255)), (0, index*size[1]))
+                    msg.blit(font.render(sub, True, Color(255, 255, 255)), (0, index*size[1]))
             else:
-                msg=font.render(text, True, Color(0, 0, 0), Color(255, 255, 255))
+                linenum=1
+                msg=font.render(text, True, Color(255, 255, 255))
             
-            old_render=chat_render
-            chat_render=pygame.Surface((524, old_render.get_height()+msg.get_height()))
-            chat_render.fill(Color(255, 255, 255))
-            chat_render.blit(old_render, (0,0))
-            chat_render.blit(msg, (0, old_render.get_height()))
-            #print chat_render.get_height()
+            old_render=chat_full
+            old_render.set_alpha(255)
             
+            chat_full=pygame.Surface((524, old_render.get_height()+msg.get_height()))
+            chat_full.fill(Color(0, 0, 0))
+            chat_full.set_alpha(180)
+            chat_full.blit(old_render, (0,0))
+            chat_full.blit(msg, (3, old_render.get_height()))
+            
+            if chat_full.get_height() > 190:
+                chat_render=chat_full.subsurface(pygame.Rect((0, chat_full.get_height()-204),(524, 204)))
+            else:
+                chat_render=chat_full
+
         
         screen.blit(lobby_back, (0, 720-lobby_back.get_height()))
         screen.blit(mist, (x/4,0))
@@ -321,43 +345,87 @@ def lobby(players):
         screen.blit(mountains, (0,0))
         screen.blit(clouds, (x%1280, 0))
         screen.blit(clouds, (x%1280-1280, 0))
-        screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()))
+        
+        screen.blit(chat_box[0], chatPos)
+        screen.blit(chatText, (chatPos[0]+10, chatPos[1]+chatText.get_height()/2))
+        screen.blit(name_box[0], (namePos))
+        screen.blit(nameText, (namePos[0]+10, namePos[1]+nameText.get_height()/2))
+        
+        screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35))
+        screen.blit(chat_label, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35-chat_label.get_height()))
         x+=.5
         if x > 1280*4:
             x = 0;
         
         for index,box in enumerate(team_char_select):
-            if Rect(640-40 - ((index+1)%2) * 45 + index%2*80, 200+(75*(index/2)), box.get_width(), box.get_height()).collidepoint(pygame.mouse.get_pos()):
+            if Rect(640-40 - ((index+1)%2) * 45 + index%2*80, 175+(75*(index/2)), box.get_width(), box.get_height()).collidepoint(pygame.mouse.get_pos()):
                 team_char_select[index]=arrow_hover[index%2]           
             else:
                 team_char_select[index]=arrow[index%2]
-            screen.blit(box, (640-40 - ((index+1)%2) * 45 + index%2*80, 200+(75*(index/2))))
+            screen.blit(box, (640-40 - ((index+1)%2) * 45 + index%2*80, 175+(75*(index/2))))
             
         for i in range(0,4):
-            if Rect(640-32, 200+75*i, 64, 64).collidepoint(pygame.mouse.get_pos()):
+            if Rect(640-32, 175+75*i, 64, 64).collidepoint(pygame.mouse.get_pos()):
                 info=i
                 idle_anim_frame[i]+=.1
                 if idle_anim_frame[i]>=25:
                     idle_anim_frame[i]=0
    
-            screen.blit(panel, (640-35, 200+(75*(i))))
-            screen.blit(idle_anim[i*5+int(idle_anim_frame[i])%5], (640-32, 200+(75*(i))))
+            screen.blit(panel, (640-35, 175+(75*(i))))
+            screen.blit(idle_anim[i*5+int(idle_anim_frame[i])%5], (640-32, 175+(75*(i))))
         if info!=-1:
             screen.blit(info_panel[info], (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]-10))    
             info=-1
             
         for event in pygame.event.get():
-            if event.type==QUIT:
-                pygame.quit()
-                sys.exit()
+        
             if event.type == MOUSEBUTTONUP and event.button == 1:
                 for index,box in enumerate(team_char_select):
-                    if Rect(640-40 - ((index+1)%2) * 45 + index%2*80, 200+(75*(index/2)), box.get_width(), box.get_height()).collidepoint(event.pos):
+                    if Rect(640-40 - ((index+1)%2) * 45 + index%2*80, 175+(75*(index/2)), box.get_width(), box.get_height()).collidepoint(event.pos):
                         team = index%2
                         wizard = index/2
-                        sock.sendTo()
+                        #sock.sendto()
                         print "wizard:%s\nteam:%s\n" % (wizard, team)
-    
+                if Rect(chatPos, (chat_box[0].get_width(), chat_box[0].get_height())
+                       ).collidepoint(event.pos):
+                    focus = chat_box
+                    chat_box[0].fill(Color(255, 255, 255))
+                    name_box[0].fill(Color(196, 196, 196))
+                elif Rect(namePos, (name_box[0].get_width(), name_box[0].get_height())
+                         ).collidepoint(event.pos):
+                    focus = name_box
+                    chat_box[0].fill(Color(196, 196, 196))
+                    name_box[0].fill(Color(255, 255, 255))
+            elif event.type == KEYDOWN:
+                if(event.key >= 32 and event.key <= 126) or event.key == 46:
+                    focus[1] += str(chr(event.key))
+                elif event.key >= 256 and event.key <= 266:
+                    if event.key == 266:
+                        focus[1] += str(chr(46))
+                    else:
+                        focus[1] += str(chr(event.key-208))
+                elif event.key == 8:
+                    focus[1] = focus[1][:-1]
+                elif event.key == 13 or event.key == 271:#name/chat enter
+                    print focus[1]
+                    sounds.click.play()
+                    if focus==chat_box:
+                        sock.sendto(pickle.dumps(("c", focus[1])), (server_ip, server_port))
+                        focus[1]=''
+                    else:
+                        sock.sendto(pickle.dumps(("u", focus[1], wizard, team)),(server_ip, server_port))
+                elif event.key == 9:
+                    if focus == chat_box:
+                        focus = name_box
+                        chat_box[0].fill(Color(196, 196, 196))
+                        name_box[0].fill(Color(255, 255, 255))
+                    else:
+                        focus = chat_box
+                        chat_box[0].fill(Color(255, 255, 255))
+                        name_box[0].fill(Color(196, 196, 196))
+            elif event.type==QUIT:
+                pygame.quit()
+                sys.exit()
         pygame.display.update()
         pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
         fpsClock.tick(60)
