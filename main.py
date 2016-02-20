@@ -320,11 +320,11 @@ def lobby(players):
             x = 0;
         
         for index,box in enumerate(team_char_select):
-            if Rect(544 + (index%2) * 64, 200+(100*(index/2)), box.get_width(), box.get_height()).collidepoint(pygame.mouse.get_pos()):
+            if Rect(640-40 - ((index+1)%2) * 45 + index%2*80, 200+(75*(index/2)), box.get_width(), box.get_height()).collidepoint(pygame.mouse.get_pos()):
                 team_char_select[index]=arrow_hover[index%2]           
             else:
                 team_char_select[index]=arrow[index%2]
-            #screen.blit(box, (544 + (index%2) * 64, 200+(100*(index/2))))
+            screen.blit(box, (640-40 - ((index+1)%2) * 45 + index%2*80, 200+(75*(index/2))))
             
         for i in range(0,4):
             if Rect(640-32, 200+75*i, 64, 64).collidepoint(pygame.mouse.get_pos()):
@@ -341,7 +341,7 @@ def lobby(players):
                 sys.exit()
             if event.type == MOUSEBUTTONUP and event.button == 1:
                 for index,box in enumerate(team_char_select):
-                    if Rect(544 + (index%2) * 64, 200+(100*(index/2)), box.get_width(), box.get_height()).collidepoint(event.pos):
+                    if Rect(640-40 - ((index+1)%2) * 45 + index%2*80, 200+(75*(index/2)), box.get_width(), box.get_height()).collidepoint(event.pos):
                         team = index%2
                         wizard = index/2
                         print "wizard:%s\nteam:%s\n" % (wizard, team)
