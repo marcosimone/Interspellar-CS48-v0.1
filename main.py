@@ -21,6 +21,7 @@ font = pygame.font.Font('WhiteRabbit.ttf', 24)
 icon = pygame.image.load("images/icon.png").convert_alpha()
 sounds = soundboard()
 y = 0
+x = 0
 gothreadgo = True
 server_ip=""
 server_port=0
@@ -30,6 +31,10 @@ logo = pygame.image.load("images/logo.png").convert_alpha()
 stars = pygame.image.load("images/stars.png").convert_alpha()
 stars2 = stars
 hills = pygame.image.load("images/hills.png").convert_alpha()
+lobby_back = pygame.image.load("images/lobby_background.png").convert_alpha()
+clouds = pygame.image.load("images/lobby_clouds.png").convert_alpha()
+mist = pygame.image.load("images/lobby_mist.png").convert_alpha()
+mountains = pygame.image.load("images/lobby_mountains.png").convert_alpha()
 level = []
 #buttons
 back_hover = pygame.image.load("images/buttons/back_hover.png").convert_alpha()
@@ -254,6 +259,7 @@ def try_join(ipBox, portBox):
         print 'invalid port'
 
 def lobby(players):
+    global x
     game_start=False
     chat=[]
     t = threading.Thread(target=lobby_thread, args=(players, chat, game_start))
@@ -276,6 +282,17 @@ def lobby(players):
     idle_anim_frame=0
     anim_hover=0
     while 1:
+
+        screen.blit(lobby_back, (0, 720-lobby_back.get_height()))
+        screen.blit(mist, (x/8,0))
+        screen.blit(mist, (x/8-1280,-50))
+        screen.blit(mountains, (0,0))
+        screen.blit(clouds, (x/2, 0))
+        screen.blit(clouds, (x/2-1280, 0))
+		
+        x+=1
+        if x > 10240:
+            x = 0;
         anim_hover=-1
         
         for index,box in enumerate(team_char_select):
