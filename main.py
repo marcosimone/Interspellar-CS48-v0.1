@@ -272,6 +272,7 @@ def lobby(players):
     arrow = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char.png").convert_alpha(), True, False), pygame.image.load("images/buttons/lobby_char.png").convert_alpha()]
     arrow_hover = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha(), True, False), pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()]
     team_char_select=[]
+    panel=pygame.image.load("images/buttons/char_panel.png").convert_alpha()
     for i in range(0,4):
         team_char_select.append(arrow[0])
         team_char_select.append(arrow[1])
@@ -280,9 +281,8 @@ def lobby(players):
         names=["dankwiz/", "wiz_atk_", "darkwiz/", "dark_idle_", "healer/","healer_idle_", "dankwiz/", "wiz_atk_"]
         for j in range(5):
             anim_string = "images/animations/" + names[2*i] + names[2*i+1] + str(j+1) + ".png"
-            idle_anim.append(pygame.image.load(anim_string).convert_alpha())
-    idle_anim_frame=0
-    anim_hover=0
+            idle_anim.append(pygame.transform.scale(pygame.image.load(anim_string).convert_alpha(), (64, 64)))
+    idle_anim_frame=[0,0,0,0]
     while 1:
         
         if len(chat)!=0:
@@ -318,19 +318,23 @@ def lobby(players):
         x+=1
         if x > 10240:
             x = 0;
-        anim_hover=-1
         
         for index,box in enumerate(team_char_select):
             if Rect(544 + (index%2) * 64, 200+(100*(index/2)), box.get_width(), box.get_height()).collidepoint(pygame.mouse.get_pos()):
-                team_char_select[index]=arrow_hover[index%2]
-                anim_hover=index/2
-                idle_anim_frame+=1
+                team_char_select[index]=arrow_hover[index%2]           
             else:
                 team_char_select[index]=arrow[index%2]
-            screen.blit(box, (544 + (index%2) * 64, 200+(100*(index/2))))
-            screen.blit(idle_anim[index*5/2], (576, 200+(100*(index/2))))
-        if idle_anim_frame>=25:
-            idle_anim_frame=0
+            #screen.blit(box, (544 + (index%2) * 64, 200+(100*(index/2))))
+            
+        for i in range(0,4):
+            if Rect(640-32, 200+75*i, 64, 64).collidepoint(pygame.mouse.get_pos()):
+                idle_anim_frame[i]+=.1
+                if idle_anim_frame[i]>=25:
+                    idle_anim_frame[i]=0
+            screen.blit(panel, (640-35, 200+(75*(i))))
+            screen.blit(idle_anim[i*5+int(idle_anim_frame[i])%5], (640-32, 200+(75*(i))))
+            
+            
         for event in pygame.event.get():
             if event.type==QUIT:
                 pygame.quit()
