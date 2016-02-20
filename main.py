@@ -285,8 +285,8 @@ def lobby(players):
                 idle_anim_frame+=1
             else:
                 team_char_select[index]=arrow[index%2]
-            toDraw_background.append((box, (544 + (index%2) * 64, 200+(100*(index/2)))))
-            toDraw_background.append((idle_anim[index*5/2], (576, 200+(100*(index/2)))))
+            screen.blit(box, (544 + (index%2) * 64, 200+(100*(index/2))))
+            screen.blit(idle_anim[index*5/2], (576, 200+(100*(index/2))))
         if idle_anim_frame>=25:
             idle_anim_frame=0
         for event in pygame.event.get():
@@ -298,9 +298,8 @@ def lobby(players):
                     if Rect(544 + (index%2) * 64, 200+(100*(index/2)), box.get_width(), box.get_height()).collidepoint(event.pos):
                         team = index%2
                         wizard = index/2
-                        print wizard
-                        print team
-        blit()
+                        print "wizard:%s\nteam:%s\n" % (wizard, team)
+    
         pygame.display.update()
         pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
         fpsClock.tick(60)
