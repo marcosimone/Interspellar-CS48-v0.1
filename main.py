@@ -238,17 +238,17 @@ def join_server():
 
 def try_join(ipBox, portBox):
     try:
-        socket.inet_aton(ipBox[1])
-        int(portBox[1])
-        sock.sendto(pickle.dumps(("j")), (ipBox[1], int(portBox[1])))
-        sock.settimeout(3.0)
-        data, addr = sock.recvfrom(1024)
-        lobby_players = pickle.loads(data)
-        print 'joining %s:%s' % (ipBox[1], portBox[1])
         global server_ip
         server_ip=ipBox[1]
         global server_port
         server_port=int(portBox[1])
+        socket.inet_aton(server_ip)
+        int(server_port)
+        sock.sendto(pickle.dumps(("j")), (server_ip, server_port))
+        sock.settimeout(3.0)
+        data, addr = sock.recvfrom(1024)
+        lobby_players = pickle.loads(data)
+        print 'joining %s:%s' % (server_ip, server_port)
         lobby(lobby_players)
 
     except socket.timeout:
@@ -269,8 +269,14 @@ def lobby(players):
     t.start()
     team=0
     wizard=0
-    arrow = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char.png").convert_alpha(), True, False), pygame.image.load("images/buttons/lobby_char.png").convert_alpha()]
-    arrow_hover = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha(), True, False), pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()]
+    arrow = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char.png").convert_alpha(), True, False), 
+             pygame.image.load("images/buttons/lobby_char.png").convert_alpha()]
+    arrow_hover = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha(), True, False),
+                   pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()]
+    info_panel=[pygame.image.load("images/buttons/info_panel_dank.png").convert_alpha(),
+                pygame.image.load("images/buttons/info_panel_dark.png").convert_alpha(),
+                pygame.image.load("images/buttons/info_panel_healer.png").convert_alpha(),
+                pygame.image.load("images/buttons/info_panel_gravity.png").convert_alpha()]
     team_char_select=[]
     panel=pygame.image.load("images/buttons/char_panel.png").convert_alpha()
     for i in range(0,4):
@@ -283,6 +289,7 @@ def lobby(players):
             anim_string = "images/animations/" + names[2*i] + names[2*i+1] + str(j+1) + ".png"
             idle_anim.append(pygame.transform.scale(pygame.image.load(anim_string).convert_alpha(), (64, 64)))
     idle_anim_frame=[0,0,0,0]
+    info=-1
     while 1:
         
         if len(chat)!=0:
@@ -309,14 +316,14 @@ def lobby(players):
             
         
         screen.blit(lobby_back, (0, 720-lobby_back.get_height()))
-        screen.blit(mist, (x/8,0))
-        screen.blit(mist, (x/8-1280,-50))
+        screen.blit(mist, (x/4,0))
+        screen.blit(mist, (x/4-1280,-50))
         screen.blit(mountains, (0,0))
-        screen.blit(clouds, (x/2, 0))
-        screen.blit(clouds, (x/2-1280, 0))
+        screen.blit(clouds, (x%1280, 0))
+        screen.blit(clouds, (x%1280-1280, 0))
         screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()))
-        x+=1
-        if x > 10240:
+        x+=.5
+        if x > 1280*4:
             x = 0;
         
         for index,box in enumerate(team_char_select):
@@ -328,12 +335,16 @@ def lobby(players):
             
         for i in range(0,4):
             if Rect(640-32, 200+75*i, 64, 64).collidepoint(pygame.mouse.get_pos()):
+                info=i
                 idle_anim_frame[i]+=.1
                 if idle_anim_frame[i]>=25:
                     idle_anim_frame[i]=0
+   
             screen.blit(panel, (640-35, 200+(75*(i))))
             screen.blit(idle_anim[i*5+int(idle_anim_frame[i])%5], (640-32, 200+(75*(i))))
-            
+        if info!=-1:
+            screen.blit(info_panel[info], (pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]-10))    
+            info=-1
             
         for event in pygame.event.get():
             if event.type==QUIT:
@@ -344,6 +355,7 @@ def lobby(players):
                     if Rect(640-40 - ((index+1)%2) * 45 + index%2*80, 200+(75*(index/2)), box.get_width(), box.get_height()).collidepoint(event.pos):
                         team = index%2
                         wizard = index/2
+                        sock.sendTo()
                         print "wizard:%s\nteam:%s\n" % (wizard, team)
     
         pygame.display.update()
