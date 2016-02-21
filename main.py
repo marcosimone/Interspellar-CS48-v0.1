@@ -1,4 +1,3 @@
-#pylint: disable=W0401,W0611
 import socket
 import sys
 import threading
@@ -268,8 +267,8 @@ def lobby(players):
     t = threading.Thread(target=lobby_thread, args=(players, chat, game_start))
     t.daemon = True
     t.start()
-    team=0
-    wizard=0
+    team="default"
+    wizard="default"
     name="unnamed"
     chat_box = [pygame.Surface((524, 25)), ""]
     chat_box[0].fill(Color(255, 255, 255)) 
@@ -382,9 +381,9 @@ def lobby(players):
             if event.type == MOUSEBUTTONUP and event.button == 1:
                 for index,box in enumerate(team_char_select):
                     if Rect(640-40 - ((index+1)%2) * 45 + index%2*80, 175+(75*(index/2)), box.get_width(), box.get_height()).collidepoint(event.pos):
-                        team = index%2
-                        wizard = index/2
-                        #sock.sendto()
+                        team = str(index%2)
+                        wizard = str(index/2)
+                        sock.sendto(pickle.dumps(("u", name, wizard, team)), (server_ip, server_port))
                         print "wizard:%s\nteam:%s\n" % (wizard, team)
                 if Rect(chatPos, (chat_box[0].get_width(), chat_box[0].get_height())
                        ).collidepoint(event.pos):
@@ -406,14 +405,14 @@ def lobby(players):
                         focus[1] += str(chr(event.key-208))
                 elif event.key == 8:
                     focus[1] = focus[1][:-1]
-                elif event.key == 13 or event.key == 271:#name/chat enter
-                    print focus[1]
+                elif event.key == 13 or event.key == 271:
                     sounds.click.play()
                     if focus==chat_box:
                         sock.sendto(pickle.dumps(("c", focus[1])), (server_ip, server_port))
                         focus[1]=''
                     else:
                         sock.sendto(pickle.dumps(("u", focus[1], wizard, team)),(server_ip, server_port))
+                        name=focus[1]
                 elif event.key == 9:
                     if focus == chat_box:
                         focus = name_box

@@ -13,7 +13,7 @@ class GameStart(Exception):
     pass
 
 def main():
-    '''the main loop'''
+    '''the main loop'''  
     print '\nstarting lobby phase'
     clients = {}
     #team_points = (0, 0)
