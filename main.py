@@ -274,7 +274,7 @@ def lobby(players):
     chat_box[0].fill(Color(255, 255, 255)) 
     name_box = [pygame.Surface((150, 30)), name] 
     name_box[0].fill(Color(196, 196, 196))
-    
+    name_label=pygame.image.load("images/buttons/name.png").convert_alpha()
     chatPos = ((screen.get_width()-chat_box[0].get_width())/2,(screen.get_height()-chat_box[0].get_height()-10))
     namePos = ((screen.get_width()-name_box[0].get_width())/2,10)
     screen.blit(chat_box[0], chatPos)
@@ -350,7 +350,9 @@ def lobby(players):
         screen.blit(chatText, (chatPos[0]+10, chatPos[1]+chatText.get_height()/2))
         screen.blit(name_box[0], (namePos))
         screen.blit(nameText, (namePos[0]+10, namePos[1]+nameText.get_height()/2))
+        screen.blit(name_label, (namePos[0]-name_label.get_width()-5, namePos[1]))
         screen.blit(set, (namePos[0]+name_box[0].get_width()+5, namePos[1]))
+        
         screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35))
         screen.blit(chat_label, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35-chat_label.get_height()))
         x+=.5
