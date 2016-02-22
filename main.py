@@ -24,7 +24,7 @@ x = 0
 gothreadgo = True
 server_ip=""
 server_port=0
-
+shiftLookup={'1':'!', '2':'@', '3':'#', '4':'$', '5':'%', '6':'^', '7':'&', '8':'*', '9':'(', '0':')', ',':'<', '.':'>', '/':'?', ';':':', '\'':'"', '`':'~', '-':'_', '=':'+', '\\':'|'}
 #background stuff
 logo = pygame.image.load("images/logo.png").convert_alpha()
 stars = pygame.image.load("images/stars.png").convert_alpha()
@@ -274,7 +274,7 @@ def lobby(players):
     chat_box[0].fill(Color(255, 255, 255)) 
     name_box = [pygame.Surface((150, 30)), name] 
     name_box[0].fill(Color(196, 196, 196))
-    
+    name_label=pygame.image.load("images/buttons/name.png").convert_alpha()
     chatPos = ((screen.get_width()-chat_box[0].get_width())/2,(screen.get_height()-chat_box[0].get_height()-10))
     namePos = ((screen.get_width()-name_box[0].get_width())/2,10)
     screen.blit(chat_box[0], chatPos)
@@ -295,6 +295,7 @@ def lobby(players):
                 pygame.image.load("images/buttons/info_panel_healer.png").convert_alpha(),
                 pygame.image.load("images/buttons/info_panel_gravity.png").convert_alpha()]
     team_char_select=[]
+    set=pygame.image.load("images/buttons/set_button.png").convert_alpha()
     panel=pygame.image.load("images/buttons/char_panel.png").convert_alpha()
     for i in range(0,4):
         team_char_select.append(arrow[0])
@@ -357,6 +358,8 @@ def lobby(players):
         screen.blit(team_2_top[int((x/4)%4)], (800,0))
         screen.blit(team_2_bot, (800,team_1_top[0].get_height()))
         screen.blit(team_1_bot, (20,team_1_top[0].get_height()))
+        screen.blit(name_label, (namePos[0]-name_label.get_width()-5, namePos[1]))
+        screen.blit(set, (namePos[0]+name_box[0].get_width()+5, namePos[1]))
         
         screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35))
         screen.blit(chat_label, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35-chat_label.get_height()))
@@ -403,8 +406,18 @@ def lobby(players):
                     focus = name_box
                     chat_box[0].fill(Color(196, 196, 196))
                     name_box[0].fill(Color(255, 255, 255))
+                elif Rect((namePos[0]+name_box[0].get_width()+5, namePos[1]), (set.get_width(), set.get_height())
+                         ).collidepoint(event.pos):
+                    sock.sendto(pickle.dumps(("u", name_box[1], wizard, team)),(server_ip, server_port))
+                    name=name_box[1]
             elif event.type == KEYDOWN:
-                if(event.key >= 32 and event.key <= 126) or event.key == 46:
+                
+                if pygame.key.get_pressed()[304]:
+                    if (event.key>=39 and event.key<=61) or (event.key>=91 and event.key<=96):
+                        focus[1]+=shiftLookup[str(chr(event.key))]
+                    elif event.key>=97 and event.key<=122:
+                        focus[1]+=str(chr(event.key-32))
+                elif(event.key >= 32 and event.key <= 126) or event.key == 46:
                     focus[1] += str(chr(event.key))
                 elif event.key >= 256 and event.key <= 266:
                     if event.key == 266:
