@@ -24,7 +24,7 @@ x = 0
 gothreadgo = True
 server_ip=""
 server_port=0
-
+shiftLookup={'1':'!', '2':'@', '3':'#', '4':'$', '5':'%', '6':'^', '7':'&', '8':'*', '9':'(', '0':')', ',':'<', '.':'>', '/':'?', ';':':', '\'':'"', '`':'~', '-':'_', '=':'+', '\\':'|'}
 #background stuff
 logo = pygame.image.load("images/logo.png").convert_alpha()
 stars = pygame.image.load("images/stars.png").convert_alpha()
@@ -396,7 +396,13 @@ def lobby(players):
                     chat_box[0].fill(Color(196, 196, 196))
                     name_box[0].fill(Color(255, 255, 255))
             elif event.type == KEYDOWN:
-                if(event.key >= 32 and event.key <= 126) or event.key == 46:
+                
+                if pygame.key.get_pressed()[304]:
+                    if (event.key>=39 and event.key<=61) or (event.key>=91 and event.key<=96):
+                        focus[1]+=shiftLookup[str(chr(event.key))]
+                    elif event.key>=97 and event.key<=122:
+                        focus[1]+=str(chr(event.key-32))
+                elif(event.key >= 32 and event.key <= 126) or event.key == 46:
                     focus[1] += str(chr(event.key))
                 elif event.key >= 256 and event.key <= 266:
                     if event.key == 266:
