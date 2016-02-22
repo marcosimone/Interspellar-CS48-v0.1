@@ -290,6 +290,7 @@ def lobby(players):
                 pygame.image.load("images/buttons/info_panel_healer.png").convert_alpha(),
                 pygame.image.load("images/buttons/info_panel_gravity.png").convert_alpha()]
     team_char_select=[]
+    set=pygame.image.load("images/buttons/set_button.png").convert_alpha()
     panel=pygame.image.load("images/buttons/char_panel.png").convert_alpha()
     for i in range(0,4):
         team_char_select.append(arrow[0])
@@ -349,7 +350,7 @@ def lobby(players):
         screen.blit(chatText, (chatPos[0]+10, chatPos[1]+chatText.get_height()/2))
         screen.blit(name_box[0], (namePos))
         screen.blit(nameText, (namePos[0]+10, namePos[1]+nameText.get_height()/2))
-        
+        screen.blit(set, (namePos[0]+name_box[0].get_width()+5, namePos[1]))
         screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35))
         screen.blit(chat_label, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35-chat_label.get_height()))
         x+=.5
@@ -395,6 +396,10 @@ def lobby(players):
                     focus = name_box
                     chat_box[0].fill(Color(196, 196, 196))
                     name_box[0].fill(Color(255, 255, 255))
+                elif Rect((namePos[0]+name_box[0].get_width()+5, namePos[1]), (set.get_width(), set.get_height())
+                         ).collidepoint(event.pos):
+                    sock.sendto(pickle.dumps(("u", name_box[1], wizard, team)),(server_ip, server_port))
+                    name=name_box[1]
             elif event.type == KEYDOWN:
                 
                 if pygame.key.get_pressed()[304]:
