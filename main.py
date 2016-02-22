@@ -75,7 +75,7 @@ def main_menu():
     for index, butt in enumerate(buttons):
         toDraw_background.append((butt, (500, 300+(100*index))))
     blit()
-    #pygame.mixer.music.play(-1)
+    pygame.mixer.music.play(-1)
     while 1:
 
         for index, butt in enumerate(buttons):
@@ -280,7 +280,12 @@ def lobby(players):
     screen.blit(chat_box[0], chatPos)
     screen.blit(name_box[0], namePos)
     focus = chat_box
-    
+    team_1_top = [pygame.image.load("images/team_1_top_1.png").convert_alpha(), pygame.image.load("images/team_1_top_2.png").convert_alpha(),pygame.image.load("images/team_1_top_3.png").convert_alpha(), pygame.image.load("images/team_1_top_4.png").convert_alpha()]
+    team_2_top = [pygame.image.load("images/team_2_top_1.png").convert_alpha(), pygame.image.load("images/team_2_top_2.png").convert_alpha(),pygame.image.load("images/team_2_top_3.png").convert_alpha(), pygame.image.load("images/team_2_top_4.png").convert_alpha()]
+    team_1_mid = pygame.image.load("images/team_1_mid.png")
+    team_2_mid = pygame.image.load("images/team_2_mid.png")
+    team_1_bot = pygame.image.load("images/team_1_bot.png")
+    team_2_bot = pygame.image.load("images/team_2_bot.png")
     arrow = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char.png").convert_alpha(), True, False), 
              pygame.image.load("images/buttons/lobby_char.png").convert_alpha()]
     arrow_hover = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha(), True, False),
@@ -337,7 +342,6 @@ def lobby(players):
             else:
                 chat_render=chat_full
 
-        
         screen.blit(lobby_back, (0, 720-lobby_back.get_height()))
         screen.blit(mist, (x/4,0))
         screen.blit(mist, (x/4-1280,-50))
@@ -349,6 +353,10 @@ def lobby(players):
         screen.blit(chatText, (chatPos[0]+10, chatPos[1]+chatText.get_height()/2))
         screen.blit(name_box[0], (namePos))
         screen.blit(nameText, (namePos[0]+10, namePos[1]+nameText.get_height()/2))
+        screen.blit(team_1_top[int((x/4)%4)], (20,0))
+        screen.blit(team_2_top[int((x/4)%4)], (800,0))
+        screen.blit(team_2_bot, (800,team_1_top[0].get_height()))
+        screen.blit(team_1_bot, (20,team_1_top[0].get_height()))
         
         screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35))
         screen.blit(chat_label, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35-chat_label.get_height()))
