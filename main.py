@@ -75,7 +75,7 @@ def main_menu():
     for index, butt in enumerate(buttons):
         toDraw_background.append((butt, (500, 300+(100*index))))
     blit()
-    pygame.mixer.music.play(-1)
+    #pygame.mixer.music.play(-1)
     while 1:
 
         for index, butt in enumerate(buttons):
@@ -272,7 +272,7 @@ def lobby(players):
     name="unnamed"
     chat_box = [pygame.Surface((524, 25)), ""]
     chat_box[0].fill(Color(255, 255, 255)) 
-    name_box = [pygame.Surface((150, 30)), name] 
+    name_box = [pygame.Surface((200, 30)), name] 
     name_box[0].fill(Color(196, 196, 196))
     name_label=pygame.image.load("images/buttons/name.png").convert_alpha()
     chatPos = ((screen.get_width()-chat_box[0].get_width())/2,(screen.get_height()-chat_box[0].get_height()-10))
@@ -280,12 +280,14 @@ def lobby(players):
     screen.blit(chat_box[0], chatPos)
     screen.blit(name_box[0], namePos)
     focus = chat_box
-    team_1_top = [pygame.image.load("images/team_1_top_1.png").convert_alpha(), pygame.image.load("images/team_1_top_2.png").convert_alpha(),pygame.image.load("images/team_1_top_3.png").convert_alpha(), pygame.image.load("images/team_1_top_4.png").convert_alpha()]
-    team_2_top = [pygame.image.load("images/team_2_top_1.png").convert_alpha(), pygame.image.load("images/team_2_top_2.png").convert_alpha(),pygame.image.load("images/team_2_top_3.png").convert_alpha(), pygame.image.load("images/team_2_top_4.png").convert_alpha()]
-    team_1_mid = pygame.image.load("images/team_1_mid.png")
-    team_2_mid = pygame.image.load("images/team_2_mid.png")
-    team_1_bot = pygame.image.load("images/team_1_bot.png")
-    team_2_bot = pygame.image.load("images/team_2_bot.png")
+    #team_1_top = [pygame.image.load("images/team_1_top_1_re.png").convert_alpha(), pygame.image.load("images/team_1_top_2_re.png").convert_alpha(),pygame.image.load("images/team_1_top_3_re.png").convert_alpha(), pygame.image.load("images/team_1_top_4_re.png").convert_alpha()]
+    #team_2_top = [pygame.image.load("images/team_2_top_1_re.png").convert_alpha(), pygame.image.load("images/team_2_top_2_re.png").convert_alpha(),pygame.image.load("images/team_2_top_3_re.png").convert_alpha(), pygame.image.load("images/team_2_top_4_re.png").convert_alpha()]
+    team_1_mid = pygame.image.load("images/team_1_mid.png").convert_alpha()
+    team_2_mid = pygame.image.load("images/team_2_mid.png").convert_alpha()
+    team_1_top = pygame.image.load("images/team_1_top_re.png").convert_alpha()#####
+    team_2_top = pygame.image.load("images/team_2_top_re.png").convert_alpha()#####
+    team_1_bot = pygame.image.load("images/team_1_bot_re.png").convert_alpha()
+    team_2_bot = pygame.image.load("images/team_2_bot_re.png").convert_alpha()
     arrow = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char.png").convert_alpha(), True, False), 
              pygame.image.load("images/buttons/lobby_char.png").convert_alpha()]
     arrow_hover = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha(), True, False),
@@ -310,7 +312,7 @@ def lobby(players):
     info=-1
     chat_label=font.render(' chat ', True, Color("#749DCF"), Color(0, 0, 0))
     while 1:
-        
+        font = pygame.font.SysFont('lucidaconsole', 16)
         chatText = font.render(chat_box[1], True, Color(0, 0, 0))
         nameText = font.render(name_box[1], True, Color(0, 0, 0))
         
@@ -354,10 +356,37 @@ def lobby(players):
         screen.blit(chatText, (chatPos[0]+10, chatPos[1]+chatText.get_height()/2))
         screen.blit(name_box[0], (namePos))
         screen.blit(nameText, (namePos[0]+10, namePos[1]+nameText.get_height()/2))
-        screen.blit(team_1_top[int((x/4)%4)], (20,0))
-        screen.blit(team_2_top[int((x/4)%4)], (800,0))
-        screen.blit(team_2_bot, (800,team_1_top[0].get_height()))
-        screen.blit(team_1_bot, (20,team_1_top[0].get_height()))
+        #screen.blit(team_1_top[int((x/4)%4)], (20,0))
+        #screen.blit(team_2_top[int((x/4)%4)], (800,0))
+        screen.blit(team_1_top, (20,20))
+        screen.blit(team_2_top, (800,20))
+        
+        #(port, name, sprite, team)
+        font=pygame.font.Font('WhiteRabbit.ttf', 24)
+        player_list_1=[]
+        player_list_2=[]
+        for player in players:
+            if players[player][3]=='0':
+                player_entry=team_1_mid.copy()
+                player_entry.blit(idle_anim[5*int(players[player][2])], (8, 8))
+                player_name=font.render(players[player][1], True, Color(0, 0, 0))
+                player_entry.blit(player_name, (64+8+5, player_entry.get_height()/2-font.size(players[player][1])[1]/2))
+                ##check if ready
+                player_list_1.append(player_entry)
+                
+            elif players[player][3]=='1':
+                player_entry=team_2_mid.copy()
+                player_entry.blit(idle_anim[5*int(players[player][2])], (8, 8))
+                player_name=font.render(players[player][1], True, Color(0, 0, 0))
+                player_entry.blit(player_name, (64+8+5, player_entry.get_height()/2-font.size(players[player][1])[1]/2))
+                ##check if ready
+                player_list_2.append(player_entry)
+        for i in range(0, len(player_list_1)):
+            screen.blit(player_list_1[i], (20, team_1_mid.get_height()*i+team_1_top.get_height()+20))
+        for i in range(0, len(player_list_2)):
+            screen.blit(player_list_2[i], (800, team_2_mid.get_height()*i+team_2_top.get_height()+20))
+        screen.blit(team_2_bot, (800,team_2_top.get_height()+20+team_2_mid.get_height()*len(player_list_2)))
+        screen.blit(team_1_bot, (20,team_1_top.get_height()+20+team_1_mid.get_height()*len(player_list_1)))
         screen.blit(name_label, (namePos[0]-name_label.get_width()-5, namePos[1]))
         screen.blit(set, (namePos[0]+name_box[0].get_width()+5, namePos[1]))
         
@@ -395,7 +424,7 @@ def lobby(players):
                         team = str(index%2)
                         wizard = str(index/2)
                         sock.sendto(pickle.dumps(("u", name, wizard, team)), (server_ip, server_port))
-                        print "wizard:%s\nteam:%s\n" % (wizard, team)
+                        #print "wizard:%s\nteam:%s\n" % (wizard, team)
                 if Rect(chatPos, (chat_box[0].get_width(), chat_box[0].get_height())
                        ).collidepoint(event.pos):
                     focus = chat_box
