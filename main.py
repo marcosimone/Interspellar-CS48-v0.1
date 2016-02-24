@@ -26,6 +26,8 @@ server_ip=""
 server_port=0
 shiftLookup={'1':'!', '2':'@', '3':'#', '4':'$', '5':'%', '6':'^', '7':'&', '8':'*', '9':'(', '0':')', ',':'<', '.':'>', '/':'?', ';':':', '\'':'"', '`':'~', '-':'_', '=':'+', '\\':'|'}
 #background stuff
+splash=pygame.image.load("images/liquid_toaster.png").convert()
+click_continue=pygame.image.load("images/continue.png").convert()
 logo = pygame.image.load("images/logo.png").convert_alpha()
 stars = pygame.image.load("images/stars.png").convert_alpha()
 stars2 = stars
@@ -52,7 +54,33 @@ def main():
 
     pygame.mixer.music.load("sound/Lines_of_Code.wav")
     pygame.display.set_icon(icon)
-
+    loading=True
+    click=False
+    alpha=0
+    alpha2=12
+    while loading:
+        
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                loading = False
+            if event.type == KEYDOWN or event.type == MOUSEBUTTONDOWN:
+                #if click:
+                loading = False
+        splash.set_alpha(alpha%2)
+        toDraw_background.append((splash, (500,150)))
+        click_continue.set_alpha(alpha2)
+        if click:
+            toDraw_background.append((click_continue, (500, 460)))
+        blit()
+        alpha+=1
+        if alpha >= 510:
+            alpha=510
+            click=True
+            alpha2+=1
+        
+        pygame.display.update()
+        pygame.display.set_caption("Loading Interspellar")
+        fpsClock.tick(60)
     main_menu()
 
 def main_menu():
@@ -268,7 +296,8 @@ def lobby(players):
     t.daemon = True
     t.start()
     team="default"
-    wizard="default"
+    global wizard
+    wizard = "0"
     name="unnamed"
     chat_box = [pygame.Surface((524, 25)), ""]
     chat_box[0].fill(Color(255, 255, 255)) 
@@ -298,6 +327,7 @@ def lobby(players):
                 pygame.image.load("images/buttons/info_panel_gravity.png").convert_alpha()]
     team_char_select=[]
     set=pygame.image.load("images/buttons/set_button.png").convert_alpha()
+    start=pygame.image.load("images/buttons/start.png").convert_alpha()
     panel=pygame.image.load("images/buttons/char_panel.png").convert_alpha()
     for i in range(0,4):
         team_char_select.append(arrow[0])
@@ -360,6 +390,7 @@ def lobby(players):
         #screen.blit(team_2_top[int((x/4)%4)], (800,0))
         screen.blit(team_1_top, (20,20))
         screen.blit(team_2_top, (800,20))
+        screen.blit(start, (1000, 600    ))
         
         #(port, name, sprite, team)
         font=pygame.font.Font('WhiteRabbit.ttf', 24)
@@ -439,6 +470,11 @@ def lobby(players):
                          ).collidepoint(event.pos):
                     sock.sendto(pickle.dumps(("u", name_box[1], wizard, team)),(server_ip, server_port))
                     name=name_box[1]
+                elif Rect((1000, 600), (start.get_width(), start.get_height())
+                         ).collidepoint(event.pos):
+                    sock.sendto(pickle.dumps(("*")),(server_ip, server_port))
+                    play()
+                    
             elif event.type == KEYDOWN:
                 
                 if pygame.key.get_pressed()[304]:
@@ -503,13 +539,21 @@ def lobby_thread(players, chat, start):
         elif cmd[0] == "*":
             start=True
     
-'''
+
 def play():
     global level
+    global wizard
     level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
     player=DankWizard(screen, sounds, level, (640, 650))
+    if wizard == '0':
+        player=DankWizard(screen, sounds, level, (640, 650)) 
+    elif wizard == '1':
+        player=DarkWizard(screen, sounds, level, (640, 650)) 
+    elif wizard == '2':
+        player=Healer(screen, sounds, level, (640, 650)) 
+    elif wizard == '3':
+        player=DankWizard(screen, sounds, level, (640, 650))
     toDraw_players.append(player.draw())
-
     gothreadgo=True
     t = threading.Thread(target=update_foes)
     t.daemon = True
@@ -565,8 +609,6 @@ def play():
         pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
         fpsClock.tick(60)
 
-'''
-'''
 def update_foes():
     other_players={}
     sock.sendto(pickle.dumps((("b"),(Bullet(screen, sounds, level, (-1,-1), (-1,-1))).toString())),
@@ -590,7 +632,7 @@ def update_foes():
                 toDraw_players[1+count]=other_players[key].draw()
 
                 count +=1
-'''
+
 def options():
     walker = [pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),
               pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_2.png").convert_alpha()),
