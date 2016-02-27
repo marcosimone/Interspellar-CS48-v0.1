@@ -58,6 +58,9 @@ def main():
                     if not clients[client][4]:
                         ready=False
             if ready:
+                for client in clients:
+                    SOCK.sendto(pickle.dumps(("*", "SERVER")), (client, clients[client][0]))
+                    print client
                 raise GameStart
     except GameStart:
         pass
@@ -70,18 +73,12 @@ def main():
         data = pickle.loads(data)
         print ("        %s, %s") % (data, addr[0])
 
-
-        if data[0].equals("j"):
-            #name, sprite, team
-            SOCK.sendto(pickle.dumps(clients), addr)
-            clients[addr[0]] = (data[1], "default", "default")
-
-        elif data[0].equals("q"):
+        if data[0] == "q":
             del clients[addr[0]]
 
         for client in clients:
-            if not client.equals(addr[0]):
-                SOCK.sendto(pickle.dumps((addr[0], data)),
+            #if not client == addr[0]:
+            SOCK.sendto(pickle.dumps((addr[0], data)),
                             (client, clients[client][0]))
 
 

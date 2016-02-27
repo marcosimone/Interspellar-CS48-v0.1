@@ -287,7 +287,7 @@ def try_join(ipBox, portBox):
 
 def lobby(players):
     global x
-    game_start=False
+    game_start=[False]
     chat=[]
     font = pygame.font.SysFont('lucidaconsole', 16)
     chat_full=pygame.Surface((524, 0))
@@ -343,10 +343,13 @@ def lobby(players):
     info=-1
     chat_label=font.render(' chat ', True, Color("#749DCF"), Color(0, 0, 0))
     while 1:
+        
         font = pygame.font.SysFont('lucidaconsole', 16)
         chatText = font.render(chat_box[1], True, Color(0, 0, 0))
         nameText = font.render(name_box[1], True, Color(0, 0, 0))
-        
+        if game_start[0]:
+            play()
+            return
         if len(chat)!=0:
             text=chat.pop()
             text='%s: %s' % (players[text[0][0]][1], text[1])
@@ -473,18 +476,11 @@ def lobby(players):
                          ).collidepoint(event.pos):
                     sock.sendto(pickle.dumps(("u", name_box[1], wizard, team)),(server_ip, server_port))
                     name=name_box[1]
-<<<<<<< HEAD
+
                     sounds.click.play()
                 elif Rect((640+chat_render.get_width()/2+(1280-(640+chat_render.get_width()/2))/2-ready.get_width()/2,600), (ready.get_width(),ready.get_height())).collidepoint(event.pos):
                          sounds.click.play()
                          sock.sendto(pickle.dumps(("*")),(server_ip, server_port))
-=======
-                elif Rect((1000, 600), (start.get_width(), start.get_height())
-                         ).collidepoint(event.pos):
-                    sock.sendto(pickle.dumps(("*")),(server_ip, server_port))
-                    play()
-                    
->>>>>>> 3ca8caa3af54f559561cd7a54832685a66a19dfc
             elif event.type == KEYDOWN:
                 
                 if pygame.key.get_pressed()[304]:
@@ -538,6 +534,7 @@ def lobby_thread(players, chat, start):
         
         if cmd[0] == "c":
             chat.append((src, cmd[1]))
+            start=True
         elif cmd[0] == "u":
             players[src[0]] = (src[1], cmd[1], cmd[2], cmd[3])
         elif cmd[0] == "j":
@@ -547,7 +544,7 @@ def lobby_thread(players, chat, start):
         elif cmd[0] == "q":
             del clients[src[0]]
         elif cmd[0] == "*":
-            start=True
+            start[0]=True
     
 
 def play():
