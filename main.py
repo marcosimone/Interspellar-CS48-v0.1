@@ -9,6 +9,7 @@ from bullet import *
 from player import Player
 from dank_wiz import DankWizard
 from dark_wiz import DarkWizard
+from healer import Healer
 from soundboard import soundboard
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
@@ -550,8 +551,9 @@ def lobby_thread(players, chat, game_start):
 def play():
     global level
     global wizard
-    level=[Rect((100,575),(300,70)), Rect((300,175),(300,70)), Rect((200,375),(100,20)), Rect((800,200),(100,500)), Rect((1100,200),(100,500))]
-    player=DankWizard(screen, sounds, level, (640, 650))
+    level=[Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
+		Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
+		Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
     if wizard == '0':
         player=DankWizard(screen, sounds, level, (640, 650)) 
     elif wizard == '1':
