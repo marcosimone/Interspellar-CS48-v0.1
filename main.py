@@ -516,6 +516,7 @@ def lobby(players):
                         chat_box[0].fill(Color(255, 255, 255))
                         name_box[0].fill(Color(196, 196, 196))
             elif event.type==QUIT:
+                sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
                 pygame.quit()
                 sys.exit()
         pygame.display.update()
@@ -544,6 +545,8 @@ def lobby_thread(players, chat, game_start):
             print players
         elif cmd[0] == "q":
             del clients[src[0]]
+        elif cmd[0] == "*":
+            players[src[0]][4]=not players[src[0]][4]
         elif cmd[0] == "^":
             game_start[0]=True
     
