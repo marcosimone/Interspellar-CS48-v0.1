@@ -6,18 +6,12 @@ PORT = 4637
 SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 SOCK.bind(("0.0.0.0", PORT))
 print "waiting on port:", PORT
+clients = {}
+
 # {ip: (port, name, sprite, team)}
 
-class GameStart(Exception):
-    '''defined exception to escape lobby'''
-    pass
-
-def main():
-    '''the main loop'''  
-    print '\nstarting lobby phase'
-    clients = {}
-    
-    #team_points = (0, 0)
+def lobby_phase():
+    global clients
     try:
         while 1:
             data, addr = SOCK.recvfrom(1024)
@@ -47,7 +41,10 @@ def main():
                         SOCK.sendto(pickle.dumps((data, addr)), (client, clients[client][0]))
 
             if data[0] == "*": # ("*")
-                clients[addr[0]][4]= not clients[addr[0]][4]
+                clients[addr[0]][4] = not clients[addr[0]][4]
+                for client in clients:
+                    if not client == addr[0]:
+                        SOCK.sendto(pickle.dumps(("*", addr)), (client, clients[client][0]))
                 
             ready=False
             if len(clients)!=0:
@@ -59,27 +56,35 @@ def main():
             if ready:
                 for client in clients:
                     SOCK.sendto(pickle.dumps(("^", "SERVER")), (client, clients[client][0]))
-    
-                raise GameStart
-    except GameStart:
-        pass
+                return
+    except Exception,e: 
+        print str(e)
+        
+def game_phase():
+    try:
+        team_points = [0, 0]
+        point_limit=25
+        while 1:
+            data, addr = SOCK.recvfrom(1024)
+            data = pickle.loads(data)
+            print ("        %s, %s") % (data, addr[0])
+
+            if data[0] == "q":
+                del clients[addr[0]]
+
+            for client in clients:
+                #if not client == addr[0]:
+                SOCK.sendto(pickle.dumps((addr[0], data)),
+                                (client, clients[client][0]))
+    except Exception,e: 
+        print str(e)
+
+def main():
+    '''the main loop'''  
+    print '\nstarting lobby phase'
+    lobby_phase()
     print '\nstarting game phase'
-
-    #sys.exit()
-
-    while 1:
-        data, addr = SOCK.recvfrom(1024)
-        data = pickle.loads(data)
-        print ("        %s, %s") % (data, addr[0])
-
-        if data[0] == "q":
-            del clients[addr[0]]
-
-        for client in clients:
-            #if not client == addr[0]:
-            SOCK.sendto(pickle.dumps((addr[0], data)),
-                            (client, clients[client][0]))
-
+    game_phase()
 
 if __name__ == "__main__":
     main()
