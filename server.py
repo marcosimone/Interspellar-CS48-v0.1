@@ -63,7 +63,7 @@ def main():
         pass
     print '\nstarting game phase'
 
-    sys.exit()
+    #sys.exit()
 
     while 1:
         data, addr = SOCK.recvfrom(1024)

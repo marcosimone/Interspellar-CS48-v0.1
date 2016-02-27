@@ -90,14 +90,12 @@ class DankWizard(Player):
 			self .anim_frames=0
 		return
 		
-	
-	
 	def draw(self):
 		if self.direction == 0:
 			return (self.getAnimation(), self.getPos())
 		else:
 			return (pygame.transform.flip(self.getAnimation(), True, False), self.getPos())
 		
-		
+	
 	
 		
