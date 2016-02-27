@@ -555,8 +555,8 @@ def play():
     global level
     global wizard
     level=[Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
-		Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
-		Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
+        Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
+        Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
     if wizard == '0':
         player=DankWizard(screen, sounds, level, (640, 650)) 
     elif wizard == '1':
@@ -590,6 +590,7 @@ def play():
         for event in pygame.event.get():
 
             if event.type==QUIT:
+                sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
                 pygame.quit()
                 sys.exit()
             if event.type==MOUSEBUTTONUP and event.button==1:

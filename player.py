@@ -62,7 +62,7 @@ class Player:
                 self.velocity=0
                 if inputs[0]:
                     ypos=plat.top-10
-                    self.velocity=15
+                    self.velocity=self.getJumpHeight()
                     
             if fabs(body.top-plat.bottom)<12:
                 self.velocity=-1.0
@@ -81,7 +81,7 @@ class Player:
                         self.velocity = -5
                     xpos=plat.left-32
                     if inputs[0]:
-                        self.velocity = 10
+                        self.velocity = self.getJumpHeight() * 0.75
                         self.xvelocity = -8
                         
                 elif fabs(body.left-plat.right)<10:
@@ -95,7 +95,7 @@ class Player:
                         self.velocity = -5
                     xpos=plat.right+32
                     if inputs[0]:
-                        self.velocity = 10
+                        self.velocity = self.getJumpHeight() * 0.75
                         self.xvelocity = 8
                         
         else:
@@ -109,7 +109,7 @@ class Player:
                 if inputs[1]==1 or inputs[3]==1:
                     self.animation=1
                 if inputs[0]:
-                    self.velocity=15
+                    self.velocity=self.getJumpHeight()
                 else:
                     self.velocity=0
                 self.jump=0
@@ -143,8 +143,10 @@ class Player:
         return
      
     def getSpeed(self):
-		return 3
-	
+        return 3
+    def getJumpHeight(self):
+        return 48
+    
     def getAnimation(self):
         if self.animation==0:
             return self.stand_sprites[(self.anim_frame/10)%len(self.stand_sprites)]
