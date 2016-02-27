@@ -534,7 +534,7 @@ def lobby_thread(players, chat, start):
         
         if cmd[0] == "c":
             chat.append((src, cmd[1]))
-            start=True
+       
         elif cmd[0] == "u":
             players[src[0]] = (src[1], cmd[1], cmd[2], cmd[3])
         elif cmd[0] == "j":
