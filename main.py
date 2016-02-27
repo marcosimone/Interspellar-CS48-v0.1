@@ -299,6 +299,7 @@ def lobby(players):
     team_char_select=[]
     set=pygame.image.load("images/buttons/set_button.png").convert_alpha()
     panel=pygame.image.load("images/buttons/char_panel.png").convert_alpha()
+    ready = pygame.image.load("images/ready.png").convert_alpha()
     for i in range(0,4):
         team_char_select.append(arrow[0])
         team_char_select.append(arrow[1])
@@ -392,6 +393,7 @@ def lobby(players):
         
         screen.blit(chat_render, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35))
         screen.blit(chat_label, (screen.get_width()/2-262, screen.get_height()-chat_render.get_height()-35-chat_label.get_height()))
+        screen.blit(ready, (640+chat_render.get_width()/2+(1280-(640+chat_render.get_width()/2))/2-ready.get_width()/2,600))
         x+=.5
         if x > 1280*4:
             x = 0;
@@ -424,6 +426,7 @@ def lobby(players):
                         team = str(index%2)
                         wizard = str(index/2)
                         sock.sendto(pickle.dumps(("u", name, wizard, team)), (server_ip, server_port))
+                        sounds.click.play()
                         #print "wizard:%s\nteam:%s\n" % (wizard, team)
                 if Rect(chatPos, (chat_box[0].get_width(), chat_box[0].get_height())
                        ).collidepoint(event.pos):
@@ -439,6 +442,10 @@ def lobby(players):
                          ).collidepoint(event.pos):
                     sock.sendto(pickle.dumps(("u", name_box[1], wizard, team)),(server_ip, server_port))
                     name=name_box[1]
+                    sounds.click.play()
+                elif Rect((640+chat_render.get_width()/2+(1280-(640+chat_render.get_width()/2))/2-ready.get_width()/2,600), (ready.get_width(),ready.get_height())).collidepoint(event.pos):
+                         sounds.click.play()
+                         sock.sendto(pickle.dumps(("*")),(server_ip, server_port))
             elif event.type == KEYDOWN:
                 
                 if pygame.key.get_pressed()[304]:
