@@ -53,8 +53,9 @@ toDraw_players = []
 
 def main():
 
-    pygame.mixer.music.load("sound/Lines_of_Code.wav")
+    pygame.mixer.music.load("sound/music.wav")
     pygame.display.set_icon(icon)
+    eventHandler(-1)
     loading=True
     click=False
     alpha=0
@@ -602,8 +603,10 @@ def play():
                     gothreadgo=False
                     level=[]
                     return
+
             if event.type==MOUSEBUTTONDOWN and event.button==3 and player.getRegCooldown() <= 0:
                 player.setRegCooldown(player.fullRegCooldown())
+
                 bull=Bullet(screen, sounds, level, event.pos, player.getPos())
                 bullets.append(bull)
                 sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
@@ -692,6 +695,6 @@ def credits():
     return
 
 menu_choices = [join_server, options, credits]
-
+eventHandler=pygame.mixer.music.play
 if __name__ == "__main__":
     main()
