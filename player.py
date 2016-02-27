@@ -70,7 +70,7 @@ class Player:
                 
             
             elif body.bottom>plat.top-3 and body.top<plat.bottom+3:
-                if fabs(body.right-plat.left)<8:
+                if fabs(body.right-plat.left)<10:
                     self.animation=4
                     self.jump=0
                     if self.velocity > 5:
@@ -84,7 +84,9 @@ class Player:
                         self.velocity = 10
                         self.xvelocity = -8
                         
-                elif fabs(body.left-plat.right)<8:
+                elif fabs(body.left-plat.right)<10:
+                    self.animation=4
+                    self.jump=0
                     if self.velocity > 5:
                         self.velocity-=1.5
                     else:
