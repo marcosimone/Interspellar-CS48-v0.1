@@ -49,7 +49,8 @@ class DarkWizard(Player):
 	def update(self, inputs, bullets):
 		Player.update(self,inputs, bullets)
 	
-	
+	def getSpeed(self):
+		return 4
 	def draw(self):
 		if self.direction == 0:
 			return (self.getAnimation(), self.getPos())

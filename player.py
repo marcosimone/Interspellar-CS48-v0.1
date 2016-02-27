@@ -127,9 +127,9 @@ class Player:
         if fabs(self.xvelocity) < 0.5:
             self.xvelocity = 0
         if inputs[1]:
-            xpos-=4
+            xpos-=self.getSpeed()
         if inputs[3]:
-            xpos+=4
+            xpos+=self.getSpeed()
         if xpos < 32:
             xpos=32
         if xpos > 1248:
@@ -142,7 +142,9 @@ class Player:
             self .anim_frame=0
         return
      
-    
+    def getSpeed(self):
+		return 3
+	
     def getAnimation(self):
         if self.animation==0:
             return self.stand_sprites[(self.anim_frame/10)%len(self.stand_sprites)]
