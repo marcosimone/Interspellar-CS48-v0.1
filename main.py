@@ -55,7 +55,7 @@ def main():
 
     pygame.mixer.music.load("sound/music.wav")
     pygame.display.set_icon(icon)
-    pygame.mixer.music.play(-1)
+    eventHandler(-1)
     loading=True
     click=False
     alpha=0
@@ -693,6 +693,6 @@ def credits():
     return
 
 menu_choices = [join_server, options, credits]
-
+eventHandler=pygame.mixer.music.play
 if __name__ == "__main__":
     main()
