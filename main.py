@@ -593,6 +593,7 @@ def play():
         for event in pygame.event.get():
 
             if event.type==QUIT:
+                sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
                 pygame.quit()
                 sys.exit()
             if event.type==MOUSEBUTTONUP and event.button==1:
@@ -626,14 +627,13 @@ def play():
 
 def update_foes():
     other_players={}
-    sock.sendto(pickle.dumps((("b"),(Bullet(screen, sounds, level, (-1,-1), (-1,-1))).toString())),
-                             (server_ip, server_port))
+    sock.sendto(pickle.dumps(("t")), (server_ip, server_port))
     while True:
         data, addr = sock.recvfrom(1024)
         data=pickle.loads(data)
-        #print data
         if  data[0].equals("s"):
-            print 0
+            print 
+        
         elif data[0].equals("b"):
             bull=enemyBullet(screen, sounds, level, data[1])
             bullets.append(bull)
