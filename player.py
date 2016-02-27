@@ -40,24 +40,39 @@ class Player:
                 print self.health
                 if isDead():
                     sys.exit()
+        if inputs[1]==1:
+            self.direction=1
+        elif inputs[3]==1:
+            self.direction=0
         
         col_index=body.collidelist(self.level)
         if self.velocity < -15:
             self.velocity =-15
+            
+        if inputs[0] and self.jump==0:
+            self.jump=1
         if col_index!=-1:
             plat=self.level[col_index]
             
             if fabs(body.bottom-plat.top)<17:
+                self.jump=0
+                self.animation=0
+                if inputs[1]==1 or inputs[3]==1:
+                    self.animation=1
                 self.velocity=0
                 if inputs[0]:
                     ypos=plat.top-10
                     self.velocity=15
-            if fabs(body.top-plat.bottom)<10:
+                    
+            if fabs(body.top-plat.bottom)<12:
                 self.velocity=-1.0
+                self.animation=3
                 
             
             elif body.bottom>plat.top-3 and body.top<plat.bottom+3:
                 if fabs(body.right-plat.left)<8:
+                    self.animation=4
+                    self.jump=0
                     if self.velocity > 5:
                         self.velocity-=1.5
                     else:
@@ -85,12 +100,22 @@ class Player:
             if ypos <=32:
                 self.velocity=-1
             if ypos < 720:
+                self.animation=3
                 self.velocity-=.5
             else:
+                self.animation=0
+                if inputs[1]==1 or inputs[3]==1:
+                    self.animation=1
                 if inputs[0]:
                     self.velocity=15
                 else:
                     self.velocity=0
+                self.jump=0
+            if self.jump > 0:
+                self.animation=2
+                self.jump+=1
+            if self.jump >30:
+                self.jump=-1
         ypos=ypos-self.velocity
         xpos=xpos+self.xvelocity
         if self.xvelocity > 0:
@@ -111,19 +136,19 @@ class Player:
             ypos=720
         self.pos=(xpos, ypos)
         self .anim_frame+=1
-        if self .anim_frame==9000:
+        if self .anim_frame==360:
             self .anim_frame=0
         return
      
     
     def getAnimation(self):
         if self.animation==0:
-            return self.stand_sprites[(self.anim_frames/10)%len(self.stand_sprites)]
+            return self.stand_sprites[(self.anim_frame/10)%len(self.stand_sprites)]
         elif self.animation==1:
-            return self.walk_sprites[(self.anim_frames/10)%len(self.walk_sprites)]
+            return self.walk_sprites[(self.anim_frame/10)%len(self.walk_sprites)]
         elif self.animation==2:
             return self.jump_sprites[(self.jump/3)%len(self.jump_sprites)]
         elif self.animation==3:
-            return self.fall_sprites[(self.anim_frames/10)%len(self.fall_sprites)]
+            return self.fall_sprites[(self.anim_frame/10)%len(self.fall_sprites)]
         elif self.animation==4:
             return self.slide_sprite[0]

@@ -9,6 +9,7 @@ from bullet import *
 from player import Player
 from dank_wiz import DankWizard
 from dark_wiz import DarkWizard
+from healer import Healer
 from soundboard import soundboard
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
@@ -558,6 +559,7 @@ def play():
 		Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
 		Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
     player=DankWizard(screen, sounds, level, (640, 650))
+
     if wizard == '0':
         player=DankWizard(screen, sounds, level, (640, 650)) 
     elif wizard == '1':
