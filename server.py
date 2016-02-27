@@ -48,8 +48,7 @@ def main():
 
             if data[0] == "*": # ("*")
                 clients[addr[0]][4]= not clients[addr[0]][4]
-                print addr[0]
-                print clients[client][4]
+                
             ready=False
             if len(clients)!=0:
                 ready=True
@@ -59,8 +58,8 @@ def main():
                         ready=False
             if ready:
                 for client in clients:
-                    SOCK.sendto(pickle.dumps(("*", "SERVER")), (client, clients[client][0]))
-                    print client
+                    SOCK.sendto(pickle.dumps(("^", "SERVER")), (client, clients[client][0]))
+    
                 raise GameStart
     except GameStart:
         pass

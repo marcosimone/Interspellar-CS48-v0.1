@@ -522,7 +522,7 @@ def lobby(players):
         fpsClock.tick(60)
 
 
-def lobby_thread(players, chat, start):
+def lobby_thread(players, chat, game_start):
     sock.settimeout(None)
     sock.sendto(pickle.dumps("t"), (server_ip, server_port))
     
@@ -543,8 +543,8 @@ def lobby_thread(players, chat, start):
             print players
         elif cmd[0] == "q":
             del clients[src[0]]
-        elif cmd[0] == "*":
-            start[0]=True
+        elif cmd[0] == "^":
+            game_start[0]=True
     
 
 def play():
