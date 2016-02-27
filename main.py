@@ -554,9 +554,11 @@ def lobby_thread(players, chat, game_start):
 def play():
     global level
     global wizard
+    
     level=[Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
         Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
         Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
+
     if wizard == '0':
         player=DankWizard(screen, sounds, level, (640, 650)) 
     elif wizard == '1':
@@ -600,7 +602,8 @@ def play():
                     gothreadgo=False
                     level=[]
                     return
-            if event.type==MOUSEBUTTONDOWN and event.button==3:
+            if event.type==MOUSEBUTTONDOWN and event.button==3 and player.getRegCooldown() <= 0:
+                player.setRegCooldown(player.fullRegCooldown())
                 bull=Bullet(screen, sounds, level, event.pos, player.getPos())
                 bullets.append(bull)
                 sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
@@ -624,14 +627,13 @@ def play():
 
 def update_foes():
     other_players={}
-    sock.sendto(pickle.dumps((("b"),(Bullet(screen, sounds, level, (-1,-1), (-1,-1))).toString())),
-                             (server_ip, server_port))
+    sock.sendto(pickle.dumps(("t")), (server_ip, server_port))
     while True:
         data, addr = sock.recvfrom(1024)
         data=pickle.loads(data)
-        #print data
         if  data[0].equals("s"):
-            print 0
+            print 
+        
         elif data[0].equals("b"):
             bull=enemyBullet(screen, sounds, level, data[1])
             bullets.append(bull)

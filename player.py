@@ -5,17 +5,34 @@ from math import *
 from soundboard import soundboard
 
 class Player:
-    health = 1000
+    health=1000
+    max_health=1000
     velocity=0
     xvelocity=0
     anim_frame=0
+    reg_cooldown=20
     def __init__(self, screen, sound, level, player_pos):
         self.screen=screen
         self.image = [pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
         self.pos=player_pos
         self.level=level
         self.sounds=sound
+        self.reg_cooldown = 20
     
+    def getCurrentHealth(self):
+        return self.health
+        
+    def getMaxHealth(self):
+        return self.max_health
+        
+    def damage(self, damage):
+        self.health = self.health - damage
+    
+    def heal(self, heal):
+        self.health = self.health + heal
+        if self.health > self.max_health:
+            self.health = self.max_health
+        
     def draw(self):
         return (self.image[(self.anim_frame/30)%2], self.getPos())
     
@@ -27,11 +44,20 @@ class Player:
     
     def setPos(self, pos):
         self.pos=(pos[0]+32,pos[1]+64)
+    def getRegCooldown(self):
+        return self.reg_cooldown
+    def fullRegCooldown(self):
+        return 20
+    def setRegCooldown(self, cool):
+        self.reg_cooldown = cool;
     
     def update(self, inputs, bullets):
         body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
         xpos=self.pos[0]
         ypos=self.pos[1]
+        self.reg_cooldown = self.reg_cooldown - 1/(pygame.time.Clock().get_fps()+1)
+        if self.reg_cooldown < 0:
+            self.reg_cooldown = 0
         
         for bullet in bullets:
             if body.collidepoint(bullet.getPos()) and (bullet.player!="me"):
@@ -62,7 +88,7 @@ class Player:
                 self.velocity=0
                 if inputs[0]:
                     ypos=plat.top-10
-                    self.velocity=self.getJumpHeight()
+                    self.velocity=15
                     
             if fabs(body.top-plat.bottom)<12:
                 self.velocity=-1.0
@@ -81,7 +107,7 @@ class Player:
                         self.velocity = -5
                     xpos=plat.left-32
                     if inputs[0]:
-                        self.velocity = self.getJumpHeight() * 0.75
+                        self.velocity = 10
                         self.xvelocity = -8
                         
                 elif fabs(body.left-plat.right)<10:
@@ -95,7 +121,7 @@ class Player:
                         self.velocity = -5
                     xpos=plat.right+32
                     if inputs[0]:
-                        self.velocity = self.getJumpHeight() * 0.75
+                        self.velocity = 10
                         self.xvelocity = 8
                         
         else:
@@ -109,7 +135,7 @@ class Player:
                 if inputs[1]==1 or inputs[3]==1:
                     self.animation=1
                 if inputs[0]:
-                    self.velocity=self.getJumpHeight()
+                    self.velocity=15
                 else:
                     self.velocity=0
                 self.jump=0
@@ -143,10 +169,8 @@ class Player:
         return
      
     def getSpeed(self):
-        return 3
-    def getJumpHeight(self):
-        return 48
-    
+		return 3
+	
     def getAnimation(self):
         if self.animation==0:
             return self.stand_sprites[(self.anim_frame/10)%len(self.stand_sprites)]

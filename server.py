@@ -75,8 +75,8 @@ def game_phase():
                 del clients[addr[0]]
 
             for client in clients:
-                #if not client == addr[0]:
-                SOCK.sendto(pickle.dumps((addr[0], data)),
+                if not client == addr[0]:
+                    SOCK.sendto(pickle.dumps((addr[0], data)),
                                 (client, clients[client][0]))
     except Exception,e: 
         print str(e)
@@ -85,7 +85,7 @@ def main():
     '''the main loop'''  
     restart=True
     while restart:
-        
+        restart=False
         print '\nstarting lobby phase'
         lobby_phase()
         print '\nstarting game phase'
