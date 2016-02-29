@@ -48,7 +48,7 @@ class DankWizard(Player):
         
         
 	def getSpeed(self):
-		return 4
+		return 3.5
     def draw(self):
         if self.direction == 0:
             return (self.getAnimation(), self.getPos())
