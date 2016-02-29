@@ -65,6 +65,8 @@ def game_phase():
         team_points = [0, 0]
         point_limit=25
         while 1:
+            if len(clients)==0:
+                return True
             data, addr = SOCK.recvfrom(1024)
             data = pickle.loads(data)
             print ("        %s, %s") % (data, addr[0])
@@ -73,18 +75,21 @@ def game_phase():
                 del clients[addr[0]]
 
             for client in clients:
-                #if not client == addr[0]:
-                SOCK.sendto(pickle.dumps((addr[0], data)),
+                if not client == addr[0]:
+                    SOCK.sendto(pickle.dumps((addr[0], data)),
                                 (client, clients[client][0]))
     except Exception,e: 
         print str(e)
 
 def main():
     '''the main loop'''  
-    print '\nstarting lobby phase'
-    lobby_phase()
-    print '\nstarting game phase'
-    game_phase()
+    restart=True
+    while restart:
+        restart=False
+        print '\nstarting lobby phase'
+        lobby_phase()
+        print '\nstarting game phase'
+        restart=game_phase()
 
 if __name__ == "__main__":
     main()
