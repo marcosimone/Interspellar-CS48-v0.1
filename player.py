@@ -14,13 +14,14 @@ class Player:
     spec_frame=0
     reg_cooldown=20
     spec_cooldown=60
+
     def __init__(self, screen, sound, level, player_pos):
         self.screen=screen
         self.image = [pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
         self.pos=player_pos
         self.level=level
         self.sounds=sound
-        self.reg_cooldown = 20
+        self.reg_cooldown = 200
     
     def getCurrentHealth(self):
         return self.health
@@ -50,7 +51,7 @@ class Player:
     def getRegCooldown(self):
         return self.reg_cooldown
     def fullRegCooldown(self):
-        return 20
+        return 200
     def setRegCooldown(self, cool):
         self.reg_cooldown = cool;
     def getSpecCooldown(self):
@@ -75,6 +76,7 @@ class Player:
             self.reg_cooldown = 0
         if self.spec_cooldown < 0:
             self.spec_cooldown = 0
+
         
         for bullet in bullets:
             if body.collidepoint(bullet.getPos()) and (bullet.player!="me"):
