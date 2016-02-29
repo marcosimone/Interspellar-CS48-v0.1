@@ -8,7 +8,7 @@ SOCK.bind(("0.0.0.0", PORT))
 print "waiting on port:", PORT
 clients = {}
 
-# {ip: (port, name, sprite, team)}
+# {ip: (port, name, sprite, team, ready)}
 
 def lobby_phase():
     global clients
@@ -73,6 +73,9 @@ def game_phase():
 
             if data[0] == "q":
                 del clients[addr[0]]
+            elif data[0] == "d":
+                team_points[int(clients[addr[0]][3])]+=1
+                print team_points
 
             for client in clients:
                 if not client == addr[0]:

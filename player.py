@@ -57,7 +57,7 @@ class Player:
         xpos=self.pos[0]
         ypos=self.pos[1]
         self.reg_cooldown = self.reg_cooldown - 12/(pygame.time.Clock().get_fps()+1)
-        print self.reg_cooldown
+        #print self.reg_cooldown
         if self.reg_cooldown < 0:
             self.reg_cooldown = 0
             
