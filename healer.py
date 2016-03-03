@@ -4,6 +4,8 @@ from array import array
 from math import *
 from soundboard import soundboard
 from player import Player
+import bullet
+from heal_beam import Heal
 
 class Healer(Player):
     
@@ -45,7 +47,12 @@ class Healer(Player):
         self.level=level
         self.sounds=sound
     
-        
+    
+    def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
+        beam = Heal(screen, sounds, level, mouse_pos, self.getPos())
+        return beam
+            
+    
     def update(self, inputs, bullets):
         Player.update(self,inputs, bullets)
         
