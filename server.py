@@ -7,7 +7,7 @@ SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 SOCK.bind(("0.0.0.0", PORT))
 print "waiting on port:", PORT
 clients = {}
-
+players={}
 # {ip: (port, name, sprite, team, ready)}
 
 def lobby_phase():
@@ -60,7 +60,11 @@ def lobby_phase():
     except Exception,e: 
         print str(e)
         
+# {ip: (port, name, sprite, team, (posx, posy), health, anim, frame)}    
 def game_phase():
+    for client in clients:
+        players[client]=[clients[client][0], clients[client][1], clients[client][2], clients[client][3], (0,0), 1000, 0, 0]
+    
     try:
         team_points = [0, 0]
         point_limit=25

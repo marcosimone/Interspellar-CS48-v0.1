@@ -6,15 +6,13 @@ from soundboard import soundboard
 from player import Player
 import bullet
 
-class DarkWizard(Player):
+class GravityKnight(Player):
     
     anim_frames=0
     animation=0
     direction=0
     jump=0
-    #color="original"
-    color="004c00"
-    tp_loc=(0,0)
+    color="original"
     #COLORS SUPPORTED SO FAR:
     # 004c00 : green
     # 0066cc : light blue
@@ -44,12 +42,6 @@ class DarkWizard(Player):
         for i in range(1,6):
             string = "images/animations/darkwiz/" + self.color + "/dark_fall_" + str(i) + ".png"
             self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
-        self.spec_sprites = []
-        for i in range(1,5):
-            string = "images/animations/darkwiz/" +self.color+"/dark_tp_" + str(i) + ".png"
-            self.spec_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
-            
-            
         
         self.level=level
         self.sounds=sound
@@ -59,36 +51,27 @@ class DarkWizard(Player):
     def fullRegCooldown(self):
         return 30
     def fullSpecCooldown(self):
-        return 200
+        return 80
         
     def activateSpecial(self, mouse_pos, player_pos, sock):
         
-        while sqrt((mouse_pos[0]-player_pos[0])**2 + (mouse_pos[1]-player_pos[1])**2) > 400:
-            angle = bullet.getAngleBetweenPoints(mouse_pos[0], mouse_pos[1], player_pos[0], player_pos[1])
-            rad = radians(angle)
-            mouse_pos = (mouse_pos[0] + 5*cos(rad), mouse_pos[1] + 5*sin(rad))
-            
-
-            
-        nextLoc=Rect((mouse_pos[0] - 32, mouse_pos[1] - 64), (64,64))
+        rad=radians(bullet.getAngleBetweenPoints(mouse_pos[0], mouse_pos[1], player_pos[0], player_pos[1]))
+        body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
+        
+        for i in range(0,20):
+            self.velocity=0
+            self.attemptMove(rad, 20)        
+        return
+        
+    def attemptMove(self, rad, dist):
+        xpos=self.pos[0]
+        ypos=self.pos[1]
+        nextLoc=Rect((self.pos[0]-(dist*cos(rad)) - 32, self.pos[1] - (dist*sin(rad)) - 64), (64,64))
         if nextLoc.collidelist(self.level) == -1:
-            self.tp_loc=mouse_pos
-        else:
-            self.spec_cooldown = 0
-            return
-
-
+            self.pos=(self.pos[0]-(dist*cos(rad)), self.pos[1]-(dist*sin(rad)))
+        
     def update(self, inputs, bullets):
         Player.update(self,inputs, bullets)
-        if self.tp_loc[0] != 0 and self.tp_loc[1] != 0:
-            self.animation = 5
-            self.spec_frame +=1
-            if self.spec_frame >= 20:
-                self.pos = self.tp_loc
-                self.tp_loc = (0,0)
-                
-        else:
-            self.spec_frame=-1
 
     def getSpeed(self):
         return 4

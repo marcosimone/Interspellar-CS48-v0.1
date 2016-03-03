@@ -350,7 +350,7 @@ def lobby(players):
         chatText = font.render(chat_box[1], True, Color(0, 0, 0))
         nameText = font.render(name_box[1], True, Color(0, 0, 0))
         if game_start[0]:
-            play()
+            play(players)
             return
         if len(chat)!=0:
             text=chat.pop()
@@ -553,10 +553,12 @@ def lobby_thread(players, chat, game_start):
             return
     
 
-def play():
+def play(players):
     global level
     global wizard
-    
+    for client in players:
+        players[client]=[players[client][0], players[client][1], players[client][2], players[client][3], (0,0), 1000, 0, 0]
+    print players
     level=[Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
         Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
         Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
@@ -607,12 +609,16 @@ def play():
                     level=[]
                     return
 
-            if event.type==MOUSEBUTTONDOWN and event.button==3 and player.getRegCooldown() <= 0:
-                player.setRegCooldown(player.fullRegCooldown())
+            if event.type==MOUSEBUTTONDOWN:
+                if event.button==1 and player.getRegCooldown() <= 0:
+                    player.setRegCooldown(player.fullRegCooldown())
 
-                bull=Bullet(screen, sounds, level, event.pos, player.getPos())
-                bullets.append(bull)
-                sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
+                    bull=Bullet(screen, sounds, level, event.pos, player.getPos())
+                    bullets.append(bull)
+                    sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
+                if event.button==3 and player.getSpecCooldown() <= 0:
+                    player.setSpecCooldown(player.fullSpecCooldown())
+                    player.activateSpecial(event.pos, player.getPos(), sock);
 
 
         for bullet in enumerate(bullets):
