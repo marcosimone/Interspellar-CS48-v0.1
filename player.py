@@ -3,6 +3,7 @@ from pygame.locals import *
 from array import array
 from math import *
 from soundboard import soundboard
+from bullet import Bullet
 
     
 class Player:
@@ -21,7 +22,7 @@ class Player:
         self.pos=player_pos
         self.level=level
         self.sounds=sound
-        self.reg_cooldown = 200
+        self.reg_cooldown = 20
     
     def getCurrentHealth(self):
         return self.health
@@ -51,7 +52,7 @@ class Player:
     def getRegCooldown(self):
         return self.reg_cooldown
     def fullRegCooldown(self):
-        return 200
+        return 20
     def setRegCooldown(self, cool):
         self.reg_cooldown = cool;
     def getSpecCooldown(self):
@@ -60,9 +61,11 @@ class Player:
         return 60
     def setSpecCooldown(self, cool):
         self.spec_cooldown = cool;
-        
-    def activateSpecial(self, mouse_pos, player_pos, sock):
-        return
+    
+    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
+        return None
+    def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
+        return None
     
    
         

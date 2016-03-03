@@ -4,7 +4,7 @@ from array import array
 from math import *
 from soundboard import soundboard
 from player import Player
-import bullet
+from bullet import *
 
 class DarkWizard(Player):
     
@@ -60,10 +60,12 @@ class DarkWizard(Player):
     def fullSpecCooldown(self):
         return 200
         
-    def activateSpecial(self, mouse_pos, player_pos, sock):
-        
-        while sqrt((mouse_pos[0]-player_pos[0])**2 + (mouse_pos[1]-player_pos[1])**2) > 400:
-            angle = bullet.getAngleBetweenPoints(mouse_pos[0], mouse_pos[1], player_pos[0], player_pos[1])
+    
+    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
+        return Bullet(screen, sounds, level, mouse_pos, self.getPos())
+    def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
+        while sqrt((mouse_pos[0]-self.pos[0])**2 + (mouse_pos[1]-self.pos[1])**2) > 400:
+            angle = bullet.getAngleBetweenPoints(mouse_pos[0], mouse_pos[1], self.pos[0], self.pos[1])
             rad = radians(angle)
             mouse_pos = (mouse_pos[0] + 5*cos(rad), mouse_pos[1] + 5*sin(rad))
             
@@ -74,7 +76,7 @@ class DarkWizard(Player):
             self.tp_loc=mouse_pos
         else:
             self.spec_cooldown = 0
-            return
+            return None
 
 
     def update(self, inputs, bullets):
