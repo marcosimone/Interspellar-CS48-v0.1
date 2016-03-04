@@ -6,6 +6,7 @@ from array import array
 import pygame
 from pygame.locals import *
 from bullet import *
+from mapDraw import * 
 from player import Player
 from dank_wiz import DankWizard
 from dark_wiz import DarkWizard
@@ -25,6 +26,7 @@ x = 0
 gothreadgo = True
 server_ip=""
 server_port=0
+my_ip="127.0.0.1"
 shiftLookup={'1':'!', '2':'@', '3':'#', '4':'$', '5':'%', '6':'^', '7':'&', '8':'*', '9':'(', '0':')', ',':'<', '.':'>', '/':'?', ';':':', '\'':'"', '`':'~', '-':'_', '=':'+', '\\':'|'}
 #background stuff
 splash=pygame.image.load("images/liquid_toaster.png").convert()
@@ -38,6 +40,7 @@ clouds = pygame.image.load("images/lobby_clouds.png").convert_alpha()
 mist = pygame.image.load("images/lobby_mist.png").convert_alpha()
 mountains = pygame.image.load("images/lobby_mountains.png").convert_alpha()
 level = []
+textureSurfaces = []
 #buttons
 back_hover = pygame.image.load("images/buttons/back_hover.png").convert_alpha()
 back_idle = pygame.image.load("images/buttons/back.png").convert_alpha()
@@ -147,8 +150,11 @@ def blit():
         if pic is not None:
             screen.blit(pic[0], pic[1])
 
-    for plat in level:
-        pygame.draw.rect(screen, Color("grey"), plat)
+    i = 0
+    for texture in textureSurfaces: 
+        if texture is not None: 
+            screen.blit(texture, level[i])
+        i = i + 1 
 
     for pic in toDraw_bullets:
         if pic is not None:
@@ -259,6 +265,7 @@ def join_server():
                         portBox[0].fill(Color(196, 196, 196))
 
             elif event.type == QUIT:
+                sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
                 sys.exit()
 
         pygame.display.update()
@@ -276,7 +283,11 @@ def try_join(ipBox, portBox):
         sock.sendto(pickle.dumps(("j")), (server_ip, server_port))
         sock.settimeout(3.0)
         data, addr = sock.recvfrom(1024)
-        lobby_players = pickle.loads(data)
+        stuff=pickle.loads(data)
+        lobby_players = stuff[0]
+        global my_ip
+        my_ip=stuff[1]
+        print 'my ip: %s' % (my_ip)
         print 'joining %s:%s' % (server_ip, server_port)
         lobby(lobby_players)
 
@@ -311,8 +322,7 @@ def lobby(players):
     screen.blit(chat_box[0], chatPos)
     screen.blit(name_box[0], namePos)
     focus = chat_box
-    #team_1_top = [pygame.image.load("images/team_1_top_1_re.png").convert_alpha(), pygame.image.load("images/team_1_top_2_re.png").convert_alpha(),pygame.image.load("images/team_1_top_3_re.png").convert_alpha(), pygame.image.load("images/team_1_top_4_re.png").convert_alpha()]
-    #team_2_top = [pygame.image.load("images/team_2_top_1_re.png").convert_alpha(), pygame.image.load("images/team_2_top_2_re.png").convert_alpha(),pygame.image.load("images/team_2_top_3_re.png").convert_alpha(), pygame.image.load("images/team_2_top_4_re.png").convert_alpha()]
+
     team_1_mid = pygame.image.load("images/team_1_mid.png").convert_alpha()
     team_2_mid = pygame.image.load("images/team_2_mid.png").convert_alpha()
     team_1_top = pygame.image.load("images/team_1_top_re.png").convert_alpha()#####
@@ -534,18 +544,16 @@ def lobby_thread(players, chat, game_start):
         data=pickle.loads(data)
         src=data[1]
         cmd=data[0]
-        print players
+        
         if cmd[0] == "c":
             chat.append((src, cmd[1]))
        
         elif cmd[0] == "u":
             players[src[0]] = [src[1], cmd[1], cmd[2], cmd[3], players[src[0]][4]]
         elif cmd[0] == "j":
-            players[src[0]] = [addr[1], addr[0], "default", "default", False]
-            print '%s joined' % (src[0])
-            print players
+            players[src[0]] = [src[1], src[0], data[2][0], data[2][1], False]
         elif cmd[0] == "q":
-            del clients[src[0]]
+            del players[src[0]]
         elif cmd[0] == "*":
             players[src[0]][4]=not players[src[0]][4]
         elif cmd[0] == "^":
@@ -553,109 +561,123 @@ def lobby_thread(players, chat, game_start):
             return
     
 
-def play(players):
+def play(ppl):
+    bullet_id=0
     global level
     global wizard
-    for client in players:
-        players[client]=[players[client][0], players[client][1], players[client][2], players[client][3], (0,0), 1000, 0, 0]
-    print players
-    level=[Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
-        Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
-        Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
-    
+    global textureSurfaces
+    background=pygame.image.load("images/tmp_background.png").convert_alpha()
+    bullet_list_0={}#ip -> dict
+    bullet_list_1={}
+    bullets=[bullet_list_0, bullet_list_1]
+    mapID = 1
+    mapped = Map(mapID)
+    level = mapped.getLevel()
+    textureSurfaces = mapped.getTextures() 
+    players={}
+    #score=[0,0]
+    score=["0 - 0"]
     test=[DankWizard, DarkWizard, Healer, DankWizard]
-    player=test[int(wizard)](screen, sounds, level, (640, 650))
-    
-    
+    #(port, Player, pos, health, anim, frame)
+    for client in ppl:
+        bullets[int(ppl[client][3])][client]={}#id -> bullet
+        if not client==my_ip:
+            players[client]=[ppl[client][0],  test[int(ppl[client][2])](screen, sounds, level, ppl[client][1], ppl[client][3]), (0,0), 1000, 0, 0]
+        else:
+            player=test[int(ppl[client][2])](screen, sounds, level, ppl[client][1], ppl[client][3])
+
     gothreadgo=True
-    t = threading.Thread(target=update_foes)
+    t = threading.Thread(target=update_foes, args=(players,bullets, score))
     t.daemon = True
     t.start()
     
     global y
-    back=back_idle
     while 1:
-        toDraw_background.append((stars, (0,y/2)))
-        toDraw_background.append((stars, (0,y/2-720)))
-        toDraw_background.append((hills, (0,720-hills.get_height())))
-        toDraw_background.append((back, (100, 575)))
-
-        y +=1
-        if y==1440:
-            y=0
-
-        if Rect(100,575,back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
-            back=back_hover
-        else:
-            back=back_idle
-
+        score_label=font.render(score[0], True, Color(0, 0, 0))
         for event in pygame.event.get():
 
             if event.type==QUIT:
                 sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
-                pygame.quit()
                 sys.exit()
-            if event.type==MOUSEBUTTONUP and event.button==1:
-                if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
-                    sounds.click.play()
-                    del toDraw_players[:]
-                    gothreadgo=False
-                    level=[]
-                    return
 
             if event.type==MOUSEBUTTONDOWN:
+                
                 if event.button==1 and player.getRegCooldown() <= 0:
+               
                     player.setRegCooldown(player.fullRegCooldown())
                     bull = player.activateRegular(screen, sounds, level, event.pos, sock);
                     if bull is not None:
-                        bullets.append(bull)
-                        sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
+                        bullets[int(player.team)][my_ip][bullet_id]=bull
+                        #send bullet inception ("b", type, id, pos, angle) ORIGINAL
+                        #send bullet inception ("b", id, pos, angle) TMP CURRENT
+                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(),  bull.angle)),(server_ip, server_port))
+                        bullet_id+=1
+                        
                 if event.button==3 and player.getSpecCooldown() <= 0:
                     player.setSpecCooldown(player.fullSpecCooldown())
                     bull2 = player.activateSpecial(screen, sounds, level, event.pos, sock);
                     if bull2 is not None:
-                        bullets.append(bull2)
-                        sock.sendto(pickle.dumps("b" + bull2.toString()),(server_ip, server_port))
+                        #bullets.append(bull2)
+                        #sock.sendto(pickle.dumps("b" + bull2.toString()),(server_ip, server_port))
+                        pass
 
-
-        for bullet in enumerate(bullets):
-            if bullet[1].isDead():
-                sounds.explode.play()
-                del bullets[bullet[0]]
-            else:
-                bullet[1].update()
-                toDraw_bullets.append(bullet[1].draw())
+        
         input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
-        player.update(input, bullets)
-        sock.sendto(pickle.dumps(player.getPos()),(server_ip, server_port))
-        toDraw_players[0]=player.draw()
-        blit()
+        player.update(input, bullets[int(not int(player.team))], (server_ip, server_port))
+       
+        #s(tatus):  ("s", (posx, posy), (health, anim, frame, direction))
+        sock.sendto(pickle.dumps(("s", player.getPos(), (player.health, player.animation, player.anim_frame, player.direction))),(server_ip, server_port))
+        
+        screen.blit(background, (0,0))
+        for i in range(len(level)):
+            screen.blit(textureSurfaces[i], level[i])
+        for bullet_list in bullets:
+            for char in bullet_list:
+                for bul in bullet_list[char].keys():
+                    bullet=bullet_list[char][bul]
+                    if bullet.isDead():
+                        sounds.explode.play()
+                        del bullet_list[char][bul]
+                    else:
+                        bullet.update()
+                        draw=bullet.draw()
+                        screen.blit(draw[0], draw[1])
+        for opp in players:
+            draw=players[opp][1].draw()
+            screen.blit(draw[0], draw[1])
+        draw=player.draw()
+        screen.blit(draw[0], draw[1])
+        screen.blit(score_label, (600, 50))
         pygame.display.update()
         pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
         fpsClock.tick(60)
 
-def update_foes():
-    other_players={}
+def update_foes(players, bullets, score):
     sock.sendto(pickle.dumps(("t")), (server_ip, server_port))
     while True:
         data, addr = sock.recvfrom(1024)
         data=pickle.loads(data)
-        if  data[0].equals("s"):
-            pass
+        if  data[0][0] == "s":
+            players[data[1]][1].setPos(data[0][1])
+            players[data[1]][1].health=data[0][2][0]
+            players[data[1]][1].animation=data[0][2][1]
+            players[data[1]][1].anim_fram=data[0][2][2]
+            players[data[1]][1].direction=data[0][2][3]
         
-        elif data[0].equals("b"):
-            bull=enemyBullet(screen, sounds, level, data[1])
-            bullets.append(bull)
-        else:
-            if not other_players.has_key(data[0]):
-                other_players[data[0]]=Player(screen, sounds, level, (640, 650))
-                toDraw_players.append(other_players[data[0]])
-            other_players[data[0]].setPos(data[1])
-            count=0
-            for key in other_players:
-                toDraw_players[1+count]=other_players[key].draw()
+        elif data[0][0] == "b":
+            #send bullet inception ("b", type, id, pos, angle) ORIGINAL
+            #send bullet inception ("b", id, pos, angle) TMP CURRENT
+            bull=enemyBullet(screen, sounds, level, data[0][1], data[0][2], data[0][3], data[1])
+            bullets[int(players[data[1]][1].team)][data[1]][bull.id]=bull
 
-                count +=1
+        elif data[0][0] == "p":
+            score[0]='%s - %s' % (data[2][1], data[2][0])
+        
+        elif data[0][0] == "0" or data[0][0] == "1":
+            score[0] = 'team %s wins' % (data[0][0])
+            
+        else:
+            pass
 
 
 '''

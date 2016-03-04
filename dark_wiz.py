@@ -7,6 +7,7 @@ from player import Player
 import bullet
 from bullet import Bullet
 
+
 class DarkWizard(Player):
     
     anim_frames=0
@@ -25,9 +26,8 @@ class DarkWizard(Player):
     # 000080 : blue
     # cc5200 : orange
     
-    def __init__(self, screen, sound, level, player_pos):
+    def __init__(self, screen, sound, level, name, team):
         self.screen=screen
-        self.pos=player_pos
         self.stand_sprites = []
         for i in range(1,6):
             string = "images/animations/darkwiz/" + self.color + "/dark_idle_" + str(i) + ".png"
@@ -49,9 +49,9 @@ class DarkWizard(Player):
         for i in range(1,5):
             string = "images/animations/darkwiz/" +self.color+"/dark_tp_" + str(i) + ".png"
             self.spec_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
-            
-            
-        
+        self.pos=((int(team)*1200+10), 64)
+        self.name=name
+        self.team=team
         self.level=level
         self.sounds=sound
     
@@ -81,8 +81,8 @@ class DarkWizard(Player):
             return None
 
 
-    def update(self, inputs, bullets):
-        Player.update(self,inputs, bullets)
+    def update(self, inputs, bullets, server):
+        Player.update(self,inputs, bullets, server)
         if self.tp_loc[0] != 0 and self.tp_loc[1] != 0:
             self.animation = 5
             self.spec_frame +=1
@@ -95,11 +95,7 @@ class DarkWizard(Player):
 
     def getSpeed(self):
         return 4
-    def draw(self):
-        if self.direction == 0:
-            return (self.getAnimation(), self.getPos())
-        else:
-            return (pygame.transform.flip(self.getAnimation(), True, False), self.getPos())
+    
         
         
     

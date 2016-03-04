@@ -2,6 +2,7 @@
 import socket
 import sys
 import pickle
+import random
 PORT = 4637
 SOCK = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 SOCK.bind(("0.0.0.0", PORT))
@@ -22,8 +23,8 @@ def lobby_phase():
             if data[0] == "j": # ("j")
                 
                 #name, sprite, team
-                clients[addr[0]] = [addr[1], addr[0], "default", "default", False]
-                SOCK.sendto(pickle.dumps(clients), addr)
+                clients[addr[0]] = [addr[1], addr[0], random.choice(["0", "1", "2", "3"]), random.choice(["0", "1"]), False]
+                SOCK.sendto(pickle.dumps((clients, addr[0])), addr)
                 
             elif data[0] == "u": # ("u", name, sprite, team, ready)
                 clients[addr[0]] = [addr[1], data[1], data[2], data[3], clients[addr[0]][4]]
@@ -35,6 +36,10 @@ def lobby_phase():
             if data[0] == "c" or data[0]=="u":
                 for client in clients:
                     SOCK.sendto(pickle.dumps((data, addr)), (client, clients[client][0]))
+            elif data[0] == "j":
+                for client in clients:
+                    if not client == addr[0]:
+                        SOCK.sendto(pickle.dumps(("j", addr, (clients[addr[0]][2], clients[addr[0]][3]))), (client, clients[client][0]))   
             else:            
                 for client in clients:
                     if not client == addr[0]:
@@ -81,16 +86,19 @@ def game_phase():
             elif data[0] == "d":
                 team_points[int(clients[addr[0]][3])]+=1
                 print team_points
+                for client in players:
+                        SOCK.sendto(pickle.dumps(("p", "SERVER", team_points)), (client, clients[client][0]))
                 if team_points[0]==score_limit:
                     for client in clients:
                         SOCK.sendto(pickle.dumps(("0", "SERVER")), (client, clients[client][0]))
+                    return True
                 elif team_points[1]==score_limit:
                     for client in clients:
                         SOCK.sendto(pickle.dumps(("1", "SERVER")), (client, clients[client][0]))
-
+                    return True
             for client in clients:
                 if not client == addr[0]:
-                    SOCK.sendto(pickle.dumps((addr[0], data)),
+                    SOCK.sendto(pickle.dumps((data, addr[0])),
                                 (client, clients[client][0]))
     except Exception,e: 
         print str(e)
@@ -98,8 +106,12 @@ def game_phase():
 def main():
     '''the main loop'''  
     restart=True
+    global clients 
+    global players
     while restart:
         restart=False
+        clients = {}
+        players={}
         print '\nstarting lobby phase'
         lobby_phase()
         print '\nstarting game phase'

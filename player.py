@@ -4,8 +4,10 @@ from array import array
 from math import *
 from soundboard import soundboard
 from bullet import Bullet
+import socket
+import pickle
 
-    
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 class Player:
     health=1000
     max_health=1000
@@ -20,10 +22,12 @@ class Player:
     def __init__(self, screen, sound, level, name, team):
         self.screen=screen
         self.image = [pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
-        pos=int()
+        self.pos=((int(team)*1200+10), 64)
         self.level=level
         self.sounds=sound
         self.reg_cooldown = 20
+        self.name=name
+        self.team=team
     
     def getCurrentHealth(self):
         return self.health
@@ -33,6 +37,7 @@ class Player:
         
     def damage(self, damage):
         self.health = self.health - damage
+        
     
     def heal(self, heal):
         self.health = self.health + heal
@@ -68,9 +73,19 @@ class Player:
     def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
         return None
     
-   
+    def draw(self):
+        if self.direction == 0:
+            ret=self.getAnimation()
+            ret.blit(pygame.Surface((64, 7)), (0,0))
+            ret.fill(Color(255, 0, 0), Rect((0,0), ((float(self.health)/self.max_health)*64, 7)))
+            return (ret, self.getPos())
+        else:
+            ret=pygame.transform.flip(self.getAnimation(), True, False)
+            ret.blit(pygame.Surface((64, 7)), (0,0))
+            ret.fill(Color(255, 0, 0), Rect((0,0), ((float(self.health)/self.max_health)*64, 7)))
+            return (ret, self.getPos())
         
-    def update(self, inputs, bullets):
+    def update(self, inputs, bullets, server):
         body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
         xpos=self.pos[0]
         ypos=self.pos[1]
@@ -82,15 +97,23 @@ class Player:
             self.reg_cooldown = 0
         if self.spec_cooldown < 0:
             self.spec_cooldown = 0
-
+    
         
-        for bullet in bullets:
-            if body.collidepoint(bullet.getPos()) and (bullet.player!="me"):
-                bullet.selfDestruct()
-                self.health-=100
-                print self.health
-                if isDead():
-                    sys.exit()
+        
+        for bullet_list in bullets:
+            for bullet in bullets[bullet_list]:
+                if bullets[bullet_list][bullet].hbox.collidepoint(body.center):
+                    bullets[bullet_list][bullet].selfDestruct()
+                    #send bullet destruction packet ("h", src_ip, id)
+                    self.health-=bullets[bullet_list][bullet].damage
+                    if (self.health<=0):
+                        sock.sendto(pickle.dumps(("d")), server)
+                        self.health=self.max_health
+                        self.setPos(((int(self.team)*1200+10), 64))
+                        return
+                        #sys.exit()
+                        
+        
         if inputs[1]==1:
             self.direction=1
         elif inputs[3]==1:

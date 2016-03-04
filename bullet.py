@@ -18,7 +18,7 @@ class Bullet:
     speed=10
     died=False
     player="me"
-    
+    damage=10
     id=0 #will determine speed and damage
     def __init__(self, screen, sound, level, mouse_pos, player_pos):
         sound.fire.play()
@@ -58,6 +58,7 @@ class Bullet:
         
     def selfDestruct(self):
         self.died=True
+        
     
     def update(self):
         self.frame+=1
@@ -70,20 +71,26 @@ class Bullet:
         
     def getPos(self):
         return self.pos
-        
+#b(ullet):  ("b", id, type, (posx, posy) , angle, sender)  
 class enemyBullet(Bullet):
     player="enemy"
-    def __init__(self, screen, sound, level, bulletString):
-        params=bulletString.split(',')
-        self.id=params[0]
-        self.pos=(float(params[1]),float(params[2]))
+    frame=0
+    def __init__(self, screen, sound, level, id, pos, angle, sender):
+        self.id=id
+        self.pos=pos
         sound.fire.play()
         self.screen=screen
-        self.angle = float(params[3])
-        self.sender= params[4]
-        image=pygame.image.load("images/animations/bullet.png").convert_alpha()
-        self.image = pygame.transform.rotate(image,-45)
-        self.image = pygame.transform.rotate(image,self.angle-45)
+        self.angle = angle
+        self.sender= sender
+        self.fireball=[]
+        for i in range(1,15):
+            name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
+            self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+        #self.image = pygame.transform.rotate(image,-45)
+            self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
+        self.pos=pos
+        self.hbox = Rect((pos[0]+3,pos[1]+16),(1 , 32))
+        
         self.level=level
         self.sounds=sound
     

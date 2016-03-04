@@ -22,9 +22,9 @@ class DankWizard(Player):
     # 000080 : blue
     # cc5200 : orange
     
-    def __init__(self, screen, sound, level, player_pos):
+    def __init__(self, screen, sound, level, name, team):
         self.screen=screen
-        self.pos=player_pos
+        self.pos=((int(team)*1200+10), 64)
         self.stand_sprites = [pygame.transform.scale2x(pygame.image.load("images/animations/dankwiz/" +self.color+ "/wizard.png")).convert_alpha()]
         self.slide_sprite = [pygame.transform.scale2x(pygame.image.load("images/animations/dankwiz/" +self.color+ "/wiz_slide.png")).convert_alpha()]
         self.walk_sprites = []
@@ -39,7 +39,8 @@ class DankWizard(Player):
         for i in range(1,7):
             string = "images/animations/dankwiz/" +self.color+ "/wiz_fall_" + str(i) + ".png"
             self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
-        
+        self.name=name
+        self.team=team
         self.level=level
         self.sounds=sound
     
@@ -47,17 +48,14 @@ class DankWizard(Player):
         return Bullet(screen, sounds, level, mouse_pos, self.getPos())
  
             
-    def update(self, inputs, bullets):
-        Player.update(self,inputs, bullets)
+    def update(self, inputs, bullets, server):
+        Player.update(self,inputs, bullets, server)
         
         
 	def getSpeed(self):
 		return 3.5
-    def draw(self):
-        if self.direction == 0:
-            return (self.getAnimation(), self.getPos())
-        else:
-            return (pygame.transform.flip(self.getAnimation(), True, False), self.getPos())
+    
+        
         
     
     

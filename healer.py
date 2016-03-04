@@ -23,9 +23,9 @@ class Healer(Player):
     # 000080 : blue
     # cc5200 : orange
     
-    def __init__(self, screen, sound, level, player_pos):
+    def __init__(self, screen, sound, level, name, team):
         self.screen=screen
-        self.pos=player_pos
+        self.pos=((int(team)*1200+10), 64)
         self.stand_sprites = []
         for i in range(1,6):
             string = "images/animations/healer/healer_idle_" + str(i) + ".png"
@@ -44,6 +44,8 @@ class Healer(Player):
             string = "images/animations/healer/healer_idle_" + str(i) + ".png"
             self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
         
+        self.name=name
+        self.team=team
         self.level=level
         self.sounds=sound
     
@@ -53,15 +55,11 @@ class Healer(Player):
         return beam
             
     
-    def update(self, inputs, bullets):
-        Player.update(self,inputs, bullets)
+    def update(self, inputs, bullets, server):
+        Player.update(self,inputs, bullets, server)
         
         
-    def draw(self):
-        if self.direction == 0:
-            return (self.getAnimation(), self.getPos())
-        else:
-            return (pygame.transform.flip(self.getAnimation(), True, False), self.getPos())
+    
         
     
     
