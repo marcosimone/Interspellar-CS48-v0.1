@@ -49,7 +49,7 @@ class Map:
 					destVarY = destVarY + texture.get_height()
 				destVarX = destVarX + texture.get_width()
 			self.listOfTexturedSurfaces.append(newSurface)
-			pygame.image.save(newSurface, 'test.png')
+			#pygame.image.save(newSurface, 'test.png')
 
 	def getTextures(self): 
 		return self.listOfTexturedSurfaces
