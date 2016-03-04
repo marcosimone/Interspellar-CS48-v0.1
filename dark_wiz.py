@@ -5,7 +5,7 @@ from math import *
 from soundboard import soundboard
 from player import Player
 from bullet import *
-import bulletawww
+import bullet
 
 class DarkWizard(Player):
     
