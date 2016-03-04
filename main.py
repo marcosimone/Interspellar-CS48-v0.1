@@ -6,6 +6,7 @@ from array import array
 import pygame
 from pygame.locals import *
 from bullet import *
+from mapDraw import * 
 from player import Player
 from dank_wiz import DankWizard
 from dark_wiz import DarkWizard
@@ -38,6 +39,7 @@ clouds = pygame.image.load("images/lobby_clouds.png").convert_alpha()
 mist = pygame.image.load("images/lobby_mist.png").convert_alpha()
 mountains = pygame.image.load("images/lobby_mountains.png").convert_alpha()
 level = []
+textureSurfaces = []
 #buttons
 back_hover = pygame.image.load("images/buttons/back_hover.png").convert_alpha()
 back_idle = pygame.image.load("images/buttons/back.png").convert_alpha()
@@ -147,8 +149,11 @@ def blit():
         if pic is not None:
             screen.blit(pic[0], pic[1])
 
-    for plat in level:
-        pygame.draw.rect(screen, Color("grey"), plat)
+    i = 0
+    for texture in textureSurfaces: 
+        if texture is not None: 
+            screen.blit(texture, level[i])
+        i = i + 1 
 
     for pic in toDraw_bullets:
         if pic is not None:
@@ -555,10 +560,12 @@ def lobby_thread(players, chat, game_start):
 def play():
     global level
     global wizard
-    
-    level=[Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
-        Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
-        Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
+    global textureSurfaces
+
+    mapID = 1
+    mapped = Map(mapID)
+    level = mapped.getLevel()
+    textureSurfaces = mapped.getTextures() 
 
     if wizard == '0':
         player=DankWizard(screen, sounds, level, (640, 650)) 
