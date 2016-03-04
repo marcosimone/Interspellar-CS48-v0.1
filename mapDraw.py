@@ -10,6 +10,8 @@ class Map:
 
 	texture0 = []
 	texture1 = []
+	texture2 = []
+	texture3 = []
 	
 	#map 0 is vertical-combat based Enclosed walls for wall jumping, main center area, walls with holes 
 	map0 = [Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
@@ -27,12 +29,12 @@ class Map:
 			Rect((240,400),(800,75)), Rect((290,200),(700,75)), Rect((0,320),(100,50)), Rect((1180,320),(100,50)) ]
 	mapList = [map0, map1, map2, map3]
 	
-	#go through rectangles, create surfaces to append to toDraw_background 
-	#these surfaces are the same size as the rectangles, textures mapped onto them 
 	def __init__(self, id):
 		self.texture0 = pygame.image.load("images/textures/stoner.png").convert()
-		self.texture1 = pygame.image.load("images/textures/brownTexture.png").convert()
-		textureList = [self.texture0, self.texture1]
+		self.texture1 = pygame.transform.scale2x(pygame.image.load("images/textures/brownTexture.png").convert())
+		self.texture2 = pygame.transform.scale2x(pygame.image.load("images/textures/lavaRocks.png").convert())
+		self.texture3 = pygame.transform.scale2x(pygame.image.load("images/textures/greyBrown.png").convert())
+		textureList = [self.texture0, self.texture1, self.texture2, self.texture3]
 
 		self.listOfLevelRects = self.mapList[id] 
 		texture = textureList[id]
@@ -49,8 +51,7 @@ class Map:
 					destVarY = destVarY + texture.get_height()
 				destVarX = destVarX + texture.get_width()
 			self.listOfTexturedSurfaces.append(newSurface)
-			#pygame.image.save(newSurface, 'test.png')
-
+			
 	def getTextures(self): 
 		return self.listOfTexturedSurfaces
 
