@@ -4,7 +4,8 @@ from array import array
 from math import *
 from soundboard import soundboard
 from player import Player
-from bullet import *
+import bullet
+from bullet import Bullet
 
 class DarkWizard(Player):
     

@@ -562,22 +562,16 @@ def play(players):
     level=[Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
         Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
         Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
-
-    test=DankWizard
-    if wizard == '0':
-        player=test(screen, sounds, level, (640, 650)) 
-    elif wizard == '1':
-        player=DarkWizard(screen, sounds, level, (640, 650)) 
-    elif wizard == '2':
-        player=Healer(screen, sounds, level, (640, 650)) 
-    elif wizard == '3':
-        player=DankWizard(screen, sounds, level, (640, 650))
     
-    toDraw_players.append(player.draw())
+    test=[DankWizard, DarkWizard, Healer, DankWizard]
+    player=test[int(wizard)](screen, sounds, level, (640, 650))
+    
+    
     gothreadgo=True
     t = threading.Thread(target=update_foes)
     t.daemon = True
     t.start()
+    
     global y
     back=back_idle
     while 1:

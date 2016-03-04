@@ -15,11 +15,12 @@ class Player:
     spec_frame=0
     reg_cooldown=20
     spec_cooldown=60
-
-    def __init__(self, screen, sound, level, player_pos):
+    name=""
+    team=""
+    def __init__(self, screen, sound, level, name, team):
         self.screen=screen
         self.image = [pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
-        self.pos=player_pos
+        pos=int()
         self.level=level
         self.sounds=sound
         self.reg_cooldown = 20

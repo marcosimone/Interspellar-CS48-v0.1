@@ -62,6 +62,7 @@ def lobby_phase():
         
 # {ip: (port, name, sprite, team, (posx, posy), health, anim, frame)}    
 def game_phase():
+    score_limit=25
     for client in clients:
         players[client]=[clients[client][0], clients[client][1], clients[client][2], clients[client][3], (0,0), 1000, 0, 0]
     
@@ -80,6 +81,12 @@ def game_phase():
             elif data[0] == "d":
                 team_points[int(clients[addr[0]][3])]+=1
                 print team_points
+                if team_points[0]==score_limit:
+                    for client in clients:
+                        SOCK.sendto(pickle.dumps(("0", "SERVER")), (client, clients[client][0]))
+                elif team_points[1]==score_limit:
+                    for client in clients:
+                        SOCK.sendto(pickle.dumps(("1", "SERVER")), (client, clients[client][0]))
 
             for client in clients:
                 if not client == addr[0]:
