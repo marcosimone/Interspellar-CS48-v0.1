@@ -4,6 +4,7 @@ from array import array
 from math import *
 from soundboard import soundboard
 from player import Player
+from bullet import Bullet
 
 class DankWizard(Player):
     
@@ -42,13 +43,16 @@ class DankWizard(Player):
         self.level=level
         self.sounds=sound
     
-        
+    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
+        return Bullet(screen, sounds, level, mouse_pos, self.getPos())
+ 
+            
     def update(self, inputs, bullets):
         Player.update(self,inputs, bullets)
         
         
 	def getSpeed(self):
-		return 4
+		return 3.5
     def draw(self):
         if self.direction == 0:
             return (self.getAnimation(), self.getPos())

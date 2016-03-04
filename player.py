@@ -3,22 +3,26 @@ from pygame.locals import *
 from array import array
 from math import *
 from soundboard import soundboard
+from bullet import Bullet
 
+    
 class Player:
     health=1000
     max_health=1000
     velocity=0
     xvelocity=0
     anim_frame=0
-    reg_cooldown=200
-    last=0.0
+    spec_frame=0
+    reg_cooldown=20
+    spec_cooldown=60
+
     def __init__(self, screen, sound, level, player_pos):
         self.screen=screen
         self.image = [pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
         self.pos=player_pos
         self.level=level
         self.sounds=sound
-        self.reg_cooldown = 200
+        self.reg_cooldown = 20
     
     def getCurrentHealth(self):
         return self.health
@@ -48,18 +52,36 @@ class Player:
     def getRegCooldown(self):
         return self.reg_cooldown
     def fullRegCooldown(self):
-        return 200
+        return 20
     def setRegCooldown(self, cool):
         self.reg_cooldown = cool;
+    def getSpecCooldown(self):
+        return self.spec_cooldown
+    def fullSpecCooldown(self):
+        return 60
+    def setSpecCooldown(self, cool):
+        self.spec_cooldown = cool;
     
+    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
+        return None
+    def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
+        return None
+    
+   
+        
     def update(self, inputs, bullets):
         body=Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
         xpos=self.pos[0]
         ypos=self.pos[1]
-        self.reg_cooldown = self.reg_cooldown - 12/(pygame.time.Clock().get_fps()+1)
+
+        self.reg_cooldown = self.reg_cooldown - 1/(pygame.time.Clock().get_fps()+1)
+        self.spec_cooldown = self.spec_cooldown - 1/(pygame.time.Clock().get_fps()+1)
+
         if self.reg_cooldown < 0:
             self.reg_cooldown = 0
-            
+        if self.spec_cooldown < 0:
+            self.spec_cooldown = 0
+
         
         for bullet in bullets:
             if body.collidepoint(bullet.getPos()) and (bullet.player!="me"):
@@ -110,7 +132,7 @@ class Player:
                     xpos=plat.left-32
                     if inputs[0]:
                         self.velocity = 10
-                        self.xvelocity = -8
+                        self.xvelocity = -7
                         
                 elif fabs(body.left-plat.right)<10:
                     self.animation=4
@@ -124,7 +146,7 @@ class Player:
                     xpos=plat.right+32
                     if inputs[0]:
                         self.velocity = 10
-                        self.xvelocity = 8
+                        self.xvelocity = 7
                         
         else:
             if ypos <=32:
@@ -171,8 +193,8 @@ class Player:
         return
      
     def getSpeed(self):
-		return 3
-	
+        return 3
+    
     def getAnimation(self):
         if self.animation==0:
             return self.stand_sprites[(self.anim_frame/10)%len(self.stand_sprites)]
@@ -184,3 +206,5 @@ class Player:
             return self.fall_sprites[(self.anim_frame/10)%len(self.fall_sprites)]
         elif self.animation==4:
             return self.slide_sprite[0]
+        elif self.animation==5:
+            return self.spec_sprites[(self.spec_frame/5)%len(self.spec_sprites)]

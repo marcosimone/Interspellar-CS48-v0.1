@@ -611,12 +611,19 @@ def play():
                     level=[]
                     return
 
-            if event.type==MOUSEBUTTONDOWN and event.button==3 and player.getRegCooldown() <= 0:
-                player.setRegCooldown(player.fullRegCooldown())
-
-                bull=Bullet(screen, sounds, level, event.pos, player.getPos())
-                bullets.append(bull)
-                sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
+            if event.type==MOUSEBUTTONDOWN:
+                if event.button==1 and player.getRegCooldown() <= 0:
+                    player.setRegCooldown(player.fullRegCooldown())
+                    bull = player.activateRegular(screen, sounds, level, event.pos, sock);
+                    if bull is not None:
+                        bullets.append(bull)
+                        sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
+                if event.button==3 and player.getSpecCooldown() <= 0:
+                    player.setSpecCooldown(player.fullSpecCooldown())
+                    bull2 = player.activateSpecial(screen, sounds, level, event.pos, sock);
+                    if bull2 is not None:
+                        bullets.append(bull2)
+                        sock.sendto(pickle.dumps("b" + bull2.toString()),(server_ip, server_port))
 
 
         for bullet in enumerate(bullets):
