@@ -39,6 +39,7 @@ class Bullet:
     def hitbox(self):
         self.hbox=Rect((self.pos[0], self.pos[1]+16), (64,32))
         return
+    
     def draw(self):
         self.hitbox()
         return (self.fireball[((self.frame/5)%14)],(self.pos[0], self.pos[1]))

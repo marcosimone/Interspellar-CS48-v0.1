@@ -465,6 +465,11 @@ def lobby(players):
             info=-1
             
         for event in pygame.event.get():
+
+            if event.type==KEYDOWN and event.key==K_ESCAPE:
+                sock.sendto(pickle.dumps(("q")),(server_ip,server_port))
+                gothreadgo=False
+                return
         
             if event.type == MOUSEBUTTONUP and event.button == 1:
                 for index,box in enumerate(team_char_select):
@@ -495,7 +500,7 @@ def lobby(players):
                          sock.sendto(pickle.dumps(("*")),(server_ip, server_port))
             elif event.type == KEYDOWN:
                 
-                if pygame.key.get_pressed()[304]:
+                if pygame.key.get_pressed()[304] or pygame.key.get_pressed()[pygame.K_RSHIFT]:
                     if (event.key>=39 and event.key<=61) or (event.key>=91 and event.key<=96):
                         focus[1]+=shiftLookup[str(chr(event.key))]
                     elif event.key>=97 and event.key<=122:
@@ -570,7 +575,7 @@ def play(ppl):
     bullet_list_0={}#ip -> dict
     bullet_list_1={}
     bullets=[bullet_list_0, bullet_list_1]
-    mapID = 1
+    mapID = 3
     mapped = Map(mapID)
     level = mapped.getLevel()
     textureSurfaces = mapped.getTextures() 
@@ -599,6 +604,12 @@ def play(ppl):
             if event.type==QUIT:
                 sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
                 sys.exit()
+            
+            if event.type==KEYDOWN and event.key==K_ESCAPE:
+                sock.sendto(pickle.dumps(("q")),(server_ip,server_port))
+                #gothreadgo=False
+                return
+
 
             if event.type==MOUSEBUTTONDOWN:
                 
@@ -610,16 +621,16 @@ def play(ppl):
                         bullets[int(player.team)][my_ip][bullet_id]=bull
                         #send bullet inception ("b", type, id, pos, angle) ORIGINAL
                         #send bullet inception ("b", id, pos, angle) TMP CURRENT
-                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(),  bull.angle)),(server_ip, server_port))
+                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle)),(server_ip, server_port))
                         bullet_id+=1
                         
                 if event.button==3 and player.getSpecCooldown() <= 0:
                     player.setSpecCooldown(player.fullSpecCooldown())
-                    bull2 = player.activateSpecial(screen, sounds, level, event.pos, sock);
-                    if bull2 is not None:
-                        #bullets.append(bull2)
-                        #sock.sendto(pickle.dumps("b" + bull2.toString()),(server_ip, server_port))
-                        pass
+                    bull = player.activateSpecial(screen, sounds, level, event.pos, sock);
+                    if bull is not None:
+                        bullets[int(player.team)][my_ip][bullet_id]=bull
+                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle)),(server_ip,server_port))
+                        bullet_id+=1
 
         
         input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]

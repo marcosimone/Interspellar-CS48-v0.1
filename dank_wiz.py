@@ -5,6 +5,7 @@ from math import *
 from soundboard import soundboard
 from player import Player
 from bullet import Bullet
+from flamethrower import Flamethrower
 
 class DankWizard(Player):
     
@@ -46,17 +47,14 @@ class DankWizard(Player):
     
     def activateRegular(self, screen, sounds, level, mouse_pos, sock):
         return Bullet(screen, sounds, level, mouse_pos, self.getPos())
+
+    def activateSpecial(self,screen,sounds,level,mouse_pos, sock):
+        return Flamethrower(screen,sounds,level,mouse_pos,self.getPos())
  
             
     def update(self, inputs, bullets, server):
         Player.update(self,inputs, bullets, server)
         
         
-	def getSpeed(self):
-		return 3.5
-    
-        
-        
-    
-    
-        
+    def getSpeed(self):
+        return 3.5
