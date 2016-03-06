@@ -571,14 +571,14 @@ def play(ppl):
     global level
     global wizard
     global textureSurfaces
-    background=pygame.image.load("images/tmp_background.png").convert_alpha()
     bullet_list_0={}#ip -> dict
     bullet_list_1={}
     bullets=[bullet_list_0, bullet_list_1]
-    mapID = 3
+    mapID = 0
     mapped = Map(mapID)
     level = mapped.getLevel()
     textureSurfaces = mapped.getTextures() 
+    background = mapped.getBackground()
     players={}
     #score=[0,0]
     score=["0 - 0"]

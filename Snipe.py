@@ -12,7 +12,7 @@ from bullet import *
 class Snipe(Bullet):
 	anim_frames = 0
 	aniimation = 0
-	speed=35
+	speed=25
 	damage=150
 	
 	

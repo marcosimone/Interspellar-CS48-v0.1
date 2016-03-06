@@ -7,7 +7,7 @@ from bullet import *
 
 class Heal(Bullet):
 
-    speed=10
+    speed=8
     died=False
     player="me"
     

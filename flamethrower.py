@@ -12,7 +12,7 @@ from bullet import *
 class Flamethrower(Bullet):
 	anim_frames = 0
 	aniimation = 0
-	damage=60
+	damage=180
 	
 	#Flamethrower Constructor
 	def __init__(self, screen, sound, level, mouse_pos, player_pos):
