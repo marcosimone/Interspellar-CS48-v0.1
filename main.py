@@ -29,8 +29,9 @@ server_port=0
 my_ip="127.0.0.1"
 shiftLookup={'1':'!', '2':'@', '3':'#', '4':'$', '5':'%', '6':'^', '7':'&', '8':'*', '9':'(', '0':')', ',':'<', '.':'>', '/':'?', ';':':', '\'':'"', '`':'~', '-':'_', '=':'+', '\\':'|'}
 #background stuff
-splash=pygame.image.load("images/liquid_toaster.png").convert()
-click_continue=pygame.image.load("images/continue.png").convert()
+splash=pygame.image.load("images/liquid_toaster.png").convert_alpha()
+click_continue=pygame.image.load("images/continue.png").convert_alpha()
+
 logo = pygame.image.load("images/logo.png").convert_alpha()
 stars = pygame.image.load("images/stars.png").convert_alpha()
 stars2 = stars
