@@ -45,6 +45,12 @@ class DankWizard(Player):
         self.level=level
         self.sounds=sound
     
+    
+    def fullRegCooldown(self):
+        return 80
+    def fullSpecCooldown(self):
+        return 250
+        
     def activateRegular(self, screen, sounds, level, mouse_pos, sock):
         return Bullet(screen, sounds, level, mouse_pos, self.getPos())
 
