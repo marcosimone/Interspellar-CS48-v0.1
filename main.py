@@ -683,7 +683,7 @@ def play(ppl, mapID):
             time.sleep(3)
             return
         pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
-        fpsClock.tick(600)
+        fpsClock.tick(60)
 
 def update_foes(players, bullets, score):
     sock.sendto(pickle.dumps(("t")), (server_ip, server_port))

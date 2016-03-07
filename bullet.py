@@ -96,7 +96,7 @@ class enemyBullet(Bullet):
             for i in range(1,15):
                 name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
                 self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
-                if mouse_pos[0] > player_pos[0]:
+                if self.angle + 90 < 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(75)
@@ -104,7 +104,7 @@ class enemyBullet(Bullet):
             for i in range(1,13):
                 name_str = "images/animations/Flamethrower/" + str(i) + ".png"
                 self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
-                if mouse_pos[0] > player_pos[0]:
+                if self.angle + 90 < 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(150)
@@ -113,7 +113,7 @@ class enemyBullet(Bullet):
                 name_str = "images/animations/snipe/void_laser_" + str(i) + ".png"
                 self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
                 self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], True, False)
-                if mouse_pos[0] > player_pos[0]:
+                if self.angle + 90 < 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(120)
@@ -121,7 +121,7 @@ class enemyBullet(Bullet):
             for i in range(1,15):
                 name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
                 self.fireball.append(pygame.image.load(name_str).convert_alpha())
-                if mouse_pos[0] > player_pos[0]:
+                if self.angle + 90 < 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(50)
@@ -129,7 +129,7 @@ class enemyBullet(Bullet):
             for i in range(1,11):
                 name_str = "images/animations/heal_beam/heal_" + str(i) + ".png"
                 self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
-                if mouse_pos[0] < player_pos[0]:
+                if self.angle + 90 < 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(-100)
