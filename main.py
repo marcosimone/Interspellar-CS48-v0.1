@@ -623,11 +623,12 @@ def play(ppl, mapID):
 
             if event.type==QUIT:
                 sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
+                del textureSurfaces[:]
                 sys.exit()
             
             if event.type==KEYDOWN and event.key==K_ESCAPE:
                 sock.sendto(pickle.dumps(("q")),(server_ip,server_port))
-                #gothreadgo=False
+                del textureSurfaces[:]
                 return
 
 
@@ -717,6 +718,7 @@ def update_foes(players, bullets, score):
         
         elif data[0][0] == "0" or data[0][0] == "1":
             score[0] = 'team %s wins' % (data[0][0])
+            del textureSurfaces[:]
             return
         else:
             pass
@@ -762,7 +764,37 @@ def options():
         fpsClock.tick(60)
 
 def credits():
-    return
+    marand = pygame.image.load("images/backgrounds/MarAnd.png").convert_alpha()
+    simkev = pygame.image.load("images/backgrounds/SimKev.png").convert_alpha()
+    ben = pygame.image.load("images/backgrounds/Ben.png").convert_alpha()
+    back = back_idle
+    global y 
+    while 1: 
+        screen.blit(stars, (0, y/2))
+        screen.blit(stars, (0, y/2-720))
+        screen.blit(hills, (0, 720-hills.get_height()))
+        screen.blit(back, (100, 575))
+        screen.blit(marand, (295, 200))
+        screen.blit(simkev, (473, 385))
+        screen.blit(ben, (542, 490))
+        y += 1
+        if y == 1440:
+            y = 0
+        if Rect(100, 575, back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
+            back = back_hover
+        else:
+            back = back_idle
+
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                sys.exit()
+            if event.type == MOUSEBUTTONUP and event.button == 1:
+                if Rect(100, 575, back.get_width(), back.get_height()).collidepoint(event.pos):
+                    sounds.click.play()
+                    return
+        pygame.display.update()
+        pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
+        fpsClock.tick(60)
 
 menu_choices = [join_server, options, credits]
 eventHandler=pygame.mixer.music.play
