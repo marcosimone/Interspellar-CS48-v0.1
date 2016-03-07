@@ -12,6 +12,7 @@ from dank_wiz import DankWizard
 from dark_wiz import DarkWizard
 from healer import Healer
 from soundboard import soundboard
+import time
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
@@ -650,6 +651,9 @@ def play(ppl):
         screen.blit(draw[0], draw[1])
         screen.blit(score_label, (600, 50))
         pygame.display.update()
+        if score[0][0] == "t":
+            time.sleep(3)
+            return
         pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
         fpsClock.tick(60)
 
@@ -676,112 +680,9 @@ def update_foes(players, bullets, score):
         
         elif data[0][0] == "0" or data[0][0] == "1":
             score[0] = 'team %s wins' % (data[0][0])
-            
+            return
         else:
             pass
-
-
-'''
-def play():
-    global level
-    global wizard
-    
-    level=[Rect((0,0),(50,720)), Rect((1230,0),(50,720)), Rect((200,470),(75,250)), Rect((1005,470),(75,250)), 
-        Rect((200,150),(75,200)), Rect((1005, 150),(75,200)), Rect((440,500),(400,100)), 
-        Rect((440,200),(75,200)), Rect((765,200),(75,200)), Rect((590,275),(100,50)) ]
-
-    if wizard == '0':
-        player=DankWizard(screen, sounds, level, (640, 650)) 
-    elif wizard == '1':
-        player=DarkWizard(screen, sounds, level, (640, 650)) 
-    elif wizard == '2':
-        player=Healer(screen, sounds, level, (640, 650)) 
-    elif wizard == '3':
-        player=DankWizard(screen, sounds, level, (640, 650))
-    
-    toDraw_players.append(player.draw())
-    gothreadgo=True
-    t = threading.Thread(target=update_foes, args=(players))
-    t.daemon = True
-    t.start()
-    global y
-    back=back_idle
-    while 1:
-        toDraw_background.append((stars, (0,y/2)))
-        toDraw_background.append((stars, (0,y/2-720)))
-        toDraw_background.append((hills, (0,720-hills.get_height())))
-        toDraw_background.append((back, (100, 575)))
-
-        y +=1
-        if y==1440:
-            y=0
-
-        if Rect(100,575,back.get_width(), back.get_height()).collidepoint(pygame.mouse.get_pos()):
-            back=back_hover
-        else:
-            back=back_idle
-
-        for event in pygame.event.get():
-
-            if event.type==QUIT:
-                sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
-                pygame.quit()
-                sys.exit()
-            if event.type==MOUSEBUTTONUP and event.button==1:
-                if Rect(100,575,back.get_width(), back.get_height()).collidepoint(event.pos):
-                    sounds.click.play()
-                    del toDraw_players[:]
-                    gothreadgo=False
-                    level=[]
-                    return
-
-            if event.type==MOUSEBUTTONDOWN and event.button==3 and player.getRegCooldown() <= 0:
-                player.setRegCooldown(player.fullRegCooldown())
-
-                bull=Bullet(screen, sounds, level, event.pos, player.getPos())
-                bullets.append(bull)
-                sock.sendto(pickle.dumps("b" + bull.toString()),(server_ip, server_port))
-
-
-        for bullet in enumerate(bullets):
-            if bullet[1].isDead():
-                sounds.explode.play()
-                del bullets[bullet[0]]
-            else:
-                bullet[1].update()
-                toDraw_bullets.append(bullet[1].draw())
-        input = [pygame.key.get_pressed()[119]==1,pygame.key.get_pressed()[97]==1,pygame.key.get_pressed()[115]==1,pygame.key.get_pressed()[100]==1]
-        player.update(input, bullets)
-        sock.sendto(pickle.dumps(player.getPos()),(server_ip, server_port))
-        toDraw_players[0]=player.draw()
-        blit()
-        pygame.display.update()
-        pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
-        fpsClock.tick(60)
-
-def update_foes():
-    other_players={}
-    sock.sendto(pickle.dumps(("t")), (server_ip, server_port))
-    while True:
-        data, addr = sock.recvfrom(1024)
-        data=pickle.loads(data)
-        if  data[0].equals("s"):
-            
-        
-        elif data[0].equals("b"):
-            bull=enemyBullet(screen, sounds, level, data[1])
-            bullets.append(bull)
-        else:
-            if not other_players.has_key(data[0]):
-                other_players[data[0]]=Player(screen, sounds, level, (640, 650))
-                toDraw_players.append(other_players[data[0]])
-            other_players[data[0]].setPos(data[1])
-            count=0
-            for key in other_players:
-                toDraw_players[1+count]=other_players[key].draw()
-
-                count +=1
-'''
 
 def options():
     walker = [pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),
