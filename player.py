@@ -193,8 +193,8 @@ class Player:
                 self.jump+=1
             if self.jump >30:
                 self.jump=-1
-        ypos=ypos-self.velocity
-        xpos=xpos+self.xvelocity
+        ypos=ypos-self.velocity * 50 / float(self.fps)
+        xpos=xpos+self.xvelocity * 50 / float(self.fps)
         if self.xvelocity > 0:
             self.xvelocity-=0.4
         if self.xvelocity < 0:
@@ -202,9 +202,9 @@ class Player:
         if fabs(self.xvelocity) < 0.5:
             self.xvelocity = 0
         if inputs[1]:
-            xpos-=self.getSpeed() * 25 / float(self.fps)
+            xpos-=self.getSpeed() * 60 / float(self.fps)
         if inputs[3]:
-            xpos+=self.getSpeed() * 25 / float(self.fps)
+            xpos+=self.getSpeed() * 60 / float(self.fps)
         if xpos < 32:
             xpos=32
         if xpos > 1248:
