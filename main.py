@@ -645,8 +645,8 @@ def play(ppl, mapID):
                     player.setSpecCooldown(player.fullSpecCooldown())
                     
                     bull = player.activateSpecial(screen, sounds, level, event.pos, sock);
-                    bull.setFPS(float(fpsClock.get_fps()))
                     if bull is not None:
+                        bull.setFPS(float(fpsClock.get_fps()))
                         bullets[int(player.team)][my_ip][bullet_id]=bull
                         sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle)),(server_ip,server_port))
                         bullet_id+=1
@@ -701,7 +701,8 @@ def update_foes(players, bullets, score):
             #send bullet inception ("b", type, id, pos, angle) ORIGINAL
             #send bullet inception ("b", id, pos, angle) TMP CURRENT
             bull=enemyBullet(screen, sounds, level, data[0][1], data[0][2], data[0][3], data[1])
-            bull.setFPS(float(fpsClock.get_fps()))
+            if bull is not None:
+                bull.setFPS(float(fpsClock.get_fps()))
             bullets[int(players[data[1]][1].team)][data[1]][bull.id]=bull
 
         elif data[0][0] == "p":
