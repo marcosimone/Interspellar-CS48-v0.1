@@ -15,7 +15,9 @@ def getAngleBetweenPoints(x_orig, y_orig, x_landmark, y_landmark):
 
 class Bullet:
 
+
     speed=10
+    fps=60
     died=False
     player="me"
     damage=10
@@ -42,7 +44,7 @@ class Bullet:
     
     def draw(self):
         self.hitbox()
-        return (self.fireball[((self.frame/5)%14)],(self.pos[0], self.pos[1]))
+        return (self.fireball[((int(self.frame)/5)%14)],(self.pos[0], self.pos[1]))
         
     def isDead(self):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
@@ -62,11 +64,15 @@ class Bullet:
         
     
     def update(self):
-        self.frame+=1
+        self.frame+=60/float(self.fps)
         rad=radians(self.angle)
-        self.pos=(self.pos[0]+(self.speed*cos(rad)), self.pos[1]-(self.speed*sin(rad)))
-        self.hbox=(self.pos[0]+(self.speed*cos(rad)), self.pos[1]-(self.speed*sin(rad)))
-
+        self.pos=(self.pos[0]+(self.getSpeed()*cos(rad)), self.pos[1]-(self.getSpeed()*sin(rad)))
+        self.hbox=(self.pos[0]+(self.getSpeed()*cos(rad)), self.pos[1]-(self.getSpeed()*sin(rad)))
+    
+    def setFPS(self, FPS):
+        self.fps = float(FPS)
+    def getSpeed(self):
+        return self.speed * 60 / float(self.fps)
     def toString(self):
         return "%d,%d,%d" % (self.pos[0],self.pos[1],self.angle)
         

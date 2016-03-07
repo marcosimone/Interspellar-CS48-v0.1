@@ -17,6 +17,7 @@ class Player:
     spec_frame=0
     reg_cooldown=20
     spec_cooldown=60
+    fps=60
     name=""
     team=""
     def __init__(self, screen, sound, level, name, team):
@@ -45,7 +46,7 @@ class Player:
             self.health = self.max_health
         
     def draw(self):
-        return (self.image[(self.anim_frame/30)%2], self.getPos())
+        return (self.image[(int(self.anim_frame)/30)%2], self.getPos())
     
     def isDead(self):
         return (self.health<=0)
@@ -90,8 +91,8 @@ class Player:
         xpos=self.pos[0]
         ypos=self.pos[1]
 
-        self.reg_cooldown = self.reg_cooldown - 1/(pygame.time.Clock().get_fps()+1)
-        self.spec_cooldown = self.spec_cooldown - 1/(pygame.time.Clock().get_fps()+1)
+        self.reg_cooldown = self.reg_cooldown - 60/(self.fps)
+        self.spec_cooldown = self.spec_cooldown - 60/(self.fps)
 
         if self.reg_cooldown < 0:
             self.reg_cooldown = 0
@@ -192,8 +193,8 @@ class Player:
                 self.jump+=1
             if self.jump >30:
                 self.jump=-1
-        ypos=ypos-self.velocity
-        xpos=xpos+self.xvelocity
+        ypos=ypos-20*self.velocity/float(self.fps)
+        xpos=xpos+25*self.xvelocity/float(self.fps)
         if self.xvelocity > 0:
             self.xvelocity-=0.4
         if self.xvelocity < 0:
@@ -201,9 +202,9 @@ class Player:
         if fabs(self.xvelocity) < 0.5:
             self.xvelocity = 0
         if inputs[1]:
-            xpos-=self.getSpeed()
+            xpos-=self.getSpeed() * 25 / float(self.fps)
         if inputs[3]:
-            xpos+=self.getSpeed()
+            xpos+=self.getSpeed() * 25 / float(self.fps)
         if xpos < 32:
             xpos=32
         if xpos > 1248:
@@ -211,24 +212,25 @@ class Player:
         if ypos > 720:
             ypos=720
         self.pos=(xpos, ypos)
-        self .anim_frame+=1
-        if self .anim_frame==360:
+        self.anim_frame+=25/float(self.fps)
+        if self .anim_frame>=360:
             self .anim_frame=0
         return
      
     def getSpeed(self):
         return 3
-    
+    def setFPS(self, FPS):
+        self.fps = FPS
     def getAnimation(self):
         if self.animation==0:
-            return self.stand_sprites[(self.anim_frame/10)%len(self.stand_sprites)]
+            return self.stand_sprites[(int(self.anim_frame)/10)%len(self.stand_sprites)]
         elif self.animation==1:
-            return self.walk_sprites[(self.anim_frame/10)%len(self.walk_sprites)]
+            return self.walk_sprites[(int(self.anim_frame)/10)%len(self.walk_sprites)]
         elif self.animation==2:
-            return self.jump_sprites[(self.jump/3)%len(self.jump_sprites)]
+            return self.jump_sprites[(int(self.jump)/3)%len(self.jump_sprites)]
         elif self.animation==3:
-            return self.fall_sprites[(self.anim_frame/10)%len(self.fall_sprites)]
+            return self.fall_sprites[(int(self.anim_frame)/10)%len(self.fall_sprites)]
         elif self.animation==4:
             return self.slide_sprite[0]
         elif self.animation==5:
-            return self.spec_sprites[(self.spec_frame/5)%len(self.spec_sprites)]
+            return self.spec_sprites[(int(self.spec_frame)/5)%len(self.spec_sprites)]

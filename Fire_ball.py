@@ -14,6 +14,7 @@ class Fire_Ball(Bullet):
 	anim_frames = 0
 	aniimation = 0
 	damage = 75
+    speed=10
 	#Fire_Ball Constructor
 	def __init__(self, screen, sound, level, mouse_pos, player_pos):
 		sound.fire.play()
@@ -29,11 +30,7 @@ class Fire_Ball(Bullet):
 		self.level=level
 		self.sounds=sound
 
-	#If fireball is fired have animation set to 1
-	#&& find the angle at which it should be at
-	def update(self):
-		rad=radians(self.angle)
-		self.pos=(self.pos[0]+(self.speed*cos(rad)), self.pos[1]-(self.speed*sin(rad)))
+
 		
 
 	def draw(self):

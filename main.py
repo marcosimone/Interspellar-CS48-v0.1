@@ -601,9 +601,10 @@ def play(ppl):
         bullets[int(ppl[client][3])][client]={}#id -> bullet
         if not client==my_ip:
             players[client]=[ppl[client][0],  test[int(ppl[client][2])](screen, sounds, level, ppl[client][1], ppl[client][3]), (0,0), 1000, 0, 0]
+            players[client][1].setFPS(float(fpsClock.get_fps()))
         else:
             player=test[int(ppl[client][2])](screen, sounds, level, ppl[client][1], ppl[client][3])
-
+            player.setFPS(float(fpsClock.get_fps()))
     gothreadgo=True
     t = threading.Thread(target=update_foes, args=(players,bullets, score))
     t.daemon = True
@@ -632,6 +633,7 @@ def play(ppl):
                     bull = player.activateRegular(screen, sounds, level, event.pos, sock);
                     if bull is not None:
                         bullets[int(player.team)][my_ip][bullet_id]=bull
+                        bull.setFPS(float(fpsClock.get_fps()))
                         #send bullet inception ("b", type, id, pos, angle) ORIGINAL
                         #send bullet inception ("b", id, pos, angle) TMP CURRENT
                         sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle)),(server_ip, server_port))
@@ -639,7 +641,9 @@ def play(ppl):
                         
                 if event.button==3 and player.getSpecCooldown() <= 0:
                     player.setSpecCooldown(player.fullSpecCooldown())
+                    
                     bull = player.activateSpecial(screen, sounds, level, event.pos, sock);
+                    bull.setFPS(float(fpsClock.get_fps()))
                     if bull is not None:
                         bullets[int(player.team)][my_ip][bullet_id]=bull
                         sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle)),(server_ip,server_port))
@@ -695,6 +699,7 @@ def update_foes(players, bullets, score):
             #send bullet inception ("b", type, id, pos, angle) ORIGINAL
             #send bullet inception ("b", id, pos, angle) TMP CURRENT
             bull=enemyBullet(screen, sounds, level, data[0][1], data[0][2], data[0][3], data[1])
+            bull.setFPS(float(fpsClock.get_fps()))
             bullets[int(players[data[1]][1].team)][data[1]][bull.id]=bull
 
         elif data[0][0] == "p":

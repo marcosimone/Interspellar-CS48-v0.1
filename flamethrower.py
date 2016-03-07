@@ -13,6 +13,7 @@ class Flamethrower(Bullet):
     anim_frames = 0
     aniimation = 0
     damage=180
+    speed=5
     
     #Flamethrower Constructor
     def __init__(self, screen, sound, level, mouse_pos, player_pos):
@@ -40,7 +41,7 @@ class Flamethrower(Bullet):
 
     def draw(self):
         self.hitbox()
-        return (self.flamethrower[((self.frame/5)%14)],(self.pos[0], self.pos[1]))
+        return (self.flamethrower[((int(self.frame)/5)%14)],(self.pos[0], self.pos[1]))
 
     def getAnimation(self):
         if self.animation==1:
@@ -48,11 +49,6 @@ class Flamethrower(Bullet):
         elif self.animation==2:
             return self.destruct_sprite[(self.anim_frames/10)%len(self.destruct_sprite)]
 
-    def update(self):
-        self.frame+=1
-        rad=radians(self.angle)
-        self.pos=((self.pos[0]+self.speed*cos(rad)), self.pos[1]-(self.speed*sin(rad)))
-        self.hbox=((self.pos[0] + self.speed*cos(rad)), self.pos[1]-(self.speed*sin(rad)))
     
     def toString(self):
         return "%d,%d,%d" % (self.pos[0],self.pos[1],self.angle)

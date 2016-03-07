@@ -31,7 +31,7 @@ class Heal(Bullet):
     
     def draw(self):
         self.hitbox()
-        return (self.hearts[((self.frame/5)%14)],(self.pos[0], self.pos[1]))
+        return (self.hearts[((int(self.frame)/5)%14)],(self.pos[0], self.pos[1]))
         
         
     def isDead(self):
@@ -48,12 +48,7 @@ class Heal(Bullet):
     def selfDestruct(self):
         self.died=True
   
-    def update(self):
-        self.frame+=1
-        rad=radians(self.angle)
-        self.pos=(self.pos[0]+(self.speed*cos(rad)), self.pos[1]-(self.speed*sin(rad)))
-        self.hbox=(self.pos[0]+(self.speed*cos(rad)), self.pos[1]-(self.speed*sin(rad)))
-
+   
     def toString(self):
         return "%d,%d,%d" % (self.pos[0],self.pos[1],self.angle)
         
