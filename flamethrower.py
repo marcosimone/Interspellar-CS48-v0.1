@@ -41,11 +41,11 @@ class Flamethrower(Bullet):
 
     def draw(self):
         self.hitbox()
-        return (self.flamethrower[((int(self.frame)/5)%14)],(self.pos[0], self.pos[1]))
+        return (self.flamethrower[((int(self.frame)/5)%13)],(self.pos[0], self.pos[1]))
 
     def getAnimation(self):
         if self.animation==1:
-            return self.fired_sprites[(self.anim_frames/10)%len(seld.fired_sprites)]
+            return self.fired_sprites[(self.anim_frames/10)%len(self.fired_sprites)]
         elif self.animation==2:
             return self.destruct_sprite[(self.anim_frames/10)%len(self.destruct_sprite)]
 
