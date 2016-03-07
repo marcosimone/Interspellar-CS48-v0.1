@@ -426,7 +426,7 @@ def lobby(players):
     
                 if players[player][4]:
                     player_ready=font.render("READY", True, Color(0, 0, 0))
-                    player_entry.blit(player_ready, (player_entry.get_width()-font.size("READY")[0], player_entry.get_height()/2-font.size("READY")[1]/2))
+                    player_entry.blit(player_ready, (player_entry.get_width()-font.size("READY")[0]-10, player_entry.get_height()/2-font.size("READY")[1]/2))
                 else:
                     player_ready=font.render("NOT READY", True, Color(0, 0, 0))
                     player_entry.blit(player_ready, (player_entry.get_width()-font.size("NOT READY")[0]-10, player_entry.get_height()/2-font.size("NOT READY")[1]/2))
@@ -565,6 +565,7 @@ def lobby_thread(players, chat, game_start):
         data=pickle.loads(data)
         src=data[1]
         cmd=data[0]
+        print data
         
         if cmd[0] == "c":
             chat.append((src, cmd[1]))
@@ -577,6 +578,7 @@ def lobby_thread(players, chat, game_start):
             del players[src[0]]
         elif cmd[0] == "*":
             players[src[0]][4]=not players[src[0]][4]
+            print 'did the thing'
         elif cmd[0] == "^":
             game_start[0]=True
             game_start[1]=int(data[2])
