@@ -18,6 +18,7 @@ class Heal(Bullet):
         self.id=id
         self.screen=screen
         self.frame=0
+        self.damage=-100
         self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
         for i in range(1,11):
             name_str = "images/animations/heal_beam/heal_" + str(i) + ".png"
