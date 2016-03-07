@@ -193,8 +193,8 @@ class Player:
                 self.jump+=1
             if self.jump >30:
                 self.jump=-1
-        ypos=ypos-self.velocity * 50 / float(self.fps)
-        xpos=xpos+self.xvelocity * 50 / float(self.fps)
+        ypos=ypos-self.velocity * 40 / float(self.fps)
+        xpos=xpos+self.xvelocity * 60 / float(self.fps)
         if self.xvelocity > 0:
             self.xvelocity-=0.4
         if self.xvelocity < 0:
@@ -212,13 +212,13 @@ class Player:
         if ypos > 720:
             ypos=720
         self.pos=(xpos, ypos)
-        self.anim_frame+=25/float(self.fps)
+        self.anim_frame+=30/float(self.fps)
         if self .anim_frame>=360:
             self .anim_frame=0
         return
      
     def getSpeed(self):
-        return 3
+        return 4
     def setFPS(self, FPS):
         self.fps = FPS
     def getAnimation(self):
