@@ -43,9 +43,11 @@ class Bullet:
         return
     def setDamage(self, dmg):
         self.damage = dmg
+    def setSpeed(self, spd):
+        self.speed = spd
     def draw(self):
         self.hitbox()
-        return (self.fireball[((int(self.frame)/5)%14)],(self.pos[0], self.pos[1]))
+        return (self.fireball[((int(self.frame)/5)%len(self.fireball))],(self.pos[0], self.pos[1]))
         
     def isDead(self):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
@@ -100,6 +102,7 @@ class enemyBullet(Bullet):
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(75)
+            self.setSpeed(10)
         elif(type == "flamethrower"):
             for i in range(1,13):
                 name_str = "images/animations/Flamethrower/" + str(i) + ".png"
@@ -108,6 +111,7 @@ class enemyBullet(Bullet):
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(150)
+            self.setSpeed(5)
         elif(type == "snipe"):
             for i in range(1,8):
                 name_str = "images/animations/snipe/void_laser_" + str(i) + ".png"
@@ -117,6 +121,7 @@ class enemyBullet(Bullet):
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(120)
+            self.setSpeed(20)
         elif(type == "wimpy"):
             for i in range(1,15):
                 name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
@@ -125,6 +130,7 @@ class enemyBullet(Bullet):
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(50)
+            self.setSpeed(8)
         elif(type == "heal"):
             for i in range(1,11):
                 name_str = "images/animations/heal_beam/heal_" + str(i) + ".png"
@@ -133,6 +139,7 @@ class enemyBullet(Bullet):
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(-100)
+            self.setSpeed(8)
         self.pos=pos
         self.hbox = Rect((pos[0]+3,pos[1]+16),(1 , 32))
         
