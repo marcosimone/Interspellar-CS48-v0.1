@@ -103,6 +103,7 @@ class enemyBullet(Bullet):
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(75)
             self.setSpeed(10)
+            self.hbox = Rect((pos[0]+3,pos[1]+8),(64, 16))
         elif(type == "flamethrower"):
             for i in range(1,13):
                 name_str = "images/animations/Flamethrower/" + str(i) + ".png"
@@ -112,6 +113,7 @@ class enemyBullet(Bullet):
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(150)
             self.setSpeed(5)
+            self.hbox = Rect((pos[0],pos[1]+55),(110, 70))
         elif(type == "snipe"):
             for i in range(1,8):
                 name_str = "images/animations/snipe/void_laser_" + str(i) + ".png"
@@ -122,6 +124,7 @@ class enemyBullet(Bullet):
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(120)
             self.setSpeed(20)
+            self.hbox = Rect((pos[0]+3,pos[1]+8),(32, 16))
         elif(type == "wimpy"):
             for i in range(1,15):
                 name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
@@ -131,6 +134,7 @@ class enemyBullet(Bullet):
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(50)
             self.setSpeed(8)
+            self.hbox = Rect((pos[0]+3,pos[1]+8),(8, 8))
         elif(type == "heal"):
             for i in range(1,11):
                 name_str = "images/animations/heal_beam/heal_" + str(i) + ".png"
@@ -140,8 +144,8 @@ class enemyBullet(Bullet):
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(-100)
             self.setSpeed(8)
+            self.hbox = Rect((pos[0]+3,pos[1]+8),(32, 16))
         self.pos=pos
-        self.hbox = Rect((pos[0]+3,pos[1]+16),(1 , 32))
         
         self.level=level
         self.sounds=sound
