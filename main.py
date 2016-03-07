@@ -731,8 +731,8 @@ def update_foes(players, bullets, score):
         
         elif data[0][0] == "0" or data[0][0] == "1":
             score[0] = 'team %s wins' % (data[0][0])
-            del textureSurfaces[:]
             return
+            del textureSurfaces[:]
         else:
             pass
 
