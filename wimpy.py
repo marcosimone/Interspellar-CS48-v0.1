@@ -16,10 +16,11 @@ class Wimpy(Bullet):
     speed=10
     
     #Flamethrower Constructor
-    def __init__(self, screen, sound, level, mouse_pos, player_pos):
+    def __init__(self, screen, sound, level, id, mouse_pos, player_pos):
         sound.fire.play()
         self.screen=screen
         self.frame=0
+        self.id=id
         self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
         self.wimpy=[]
         for i in range(1,15):
@@ -29,6 +30,10 @@ class Wimpy(Bullet):
         self.pos=(player_pos[0]+8,player_pos[1]+16)
         self.level=level
         self.sounds=sound
+        self.hbox = Rect((player_pos[0],player_pos[1]),(32 , 16))
+        
+    def hitbox(self):
+        self.hbox=Rect((self.pos[0], self.pos[1]), (32,16))
         
     def getType(self):
         return "wimpy"

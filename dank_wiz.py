@@ -55,11 +55,11 @@ class DankWizard(Player):
     def fullSpecCooldown(self):
         return 250
         
-    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
-        return Bullet(screen, sounds, level, mouse_pos, self.getPos())
+    def activateRegular(self, screen, sounds, level, id, mouse_pos):
+        return Bullet(screen, sounds, level, id, mouse_pos, self.getPos())
 
-    def activateSpecial(self,screen,sounds,level,mouse_pos, sock):
-        return Flamethrower(screen,sounds,level,mouse_pos,self.getPos())
+    def activateSpecial(self,screen,sounds,level,id ,mouse_pos):
+        return Flamethrower(screen,sounds,level,id, mouse_pos,self.getPos())
  
             
     def update(self, inputs, bullets, server):

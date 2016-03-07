@@ -14,7 +14,9 @@ from healer import Healer
 from soundboard import soundboard
 import time
 from heal_beam import Heal
-
+from flamethrower import Flamethrower
+from snipe import Snipe
+from wimpy import Wimpy
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 pygame.font.init()
@@ -636,7 +638,7 @@ def play(ppl, mapID):
                 if event.button==1 and player.getRegCooldown() <= 0:
                
                     player.setRegCooldown(player.fullRegCooldown())
-                    bull = player.activateRegular(screen, sounds, level, event.pos, sock);
+                    bull = player.activateRegular(screen, sounds, level, 0 , event.pos);
                     if bull is not None:
                         if bull is Heal:
                             bullets[abs(int(player.team)-1)][my_ip][bullet_id]=bull
@@ -645,17 +647,17 @@ def play(ppl, mapID):
                             bull.setFPS(float(fpsClock.get_fps()))
                             #send bullet inception ("b", type, id, pos, angle) ORIGINAL 
                             #send bullet inception ("b", id, pos, angle) TMP CURRENT
-                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle, bull.getType())),(server_ip, server_port))
+                        sock.sendto(pickle.dumps(("b", bullet_id, event.pos, bull.getPos(), bull.getType())),(server_ip, server_port))
                         bullet_id+=1
                         
                 if event.button==3 and player.getSpecCooldown() <= 0:
                     player.setSpecCooldown(player.fullSpecCooldown())
                     
-                    bull = player.activateSpecial(screen, sounds, level, event.pos, sock);
+                    bull = player.activateSpecial(screen, sounds, level, bullet_id, event.pos);
                     if bull is not None:
                         bull.setFPS(float(fpsClock.get_fps()))
                         bullets[int(player.team)][my_ip][bullet_id]=bull
-                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle, bull.getType())),(server_ip,server_port))
+                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), event.pos, bull.getType())),(server_ip,server_port))
                         bullet_id+=1
 
         
@@ -694,6 +696,8 @@ def play(ppl, mapID):
 
 def update_foes(players, bullets, score):
     sock.sendto(pickle.dumps(("t")), (server_ip, server_port))
+    bullet_types={"flamethrower": Flamethrower, "fireball" : Bullet, "snipe" : Snipe, "heal" : Heal, "wimpy" : Wimpy}
+
     while True:
         data, addr = sock.recvfrom(1024)
         data=pickle.loads(data)
@@ -707,10 +711,17 @@ def update_foes(players, bullets, score):
         elif data[0][0] == "b":
             #send bullet inception ("b", type, id, pos, angle) ORIGINAL
             #send bullet inception ("b", id, pos, angle) TMP CURRENT
-            bull=enemyBullet(screen, sounds, level, data[0][1], data[0][2], data[0][3], data[1], data[0][4])
+            #bull=enemyBullet(screen, sounds, level, data[0][1], data[0][2], data[0][3], data[1], data[0][4])
+            if data[0][4] == "fireball" or data[0][4] == "wimpy" or data[0][4] == "snipe":
+                bull=bullet_types[data[0][4]](screen, sounds, level, (data[0][1]), (data[0][2]), data[0][3])
+            else:
+                bull=bullet_types[data[0][4]](screen, sounds, level, (data[0][1]), (data[0][3]), data[0][2])
             if bull is not None:
                 bull.setFPS(float(fpsClock.get_fps()))
-            bullets[int(players[data[1]][1].team)][data[1]][bull.id]=bull
+            if bull.__class__ == "heal_beam.Heal":
+                bullets[int(players[data[1]][1].team)][data[1]][bull.id]=bull
+            else:
+                bullets[abs(int(players[data[1]][1].team)-1)][data[1]][bull.id]=bull
 
         elif data[0][0] == "p":
             score[0]='%s - %s' % (data[2][1], data[2][0])

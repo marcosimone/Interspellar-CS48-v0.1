@@ -69,9 +69,9 @@ class Player:
     def setSpecCooldown(self, cool):
         self.spec_cooldown = cool;
     
-    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
+    def activateRegular(self, screen, sounds, level, mouse_pos):
         return None
-    def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
+    def activateSpecial(self, screen, sounds, level, mouse_pos):
         return None
     
     def draw(self):

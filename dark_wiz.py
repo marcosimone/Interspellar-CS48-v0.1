@@ -6,7 +6,7 @@ from soundboard import soundboard
 from player import Player
 import bullet
 from bullet import Bullet
-from Snipe import Snipe
+from snipe import Snipe
 
 
 class DarkWizard(Player):
@@ -69,10 +69,10 @@ class DarkWizard(Player):
         return 200
         
     
-    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
-        return Snipe(screen, sounds, level, mouse_pos, self.getPos())
+    def activateRegular(self, screen, sounds, level, id, mouse_pos):
+        return Snipe(screen, sounds, level, id, mouse_pos, self.getPos())
     
-    def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
+    def activateSpecial(self, screen, sounds, level, id, mouse_pos):
         while sqrt((mouse_pos[0]-self.pos[0])**2 + (mouse_pos[1]-self.pos[1])**2) > 400:
             angle = bullet.getAngleBetweenPoints(mouse_pos[0], mouse_pos[1], self.pos[0], self.pos[1])
             rad = radians(angle)

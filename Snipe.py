@@ -17,8 +17,9 @@ class Snipe(Bullet):
     
     
     #Snipe Constructor
-    def __init__(self, screen, sound, level, mouse_pos, player_pos):
+    def __init__(self, screen, sound, level, id, mouse_pos, player_pos):
         self.snipe=[]
+        self.id=id
         sound.fire.play()
         self.screen=screen
         self.frame=0
@@ -33,6 +34,11 @@ class Snipe(Bullet):
         self.pos=(player_pos[0]-16,player_pos[1]-16)
         self.level=level
         self.sounds=sound
+        self.hbox = Rect((player_pos[0],player_pos[1]),(64 , 32))
+        
+    def hitbox(self):
+        self.hbox=Rect((self.pos[0], self.pos[1]), (64,32))
+        
     def getType(self):
         return "snipe"
     

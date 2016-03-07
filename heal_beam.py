@@ -12,9 +12,10 @@ class Heal(Bullet):
     player="me"
     
     id=0 #will determine speed and damage
-    def __init__(self, screen, sound, level, mouse_pos, player_pos):
+    def __init__(self, screen, sound, level, id, mouse_pos, player_pos):
         self.hearts=[]
         sound.fire.play()
+        self.id=id
         self.screen=screen
         self.frame=0
         self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
@@ -25,15 +26,18 @@ class Heal(Bullet):
                 self.hearts[i-1] = pygame.transform.flip(self.hearts[i-1], False, True)
             self.hearts[i-1] = pygame.transform.rotate(self.hearts[i-1],self.angle)
         self.pos=(player_pos[0],player_pos[1])
-        self.hbox = Rect((player_pos[0]+3,player_pos[1]+16),(1 , 32))
         self.level=level
         self.sounds=sound
+        self.hbox = Rect((player_pos[0],player_pos[1]),(64 , 32))
+        
+    def hitbox(self):
+        self.hbox=Rect((self.pos[0], self.pos[1]), (64,32))
     def getType(self):
         return "heal"
     
     def draw(self):
         self.hitbox()
-        return (self.hearts[((int(self.frame)/5)%14)],(self.pos[0], self.pos[1]))
+        return (self.hearts[((int(self.frame)/5)%len(self.hearts))],(self.pos[0], self.pos[1]))
 
     def hitbox(self):
         self.hbox=Rect((self.pos[0], self.pos[1]+16), (32,32))

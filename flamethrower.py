@@ -16,12 +16,13 @@ class Flamethrower(Bullet):
     speed=5
     
     #Flamethrower Constructor
-    def __init__(self, screen, sound, level, mouse_pos, player_pos):
+    def __init__(self, screen, sound, level, id, mouse_pos, player_pos):
         self.flamethrower=[]
         sound.fire.play()
+        self.id=id
         self.screen=screen
         self.frame=0
-        self.angle = getAngleBetweenPoints(player_pos[0]+32, mouse_pos[1], mouse_pos[0], player_pos[1]+32)
+        self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
         self.Flamethrower=[]
         for i in range(1,13):
             name_str = "images/animations/Flamethrower/" + str(i) + ".png"
@@ -32,11 +33,11 @@ class Flamethrower(Bullet):
         self.pos=(player_pos[0]-55,player_pos[1]-35)
         self.level=level
         self.sounds=sound
-        self.hbox=
-    
+        self.hbox = Rect((player_pos[0],player_pos[1]),(110 , 70))
+        
     def hitbox(self):
-        self.hbox=Rect((self.pos[0], self.pos[1]+55), (110,70))
-        return
+        self.hbox=Rect((self.pos[0], self.pos[1]), (110,70))
+     
     
     def getType(self):
         return "flamethrower"

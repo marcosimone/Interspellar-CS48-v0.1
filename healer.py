@@ -52,12 +52,12 @@ class Healer(Player):
     def fullSpecCooldown(self):
         return 100
     
-    def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
-        beam = Heal(screen, sounds, level, mouse_pos, self.getPos())
+    def activateSpecial(self, screen, sounds, level,id,  mouse_pos):
+        beam = Heal(screen, sounds, level, id, mouse_pos, self.getPos())
         return beam
             
-    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
-        return Wimpy(screen, sounds, level, mouse_pos, self.getPos())
+    def activateRegular(self, screen, sounds, level, id, mouse_pos):
+        return Wimpy(screen, sounds, level, id, mouse_pos, self.getPos())
     
     def update(self, inputs, bullets, server):
         Player.update(self,inputs, bullets, server)

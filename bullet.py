@@ -22,11 +22,12 @@ class Bullet:
     player="me"
     damage=10
     id=0 #will determine speed and damage
-    def __init__(self, screen, sound, level, mouse_pos, player_pos):
+    def __init__(self, screen, sound, level, id, mouse_pos, player_pos):
         sound.fire.play()
         self.screen=screen
         self.frame=0
-        self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1]-32, mouse_pos[0]-32, player_pos[1]+32)
+        self.id=id
+        self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1]+32)
         self.fireball=[]
         for i in range(1,15):
             name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
@@ -153,7 +154,7 @@ class enemyBullet(Bullet):
         self.sounds=sound
     def isDead(self):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
-        if self.frame >= len(self.flamethrower)*5 -1:
+        if self.frame >= len(self.fireball)*5 -1:
             return True
         if self.type != "flamethrower":
             return Bullet.isDead(self)
