@@ -302,7 +302,7 @@ def try_join(ipBox, portBox):
 
 def lobby(players):
     global x
-    game_start=[False]
+    game_start=[False, 0]
     chat=[]
     font = pygame.font.SysFont('lucidaconsole', 16)
     chat_full=pygame.Surface((524, 0))
@@ -362,7 +362,7 @@ def lobby(players):
         chatText = font.render(chat_box[1], True, Color(0, 0, 0))
         nameText = font.render(name_box[1], True, Color(0, 0, 0))
         if game_start[0]:
-            play(players)
+            play(players, game_start[1])
             return
         if len(chat)!=0:
             text=chat.pop()
@@ -576,10 +576,11 @@ def lobby_thread(players, chat, game_start):
             players[src[0]][4]=not players[src[0]][4]
         elif cmd[0] == "^":
             game_start[0]=True
+            game_start[1]=int(data[2])
             return
     
 
-def play(ppl):
+def play(ppl, mapID):
     bullet_id=0
     global level
     global wizard
@@ -587,7 +588,6 @@ def play(ppl):
     bullet_list_0={}#ip -> dict
     bullet_list_1={}
     bullets=[bullet_list_0, bullet_list_1]
-    mapID = 0
     mapped = Map(mapID)
     level = mapped.getLevel()
     textureSurfaces = mapped.getTextures() 
