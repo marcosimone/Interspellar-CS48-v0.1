@@ -174,7 +174,8 @@ def join_server():
     join_hover = pygame.image.load("images/buttons/join_hover.png").convert_alpha()
     join = join_idle
     joinPos = ((screen.get_width() - join.get_width())/2, 500)
-
+    ipLabel=font.render("IP:", True, Color(255, 255, 255))
+    portLabel=font.render("PORT:", True, Color(255, 255, 255))
     screen.blit(stars, (0, y))
     screen.blit(stars, (0, y-720))
     screen.blit(hills, (0, 720-hills.get_height()))
@@ -188,7 +189,7 @@ def join_server():
              (screen.get_height()-ipBox[0].get_height())/2-80)
     portPos = ((screen.get_width()-ipBox[0].get_width())/2,
                (screen.get_height()-portBox[0].get_height())/2-20)
-
+    
     screen.blit(ipBox[0], ipPos)
     screen.blit(portBox[0], portPos)
     back = back_idle
@@ -204,8 +205,10 @@ def join_server():
         screen.blit(stars, (0, y/2-720))
         screen.blit(hills, (0, 720-hills.get_height()))
         screen.blit(ipBox[0], ipPos)
+        screen.blit(ipLabel, (ipPos[0]-ipLabel.get_width()-5, ipPos[1]+ipLabel.get_height()/2))
         screen.blit(ipText, (ipPos[0]+10, ipPos[1]+ipText.get_height()/2))
         screen.blit(portBox[0], (portPos))
+        screen.blit(portLabel, (portPos[0]-portLabel.get_width()-5, portPos[1]+portLabel.get_height()/2))
         screen.blit(portText, (portPos[0]+10, portPos[1]+portText.get_height()/2))
         screen.blit(join, joinPos)
         screen.blit(back, (100, 575))
@@ -267,7 +270,6 @@ def join_server():
                         portBox[0].fill(Color(196, 196, 196))
 
             elif event.type == QUIT:
-                sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
                 sys.exit()
 
         pygame.display.update()
