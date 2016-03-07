@@ -605,7 +605,7 @@ def play(ppl, mapID):
     test=[DankWizard, DarkWizard, Healer, DankWizard]
     #(port, Player, pos, health, anim, frame)
     for client in ppl:
-        bullets[1][3])][client]={}#id -> bullet
+        bullets[1][client]={}#id -> bullet
         bullets[0][client]={}
         if not client==my_ip:
             players[client]=[ppl[client][0],  test[int(ppl[client][2])](screen, sounds, level, ppl[client][1], ppl[client][3]), (0,0), 1000, 0, 0]
