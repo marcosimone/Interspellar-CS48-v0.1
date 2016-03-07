@@ -12,7 +12,7 @@ from bullet import *
 class Flamethrower(Bullet):
     anim_frames = 0
     aniimation = 0
-    damage=180
+    damage=150
     speed=5
     
     #Flamethrower Constructor
