@@ -71,7 +71,7 @@ def lobby_phase():
         
 # {ip: (port, name, sprite, team, (posx, posy), health, anim, frame)}    
 def game_phase():
-    score_limit=2
+    score_limit=5
     for client in clients:
         players[client]=[clients[client][0], clients[client][1], clients[client][2], clients[client][3], (0,0), 1000, 0, 0]
     

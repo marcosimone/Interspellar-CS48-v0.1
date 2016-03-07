@@ -104,7 +104,7 @@ class Player:
         
         
         for bullet_list in bullets:
-            for bullet in bullets[bullet_list]:
+            for bullet in bullets[bullet_list].keys():
                 if bullets[bullet_list][bullet].hbox.colliderect(self.getBody()):
                     bullets[bullet_list][bullet].selfDestruct()
                     self.health-=bullets[bullet_list][bullet].damage
