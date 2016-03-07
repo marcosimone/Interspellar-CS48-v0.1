@@ -720,10 +720,11 @@ def update_foes(players, bullets, score):
                 bull=bullet_types[data[0][4]](screen, sounds, level, (data[0][1]), (data[0][3]), data[0][2])
             if bull is not None:
                 bull.setFPS(float(fpsClock.get_fps()))
-            if bull.__class__ == "heal_beam.Heal":
+            if str(bull.__class__) == "heal_beam.Heal":
                 bullets[abs(int(players[data[1]][1].team)-1)][data[1]][bull.id]=bull
             else:
                 bullets[int(players[data[1]][1].team)][data[1]][bull.id]=bull
+
 
         elif data[0][0] == "p":
             score[0]='%s - %s' % (data[2][1], data[2][0])
