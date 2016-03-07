@@ -32,6 +32,9 @@ class Flamethrower(Bullet):
         self.pos=(player_pos[0]-55,player_pos[1]-35)
         self.level=level
         self.sounds=sound
+        
+    def getType(self):
+        return "flamethrower"
     
     def isDead(self):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 

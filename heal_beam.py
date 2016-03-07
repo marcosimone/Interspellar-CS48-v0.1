@@ -28,6 +28,8 @@ class Heal(Bullet):
         self.hbox = Rect((player_pos[0]+3,player_pos[1]+16),(1 , 32))
         self.level=level
         self.sounds=sound
+    def getType(self):
+        return "heal"
     
     def draw(self):
         self.hitbox()
