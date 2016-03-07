@@ -64,7 +64,7 @@ class DarkWizard(Player):
         
     
     def fullRegCooldown(self):
-        return 80
+        return 120
     def fullSpecCooldown(self):
         return 200
         

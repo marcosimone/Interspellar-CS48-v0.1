@@ -58,17 +58,17 @@ class Healer(Player):
         
     def getAnimation(self):
         if self.animation==0:
-            return self.stand_sprites[(self.anim_frame/10)%len(self.stand_sprites)]
+            return self.stand_sprites[(int(self.anim_frame)/10)%len(self.stand_sprites)]
         elif self.animation==1:
-            return self.walk_sprites[(self.anim_frame/10)%len(self.walk_sprites)]
+            return self.walk_sprites[(int(self.anim_frame)/10)%len(self.walk_sprites)]
         elif self.animation==2:
-            return self.jump_sprites[(self.jump/6)%len(self.jump_sprites)]
+            return self.jump_sprites[(int(self.jump)/6)%len(self.jump_sprites)]
         elif self.animation==3:
-            return self.fall_sprites[(self.anim_frame/10)%len(self.fall_sprites)]
+            return self.fall_sprites[(int(self.anim_frame)/10)%len(self.fall_sprites)]
         elif self.animation==4:
             return self.slide_sprite[0]
         elif self.animation==5:
-            return self.spec_sprites[(self.spec_frame/5)%len(self.spec_sprites)]
+            return self.spec_sprites[(int(self.anim_frame)/5)%len(self.spec_sprites)]
         
     
         

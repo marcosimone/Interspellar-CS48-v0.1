@@ -638,7 +638,7 @@ def play(ppl, mapID):
                         bull.setFPS(float(fpsClock.get_fps()))
                         #send bullet inception ("b", type, id, pos, angle) ORIGINAL
                         #send bullet inception ("b", id, pos, angle) TMP CURRENT
-                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle)),(server_ip, server_port))
+                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle, bull.getType())),(server_ip, server_port))
                         bullet_id+=1
                         
                 if event.button==3 and player.getSpecCooldown() <= 0:
@@ -648,7 +648,7 @@ def play(ppl, mapID):
                     if bull is not None:
                         bull.setFPS(float(fpsClock.get_fps()))
                         bullets[int(player.team)][my_ip][bullet_id]=bull
-                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle)),(server_ip,server_port))
+                        sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle, bull.getType())),(server_ip,server_port))
                         bullet_id+=1
 
         
@@ -683,7 +683,7 @@ def play(ppl, mapID):
             time.sleep(3)
             return
         pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
-        fpsClock.tick(60)
+        fpsClock.tick(600)
 
 def update_foes(players, bullets, score):
     sock.sendto(pickle.dumps(("t")), (server_ip, server_port))
@@ -700,7 +700,7 @@ def update_foes(players, bullets, score):
         elif data[0][0] == "b":
             #send bullet inception ("b", type, id, pos, angle) ORIGINAL
             #send bullet inception ("b", id, pos, angle) TMP CURRENT
-            bull=enemyBullet(screen, sounds, level, data[0][1], data[0][2], data[0][3], data[1])
+            bull=enemyBullet(screen, sounds, level, data[0][1], data[0][2], data[0][3], data[1], data[0][4])
             if bull is not None:
                 bull.setFPS(float(fpsClock.get_fps()))
             bullets[int(players[data[1]][1].team)][data[1]][bull.id]=bull

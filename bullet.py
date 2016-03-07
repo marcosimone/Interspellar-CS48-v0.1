@@ -41,7 +41,8 @@ class Bullet:
     def hitbox(self):
         self.hbox=Rect((self.pos[0], self.pos[1]+16), (64,32))
         return
-    
+    def setDamage(self, dmg):
+        self.damage = dmg
     def draw(self):
         self.hitbox()
         return (self.fireball[((int(self.frame)/5)%14)],(self.pos[0], self.pos[1]))
@@ -62,7 +63,8 @@ class Bullet:
     def selfDestruct(self):
         self.died=True
         
-    
+    def getType(self):
+        return "fireball"
     def update(self):
         self.frame+=60/float(self.fps)
         rad=radians(self.angle)
@@ -78,11 +80,11 @@ class Bullet:
         
     def getPos(self):
         return self.pos
-#b(ullet):  ("b", id, type, (posx, posy) , angle, sender)  
+#b(ullet):  ("b", id, (posx, posy, type) , angle, sender)  
 class enemyBullet(Bullet):
     player="enemy"
     frame=0
-    def __init__(self, screen, sound, level, id, pos, angle, sender):
+    def __init__(self, screen, sound, level, id, pos, angle, sender, type):
         self.id=id
         self.pos=pos
         sound.fire.play()
@@ -90,11 +92,47 @@ class enemyBullet(Bullet):
         self.angle = angle
         self.sender= sender
         self.fireball=[]
-        for i in range(1,15):
-            name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
-            self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
-        #self.image = pygame.transform.rotate(image,-45)
-            self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
+        if(type == "fireball"):
+            for i in range(1,15):
+                name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
+                self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+                if mouse_pos[0] > player_pos[0]:
+                    self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
+                self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
+            self.setDamage(75)
+        elif(type == "flamethrower"):
+            for i in range(1,13):
+                name_str = "images/animations/Flamethrower/" + str(i) + ".png"
+                self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+                if mouse_pos[0] > player_pos[0]:
+                    self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
+                self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
+            self.setDamage(150)
+        elif(type == "snipe"):
+            for i in range(1,8):
+                name_str = "images/animations/snipe/void_laser_" + str(i) + ".png"
+                self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+                self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], True, False)
+                if mouse_pos[0] > player_pos[0]:
+                    self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
+                self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
+            self.setDamage(120)
+        elif(type == "wimpy"):
+            for i in range(1,15):
+                name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
+                self.fireball.append(pygame.image.load(name_str).convert_alpha())
+                if mouse_pos[0] > player_pos[0]:
+                    self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
+                self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
+            self.setDamage(50)
+        elif(type == "heal"):
+            for i in range(1,11):
+                name_str = "images/animations/heal_beam/heal_" + str(i) + ".png"
+                self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+                if mouse_pos[0] < player_pos[0]:
+                    self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
+                self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
+            self.setDamage(-100)
         self.pos=pos
         self.hbox = Rect((pos[0]+3,pos[1]+16),(1 , 32))
         

@@ -10,11 +10,11 @@ from bullet import Bullet
    class. It is the average spell that does average damage (75) 
    and goes a normal distance (stub)'''
 
-class Fire_Ball(Bullet):
+class Wimpy(Bullet):
     anim_frames = 0
     aniimation = 0
-    damage = 75
-    speed=10
+    damage = 50
+    speed=8
     #Fire_Ball Constructor
     def __init__(self, screen, sound, level, mouse_pos, player_pos):
         sound.fire.play()
@@ -24,14 +24,15 @@ class Fire_Ball(Bullet):
         self.fireball=[]
         for i in range(1,15):
             name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
-            self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+            self.fireball.append(pygame.image.load(name_str).convert_alpha())
             self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
         self.pos=(player_pos[0]+16,player_pos[1]+16)
         self.level=level
         self.sounds=sound
 
+
     def getType(self):
-        return "fireball"
+        return "wimpy"
 
     def draw(self):
         return (self.getAnimation(), self.getPos())
