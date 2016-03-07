@@ -13,11 +13,16 @@ class Healer(Player):
     animation=0
     direction=0
     jump=0
-    reskin="ae98e2"
+    reskin="127800"
+    #reskin="ae98e2"
     #reskin="original"
     
     def __init__(self, screen, sound, level, name, team):
         self.screen=screen
+        if team == "0":
+            self.reskin = "ae98e2"
+        else:
+            self.reskin = "127800"
         self.pos=((int(team)*1200+10), 64)
         self.stand_sprites = []
         for i in range(1,6):

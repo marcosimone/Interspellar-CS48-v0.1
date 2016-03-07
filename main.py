@@ -174,7 +174,8 @@ def join_server():
     join_hover = pygame.image.load("images/buttons/join_hover.png").convert_alpha()
     join = join_idle
     joinPos = ((screen.get_width() - join.get_width())/2, 500)
-
+    ipLabel=font.render("IP:", True, Color(255, 255, 255))
+    portLabel=font.render("PORT:", True, Color(255, 255, 255))
     screen.blit(stars, (0, y))
     screen.blit(stars, (0, y-720))
     screen.blit(hills, (0, 720-hills.get_height()))
@@ -188,7 +189,7 @@ def join_server():
              (screen.get_height()-ipBox[0].get_height())/2-80)
     portPos = ((screen.get_width()-ipBox[0].get_width())/2,
                (screen.get_height()-portBox[0].get_height())/2-20)
-
+    
     screen.blit(ipBox[0], ipPos)
     screen.blit(portBox[0], portPos)
     back = back_idle
@@ -204,8 +205,10 @@ def join_server():
         screen.blit(stars, (0, y/2-720))
         screen.blit(hills, (0, 720-hills.get_height()))
         screen.blit(ipBox[0], ipPos)
+        screen.blit(ipLabel, (ipPos[0]-ipLabel.get_width()-5, ipPos[1]+ipLabel.get_height()/2))
         screen.blit(ipText, (ipPos[0]+10, ipPos[1]+ipText.get_height()/2))
         screen.blit(portBox[0], (portPos))
+        screen.blit(portLabel, (portPos[0]-portLabel.get_width()-5, portPos[1]+portLabel.get_height()/2))
         screen.blit(portText, (portPos[0]+10, portPos[1]+portText.get_height()/2))
         screen.blit(join, joinPos)
         screen.blit(back, (100, 575))
@@ -267,7 +270,6 @@ def join_server():
                         portBox[0].fill(Color(196, 196, 196))
 
             elif event.type == QUIT:
-                sock.sendto(pickle.dumps(("q")),(server_ip, server_port))
                 sys.exit()
 
         pygame.display.update()
@@ -302,7 +304,7 @@ def try_join(ipBox, portBox):
 
 def lobby(players):
     global x
-    game_start=[False]
+    game_start=[False, 0]
     chat=[]
     font = pygame.font.SysFont('lucidaconsole', 16)
     chat_full=pygame.Surface((524, 0))
@@ -362,7 +364,7 @@ def lobby(players):
         chatText = font.render(chat_box[1], True, Color(0, 0, 0))
         nameText = font.render(name_box[1], True, Color(0, 0, 0))
         if game_start[0]:
-            play(players)
+            play(players, game_start[1])
             return
         if len(chat)!=0:
             text=chat.pop()
@@ -576,10 +578,11 @@ def lobby_thread(players, chat, game_start):
             players[src[0]][4]=not players[src[0]][4]
         elif cmd[0] == "^":
             game_start[0]=True
+            game_start[1]=int(data[2])
             return
     
 
-def play(ppl):
+def play(ppl, mapID):
     bullet_id=0
     global level
     global wizard
@@ -587,7 +590,6 @@ def play(ppl):
     bullet_list_0={}#ip -> dict
     bullet_list_1={}
     bullets=[bullet_list_0, bullet_list_1]
-    mapID = 0
     mapped = Map(mapID)
     level = mapped.getLevel()
     textureSurfaces = mapped.getTextures() 

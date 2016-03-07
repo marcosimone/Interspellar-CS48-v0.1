@@ -59,8 +59,9 @@ def lobby_phase():
                     if not clients[client][4]:
                         ready=False
             if ready:
+                map=random.choice(["0", "1", "2", "3"])
                 for client in clients:
-                    SOCK.sendto(pickle.dumps(("^", "SERVER")), (client, clients[client][0]))
+                    SOCK.sendto(pickle.dumps(("^", "SERVER", map)), (client, clients[client][0]))
                 return
     except Exception,e: 
         print str(e)
