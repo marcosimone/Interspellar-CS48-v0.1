@@ -48,8 +48,8 @@ def lobby_phase():
             if data[0] == "*": # ("*")
                 clients[addr[0]][4] = not clients[addr[0]][4]
                 for client in clients:
-                    if not client == addr[0]:
-                        SOCK.sendto(pickle.dumps(("*", addr)), (client, clients[client][0]))
+                    #if not client == addr[0]:
+                    SOCK.sendto(pickle.dumps(("*", addr)), (client, clients[client][0]))
                 
             ready=False
             if len(clients)!=0:

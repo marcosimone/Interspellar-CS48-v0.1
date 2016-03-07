@@ -420,7 +420,13 @@ def lobby(players):
                 player_entry.blit(idle_anim[5*int(players[player][2])], (8, 8))
                 player_name=font.render(players[player][1], True, Color(0, 0, 0))
                 player_entry.blit(player_name, (64+8+5, player_entry.get_height()/2-font.size(players[player][1])[1]/2))
-                ##check if ready
+                print players[player][4]
+                if players[player][4]:
+                    player_ready=font.render("READY", True, Color(0, 0, 0))
+                    player_entry.blit(player_ready, (player_entry.get_width()-font.size("READY")[0], player_entry.get_height()/2-font.size("READY")[1]/2))
+                else:
+                    player_ready=font.render("NOT READY", True, Color(0, 0, 0))
+                    player_entry.blit(player_ready, (player_entry.get_width()-font.size("NOT READY")[0]-10, player_entry.get_height()/2-font.size("NOT READY")[1]/2))
                 player_list_1.append(player_entry)
                 
             elif players[player][3]=='1':
@@ -428,7 +434,12 @@ def lobby(players):
                 player_entry.blit(idle_anim[5*int(players[player][2])], (8, 8))
                 player_name=font.render(players[player][1], True, Color(0, 0, 0))
                 player_entry.blit(player_name, (64+8+5, player_entry.get_height()/2-font.size(players[player][1])[1]/2))
-                ##check if ready
+                if players[player][4]:
+                    player_ready=font.render("READY", True, Color(0, 0, 0))
+                    player_entry.blit(player_ready, (player_entry.get_width()-font.size("READY")[0]-10, player_entry.get_height()/2-font.size("READY")[1]/2))
+                else:
+                    player_ready=font.render("NOT READY", True, Color(0, 0, 0))
+                    player_entry.blit(player_ready, (player_entry.get_width()-font.size("NOT READY")[0]-10, player_entry.get_height()/2-font.size("NOT READY")[1]/2))
                 player_list_2.append(player_entry)
         for i in range(0, len(player_list_1)):
             screen.blit(player_list_1[i], (20, team_1_mid.get_height()*i+team_1_top.get_height()+20))
