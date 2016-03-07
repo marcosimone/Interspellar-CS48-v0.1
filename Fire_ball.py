@@ -35,6 +35,8 @@ class Fire_Ball(Bullet):
 
     def draw(self):
         return (self.getAnimation(), self.getPos())
+    def hitbox(self):
+        self.hbox=Rect((self.pos[0], self.pos[1]+16), (64,32))
         
     #The fireball dies out after a few times of running the animation
     #thus, it's range is limited
@@ -55,7 +57,7 @@ class Fire_Ball(Bullet):
         if self.animation==1:
             return self.fired_sprites[(self.anim_frames/10)%len(self.fired_sprites)]
         elif self.animation==2:
-            return self.destruct_sprite[self.anim_frames/10)%len(self.destruct_sprite)]
+            return self.destruct_sprite[(self.anim_frames/10)%len(self.destruct_sprite)]
 
 
 

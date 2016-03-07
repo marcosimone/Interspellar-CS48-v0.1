@@ -40,7 +40,6 @@ class Flamethrower(Bullet):
     
     def getType(self):
         return "flamethrower"
-    
     def isDead(self):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
         if self.frame >= len(self.flamethrower)*5 -1:
