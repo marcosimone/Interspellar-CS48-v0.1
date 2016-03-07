@@ -13,7 +13,7 @@ from dark_wiz import DarkWizard
 from healer import Healer
 from soundboard import soundboard
 import time
-from heal_beam import Beam
+from heal_beam import Heal
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
@@ -638,7 +638,7 @@ def play(ppl, mapID):
                     player.setRegCooldown(player.fullRegCooldown())
                     bull = player.activateRegular(screen, sounds, level, event.pos, sock);
                     if bull is not None:
-                        if bull is Beam:
+                        if bull is Heal:
                             bullets[abs(int(player.team)-1)][my_ip][bullet_id]=bull
                         else:
                             bullets[int(player.team)][my_ip][bullet_id]=bull

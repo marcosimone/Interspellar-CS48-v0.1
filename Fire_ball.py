@@ -3,7 +3,7 @@ from pygame.locals import *
 from array import array
 from math import *
 from soundboard import soundboard
-from bullet import Bullet
+from bullet import *
 
 
 '''Fire_Ball is the standard spell cast by the Dank_Wizard
