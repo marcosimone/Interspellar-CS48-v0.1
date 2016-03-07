@@ -13,6 +13,7 @@ from dark_wiz import DarkWizard
 from healer import Healer
 from soundboard import soundboard
 import time
+from wimpy import Wimpy
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
@@ -634,10 +635,13 @@ def play(ppl, mapID):
                     player.setRegCooldown(player.fullRegCooldown())
                     bull = player.activateRegular(screen, sounds, level, event.pos, sock);
                     if bull is not None:
-                        bullets[int(player.team)][my_ip][bullet_id]=bull
-                        bull.setFPS(float(fpsClock.get_fps()))
-                        #send bullet inception ("b", type, id, pos, angle) ORIGINAL
-                        #send bullet inception ("b", id, pos, angle) TMP CURRENT
+                        if bull is Wimpy:
+                            bullets[abs(int(player.team)-1)][my_ip][bullet_id]=bull
+                        else:
+                            bullets[int(player.team)][my_ip][bullet_id]=bull
+                            bull.setFPS(float(fpsClock.get_fps()))
+                            #send bullet inception ("b", type, id, pos, angle) ORIGINAL 
+                            #send bullet inception ("b", id, pos, angle) TMP CURRENT
                         sock.sendto(pickle.dumps(("b", bullet_id, bull.getPos(), bull.angle, bull.getType())),(server_ip, server_port))
                         bullet_id+=1
                         

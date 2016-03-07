@@ -6,6 +6,7 @@ from soundboard import soundboard
 from player import Player
 import bullet
 from heal_beam import Heal
+from wimpy import Wimpy
 
 class Healer(Player):
     
@@ -46,12 +47,17 @@ class Healer(Player):
         self.team=team
         self.level=level
         self.sounds=sound
-    
+    def fullRegCooldown(self):
+        return 80
+    def fullSpecCooldown(self):
+        return 300
     
     def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
         beam = Heal(screen, sounds, level, mouse_pos, self.getPos())
         return beam
             
+    def activateRegular(self, screen, sounds, level, mouse_pos, sock):
+        return Wimpy(screen, sounds, level, mouse_pos, self.getPos())
     
     def update(self, inputs, bullets, server):
         Player.update(self,inputs, bullets, server)

@@ -12,7 +12,7 @@ from bullet import Bullet
 
 class Fire_Ball(Bullet):
     anim_frames = 0
-    aniimation = 0
+    animation = 0
     damage = 75
     speed=10
     #Fire_Ball Constructor
