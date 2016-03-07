@@ -26,7 +26,7 @@ class Bullet:
         sound.fire.play()
         self.screen=screen
         self.frame=0
-        self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
+        self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1]-32, mouse_pos[0]-32, player_pos[1]+32)
         self.fireball=[]
         for i in range(1,15):
             name_str = "images/animations/fireball/fireball_" + str(i) + ".png"

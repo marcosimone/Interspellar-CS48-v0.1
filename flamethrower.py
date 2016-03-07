@@ -21,7 +21,7 @@ class Flamethrower(Bullet):
         sound.fire.play()
         self.screen=screen
         self.frame=0
-        self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
+        self.angle = getAngleBetweenPoints(player_pos[0]+32, mouse_pos[1], mouse_pos[0], player_pos[1]+32)
         self.Flamethrower=[]
         for i in range(1,13):
             name_str = "images/animations/Flamethrower/" + str(i) + ".png"
@@ -32,7 +32,12 @@ class Flamethrower(Bullet):
         self.pos=(player_pos[0]-55,player_pos[1]-35)
         self.level=level
         self.sounds=sound
-        
+        self.hbox=
+    
+    def hitbox(self):
+        self.hbox=Rect((self.pos[0], self.pos[1]+55), (110,70))
+        return
+    
     def getType(self):
         return "flamethrower"
     
