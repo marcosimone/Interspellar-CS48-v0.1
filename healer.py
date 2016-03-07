@@ -50,7 +50,7 @@ class Healer(Player):
     def fullRegCooldown(self):
         return 80
     def fullSpecCooldown(self):
-        return 300
+        return 100
     
     def activateSpecial(self, screen, sounds, level, mouse_pos, sock):
         beam = Heal(screen, sounds, level, mouse_pos, self.getPos())

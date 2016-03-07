@@ -67,4 +67,4 @@ class DankWizard(Player):
         
         
     def getSpeed(self):
-        return 3.5
+        return 4.5

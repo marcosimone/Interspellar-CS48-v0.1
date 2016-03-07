@@ -86,7 +86,8 @@ class Bullet:
 class enemyBullet(Bullet):
     player="enemy"
     frame=0
-    def __init__(self, screen, sound, level, id, pos, angle, sender, type):
+    type = "fireball"
+    def __init__(self, screen, sound, level, id, pos, angle, sender, btype):
         self.id=id
         self.pos=pos
         sound.fire.play()
@@ -94,52 +95,53 @@ class enemyBullet(Bullet):
         self.angle = angle
         self.sender= sender
         self.fireball=[]
-        if(type == "fireball"):
+        self.type = btype
+        if(btype == "fireball"):
             for i in range(1,15):
                 name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
                 self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
-                if self.angle + 90 < 180:
+                if self.angle + 90 > 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(75)
             self.setSpeed(10)
             self.hbox = Rect((pos[0]+3,pos[1]+8),(64, 16))
-        elif(type == "flamethrower"):
+        elif(btype == "flamethrower"):
             for i in range(1,13):
                 name_str = "images/animations/Flamethrower/" + str(i) + ".png"
                 self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
-                if self.angle + 90 < 180:
+                if self.angle + 90 > 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(150)
             self.setSpeed(5)
             self.hbox = Rect((pos[0],pos[1]+55),(110, 70))
-        elif(type == "snipe"):
+        elif(btype == "snipe"):
             for i in range(1,8):
                 name_str = "images/animations/snipe/void_laser_" + str(i) + ".png"
                 self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
                 self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], True, False)
-                if self.angle + 90 < 180:
+                if self.angle + 90 > 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(120)
             self.setSpeed(20)
             self.hbox = Rect((pos[0]+3,pos[1]+8),(32, 16))
-        elif(type == "wimpy"):
+        elif(btype == "wimpy"):
             for i in range(1,15):
                 name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
                 self.fireball.append(pygame.image.load(name_str).convert_alpha())
-                if self.angle + 90 < 180:
+                if self.angle + 90 > 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(50)
             self.setSpeed(8)
             self.hbox = Rect((pos[0]+3,pos[1]+8),(8, 8))
-        elif(type == "heal"):
+        elif(btype == "heal"):
             for i in range(1,11):
                 name_str = "images/animations/heal_beam/heal_" + str(i) + ".png"
                 self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
-                if self.angle + 90 < 180:
+                if self.angle + 90 > 180:
                     self.fireball[i-1] = pygame.transform.flip(self.fireball[i-1], False, True)
                 self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
             self.setDamage(-100)
@@ -149,5 +151,11 @@ class enemyBullet(Bullet):
         
         self.level=level
         self.sounds=sound
-    
+    def isDead(self):
+        dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
+        if self.frame >= len(self.flamethrower)*5 -1:
+            return True
+        if self.type != "flamethrower":
+            return Bullet.isDead(self)
+        return dead or self.died
     

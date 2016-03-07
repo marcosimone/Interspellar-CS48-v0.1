@@ -101,7 +101,7 @@ class DarkWizard(Player):
             self.spec_frame=-1
 
     def getSpeed(self):
-        return 4
+        return 5
     
         
         
