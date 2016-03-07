@@ -13,7 +13,7 @@ from dark_wiz import DarkWizard
 from healer import Healer
 from soundboard import soundboard
 import time
-from heal_beam import Beam
+from heal_beam import Heal
 
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
