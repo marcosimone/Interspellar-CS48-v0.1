@@ -13,7 +13,8 @@ class Healer(Player):
     animation=0
     direction=0
     jump=0
-    reskin="ae98e2"
+    reskin="127800"
+    #reskin="ae98e2"
     #reskin="original"
     
     def __init__(self, screen, sound, level, name, team):
