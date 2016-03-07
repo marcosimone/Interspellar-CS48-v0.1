@@ -26,17 +26,17 @@ class Flamethrower(Bullet):
         self.Flamethrower=[]
         for i in range(1,13):
             name_str = "images/animations/Flamethrower/" + str(i) + ".png"
-            self.flamethrower.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+            self.flamethrower.append(pygame.transform.flip(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha(), False, True))
             if mouse_pos[0] > player_pos[0]:
                 self.flamethrower[i-1] = pygame.transform.flip(self.flamethrower[i-1], False, True)
             self.flamethrower[i-1] = pygame.transform.rotate(self.flamethrower[i-1],self.angle)
         self.pos=(player_pos[0]-55,player_pos[1]-35)
         self.level=level
         self.sounds=sound
-        self.hbox = Rect((player_pos[0],player_pos[1]),(110 , 70))
+        self.hbox = Rect((player_pos[0]+55,player_pos[1]+45),(110 , 70))
         
     def hitbox(self):
-        self.hbox=Rect((self.pos[0], self.pos[1]), (110,70))
+        self.hbox=Rect((self.pos[0]+55, self.pos[1]+45), (110,70))
      
     
     def getType(self):

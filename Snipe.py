@@ -44,8 +44,8 @@ class Snipe(Bullet):
     
     def isDead(self):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
-        for ob in self.level:
-            if ob.collidepoint((self.pos[0]+16, self.pos[1]+16)):
+        for l in self.level:
+            if l.collidepoint(self.hbox.center):
                 return True
         return dead or self.died
 

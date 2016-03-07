@@ -61,7 +61,9 @@ class DankWizard(Player):
     def activateSpecial(self,screen,sounds,level,id ,mouse_pos):
         return Flamethrower(screen,sounds,level,id, mouse_pos,self.getPos())
  
-            
+    def getBody(self):
+        return Rect((self.pos[0]-20,self.pos[1]-50), (48,56))
+        
     def update(self, inputs, bullets, server):
         Player.update(self,inputs, bullets, server)
         

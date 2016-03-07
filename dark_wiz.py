@@ -61,7 +61,8 @@ class DarkWizard(Player):
         self.level=level
         self.sounds=sound
     
-        
+    def getBody(self):
+        return Rect((self.pos[0]-16,self.pos[1]-64), (32,64))
     
     def fullRegCooldown(self):
         return 120

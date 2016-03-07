@@ -30,10 +30,10 @@ class Wimpy(Bullet):
         self.pos=(player_pos[0]+8,player_pos[1]+16)
         self.level=level
         self.sounds=sound
-        self.hbox = Rect((player_pos[0],player_pos[1]),(32 , 16))
+        self.hbox = Rect((player_pos[0],player_pos[1]+8),(32 , 16))
         
     def hitbox(self):
-        self.hbox=Rect((self.pos[0], self.pos[1]), (32,16))
+        self.hbox=Rect((self.pos[0], self.pos[1]+8), (32,16))
         
     def getType(self):
         return "wimpy"
@@ -42,6 +42,9 @@ class Wimpy(Bullet):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
         if self.frame >= len(self.wimpy)*5 -1:
             return True
+        for l in self.level:
+            if l.collidepoint(self.hbox.center):
+                return True
         return dead or self.died
 
     def draw(self):

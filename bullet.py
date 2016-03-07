@@ -20,7 +20,7 @@ class Bullet:
     fps=60
     died=False
     player="me"
-    damage=10
+    damage=50
     id=0 #will determine speed and damage
     def __init__(self, screen, sound, level, id, mouse_pos, player_pos):
         sound.fire.play()
@@ -54,13 +54,11 @@ class Bullet:
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
         if self.frame >= len(self.fireball)*5 -1:
             return True
-        #for ob in self.level:
-        #    if ob.colliderect(self.hbox):
-        #        return True.
-        if self.hbox.collidelist(self.level) == -1:
-            return False
-        else:
-            return True
+        
+        for l in self.level:
+            if l.collidepoint(self.hbox.center):
+                return True
+        
         return dead or self.died
         
     def selfDestruct(self):

@@ -33,25 +33,23 @@ class Heal(Bullet):
         
     def hitbox(self):
         self.hbox=Rect((self.pos[0], self.pos[1]), (64,32))
+    
     def getType(self):
         return "heal"
     
     def draw(self):
         self.hitbox()
         return (self.hearts[((int(self.frame)/5)%len(self.hearts))],(self.pos[0], self.pos[1]))
-
-    def hitbox(self):
-        self.hbox=Rect((self.pos[0], self.pos[1]+16), (32,32))
         
     def isDead(self):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
         if self.frame >= len(self.hearts)*5 -1:
             return True
 
-        if self.hbox.collidelist(self.level) == -1:
-            return False
-        else:
-            return True
+        for l in self.level:
+            if l.collidepoint(self.hbox.center):
+                return True
+
         return dead or self.died
       
     def selfDestruct(self):

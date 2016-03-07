@@ -29,7 +29,9 @@ class Player:
         self.reg_cooldown = 20
         self.name=name
         self.team=team
-    
+        
+    def getBody(self):
+        return Rect((self.pos[0]-32,self.pos[1]-64), (64,64))
     def getCurrentHealth(self):
         return self.health
         
@@ -103,16 +105,15 @@ class Player:
         
         for bullet_list in bullets:
             for bullet in bullets[bullet_list]:
-                if bullets[bullet_list][bullet].hbox.collidepoint(body.center):
+                if bullets[bullet_list][bullet].hbox.colliderect(self.getBody()):
                     bullets[bullet_list][bullet].selfDestruct()
-                    #send bullet destruction packet ("h", src_ip, id)
                     self.health-=bullets[bullet_list][bullet].damage
                     if (self.health<=0):
                         sock.sendto(pickle.dumps(("d")), server)
                         self.health=self.max_health
                         self.setPos(((int(self.team)*1200+10), 64))
                         return
-                        #sys.exit()
+                        
                         
         
         if inputs[1]==1:

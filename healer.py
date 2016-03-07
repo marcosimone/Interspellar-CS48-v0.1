@@ -61,7 +61,10 @@ class Healer(Player):
     
     def update(self, inputs, bullets, server):
         Player.update(self,inputs, bullets, server)
-        
+    
+    def getBody(self):
+        return Rect((self.pos[0]-24,self.pos[1]-60), (48,60))
+    
     def getAnimation(self):
         if self.animation==0:
             return self.stand_sprites[(int(self.anim_frame)/10)%len(self.stand_sprites)]

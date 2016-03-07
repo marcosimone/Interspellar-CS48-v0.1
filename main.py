@@ -567,7 +567,6 @@ def lobby_thread(players, chat, game_start):
         data=pickle.loads(data)
         src=data[1]
         cmd=data[0]
-        print data
         
         if cmd[0] == "c":
             chat.append((src, cmd[1]))
@@ -580,7 +579,6 @@ def lobby_thread(players, chat, game_start):
             del players[src[0]]
         elif cmd[0] == "*":
             players[src[0]][4]=not players[src[0]][4]
-            print 'did the thing'
         elif cmd[0] == "^":
             game_start[0]=True
             game_start[1]=int(data[2])
@@ -647,8 +645,7 @@ def play(ppl, mapID):
                         else:
                             bullets[int(player.team)][my_ip][bullet_id]=bull
                             bull.setFPS(float(fpsClock.get_fps()))
-                            #send bullet inception ("b", type, id, pos, angle) ORIGINAL 
-                            #send bullet inception ("b", id, pos, angle) TMP CURRENT
+
                         sock.sendto(pickle.dumps(("b", bullet_id, event.pos, bull.getPos(), bull.getType())),(server_ip, server_port))
                         bullet_id+=1
                         
@@ -683,11 +680,14 @@ def play(ppl, mapID):
                         bullet.update()
                         draw=bullet.draw()
                         screen.blit(draw[0], draw[1])
+                        #pygame.draw.rect(screen, Color(255,0,0), bullet.hbox, 5)
         for opp in players:
             draw=players[opp][1].draw()
             screen.blit(draw[0], draw[1])
+            #pygame.draw.rect(screen, Color(255,0,0), players[opp][1].getBody(), 5)
         draw=player.draw()
         screen.blit(draw[0], draw[1])
+        #pygame.draw.rect(screen, Color(255,0,0), player.getBody(), 5)
         screen.blit(score_label, (600, 50))
         pygame.display.update()
         if score[0][0] == "t":
