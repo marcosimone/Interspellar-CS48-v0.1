@@ -17,7 +17,7 @@ class DarkWizard(Player):
     jump=0
 
     #color="original"
-    color="004c00"
+    color=""
     tp_loc=(0,0)
     #COLORS SUPPORTED SO FAR:
     # 004c00 : green
@@ -30,6 +30,10 @@ class DarkWizard(Player):
     
     def __init__(self, screen, sound, level, name, team):
         self.screen=screen
+        if team=="0":
+            self.color="460099"
+        else:
+            self.color="004c00"
         self.stand_sprites = []
         for i in range(1,6):
             string = "images/animations/darkwiz/" + self.color + "/dark_idle_" + str(i) + ".png"

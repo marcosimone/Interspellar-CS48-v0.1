@@ -19,6 +19,10 @@ class Healer(Player):
     
     def __init__(self, screen, sound, level, name, team):
         self.screen=screen
+        if team == "0":
+            self.reskin = "ae98e2"
+        else:
+            self.reskin = "127800"
         self.pos=((int(team)*1200+10), 64)
         self.stand_sprites = []
         for i in range(1,6):

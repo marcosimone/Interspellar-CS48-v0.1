@@ -13,7 +13,7 @@ class DankWizard(Player):
     animation=0
     direction=0
     jump=0
-    color="004c00"
+    color=""
     #COLORS SUPPORTED SO FAR:
     # 004c00 : green
     # 0066cc : light blue
@@ -25,6 +25,10 @@ class DankWizard(Player):
     
     def __init__(self, screen, sound, level, name, team):
         self.screen=screen
+        if team == "0":
+            self.color="460099"
+        else:
+            self.color="004c00"
         self.pos=((int(team)*1200+10), 64)
         self.stand_sprites = [pygame.transform.scale2x(pygame.image.load("images/animations/dankwiz/" +self.color+ "/wizard.png")).convert_alpha()]
         self.slide_sprite = [pygame.transform.scale2x(pygame.image.load("images/animations/dankwiz/" +self.color+ "/wiz_slide.png")).convert_alpha()]
