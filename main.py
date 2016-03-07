@@ -420,7 +420,7 @@ def lobby(players):
                 player_entry.blit(idle_anim[5*int(players[player][2])], (8, 8))
                 player_name=font.render(players[player][1], True, Color(0, 0, 0))
                 player_entry.blit(player_name, (64+8+5, player_entry.get_height()/2-font.size(players[player][1])[1]/2))
-                print players[player][4]
+    
                 if players[player][4]:
                     player_ready=font.render("READY", True, Color(0, 0, 0))
                     player_entry.blit(player_ready, (player_entry.get_width()-font.size("READY")[0], player_entry.get_height()/2-font.size("READY")[1]/2))

@@ -13,35 +13,28 @@ class Healer(Player):
     animation=0
     direction=0
     jump=0
-    color="004c00"
-    #COLORS SUPPORTED SO FAR:
-    # 004c00 : green
-    # 0066cc : light blue
-    # 460099 : purple
-    # 800000 : red
-    # e5e600 : yellow
-    # 000080 : blue
-    # cc5200 : orange
+    reskin="ae98e2"
+    #reskin="original"
     
     def __init__(self, screen, sound, level, name, team):
         self.screen=screen
         self.pos=((int(team)*1200+10), 64)
         self.stand_sprites = []
         for i in range(1,6):
-            string = "images/animations/healer/healer_idle_" + str(i) + ".png"
+            string = "images/animations/healer/" + self.reskin + "/healer_idle_" + str(i) + ".png"
             self.stand_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
-        self.slide_sprite = [pygame.transform.scale2x(pygame.image.load("images/animations/healer/healer_slide.png")).convert_alpha()]
+        self.slide_sprite = [pygame.transform.scale2x(pygame.image.load("images/animations/healer/" + self.reskin + "/healer_slide.png")).convert_alpha()]
         self.walk_sprites = []
         for i in range(1,6):
-            string = "images/animations/healer/healer_walk_" + str(i) + ".png"
+            string = "images/animations/healer/" + self.reskin + "/healer_walk_" + str(i) + ".png"
             self.walk_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
         self.jump_sprites = []
         for i in range(1,13):
-            string = "images/animations/healer/healer_jump_" + str(i) + ".png"
+            string = "images/animations/healer/" + self.reskin + "/healer_jump_" + str(i) + ".png"
             self.jump_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
         self.fall_sprites = []
         for i in range(1,6):
-            string = "images/animations/healer/healer_idle_" + str(i) + ".png"
+            string = "images/animations/healer/" + self.reskin + "/healer_idle_" + str(i) + ".png"
             self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
         
         self.name=name
