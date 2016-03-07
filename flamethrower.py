@@ -28,7 +28,7 @@ class Flamethrower(Bullet):
             if mouse_pos[0] > player_pos[0]:
                 self.flamethrower[i-1] = pygame.transform.flip(self.flamethrower[i-1], False, True)
             self.flamethrower[i-1] = pygame.transform.rotate(self.flamethrower[i-1],self.angle)
-        self.pos=(player_pos[0]-32,player_pos[1]-32)
+        self.pos=(player_pos[0]-55,player_pos[1]-35)
         self.level=level
         self.sounds=sound
     
@@ -36,9 +36,6 @@ class Flamethrower(Bullet):
         dead=(self.pos[0]>1280 or self.pos[0]<0 or self.pos[1]>720 or self.pos[1]<0) 
         if self.frame >= len(self.flamethrower)*5 -1:
             return True
-        for ob in self.level:
-            if ob.collidepoint((self.pos[0]-16, self.pos[1]-16)):
-                return True
         return dead or self.died
 
     def draw(self):
