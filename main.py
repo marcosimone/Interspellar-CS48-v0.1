@@ -315,9 +315,9 @@ def lobby(players):
 		t = threading.Thread(target=lobby_thread, args=(players, chat, game_start))
 		t.daemon = True
 		t.start()
-		team="default"
+		team=players[my_ip][3]
 		global wizard
-		wizard = "0"
+		wizard = players[my_ip][4]
 		name="unnamed"
 		chat_box = [pygame.Surface((524, 25)), ""]
 		chat_box[0].fill(Color(255, 255, 255)) 
