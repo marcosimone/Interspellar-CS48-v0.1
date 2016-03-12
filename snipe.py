@@ -4,6 +4,7 @@ from array import array
 from math import *
 from soundboard import soundboard
 from bullet import *
+import tools
 
 
 """Snipe is a fast moving shot that traverses 
@@ -25,8 +26,8 @@ class Snipe(Bullet):
         self.frame=0
         self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
         for i in range(1,8):
-            name_str = "images/animations/snipe/void_laser_" + str(i) + ".png"
-            self.snipe.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+            name_str = "resources/images/animations/snipe/void_laser_" + str(i) + ".png"
+            self.snipe.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(name_str))).convert_alpha())
             self.snipe[i-1] = pygame.transform.flip(self.snipe[i-1], True, False)
             if mouse_pos[0] > player_pos[0]:
                 self.snipe[i-1] = pygame.transform.flip(self.snipe[i-1], False, True)

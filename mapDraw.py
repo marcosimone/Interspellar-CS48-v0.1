@@ -2,6 +2,7 @@ import pygame, sys, socket
 from pygame.locals import *
 from array import array
 from math import *
+import tools
 
 class Map: 
 	listOfTexturedSurfaces = [] 
@@ -39,22 +40,22 @@ class Map:
 	mapList = [map0, map1, map2, map3]
 	
 	def __init__(self, id):
-		self.texture0 = pygame.image.load("images/textures/snowCenter.png").convert()
-		self.texture1 = pygame.image.load("images/textures/sandCenter.png").convert()
-		self.texture2 = pygame.image.load("images/textures/grassCenter.png").convert()
-		self.texture3 = pygame.image.load("images/textures/castleCenter.png").convert()
+		self.texture0 = pygame.image.load(tools.resource_path("resources/images/textures/snowCenter.png")).convert()
+		self.texture1 = pygame.image.load(tools.resource_path("resources/images/textures/sandCenter.png")).convert()
+		self.texture2 = pygame.image.load(tools.resource_path("resources/images/textures/grassCenter.png")).convert()
+		self.texture3 = pygame.image.load(tools.resource_path("resources/images/textures/castleCenter.png")).convert()
 		textureList = [self.texture0, self.texture1, self.texture2, self.texture3]
 
-		self.platText0 = pygame.image.load("images/textures/snowMid.png").convert_alpha()
-		self.platText1 = pygame.image.load("images/textures/sandMid.png").convert_alpha() 
-		self.platText2 = pygame.image.load("images/textures/grassMid.png").convert_alpha()
-		self.platText3 = pygame.image.load("images/textures/castleMid.png").convert_alpha()
+		self.platText0 = pygame.image.load(tools.resource_path("resources/images/textures/snowMid.png")).convert_alpha()
+		self.platText1 = pygame.image.load(tools.resource_path("resources/images/textures/sandMid.png")).convert_alpha() 
+		self.platText2 = pygame.image.load(tools.resource_path("resources/images/textures/grassMid.png")).convert_alpha()
+		self.platText3 = pygame.image.load(tools.resource_path("resources/images/textures/castleMid.png")).convert_alpha()
 		platTextList = [self.platText0, self.platText1, self.platText2, self.platText3]
 
-		self.background0 = pygame.transform.smoothscale(pygame.image.load("images/backgrounds/mountainBackground.png").convert(), (1280,720))
-		self.background1 = pygame.transform.smoothscale(pygame.image.load("images/backgrounds/desertBackground.png").convert(), (1280,720))
-		self.background2 = pygame.transform.smoothscale(pygame.image.load("images/backgrounds/forestBackground.png").convert(), (1280,720))
-		self.background3 = pygame.transform.smoothscale(pygame.image.load("images/backgrounds/nightBackground.png").convert(), (1280,720))
+		self.background0 = pygame.transform.smoothscale(pygame.image.load(tools.resource_path("resources/images/backgrounds/mountainBackground.png")).convert(), (1280,720))
+		self.background1 = pygame.transform.smoothscale(pygame.image.load(tools.resource_path("resources/images/backgrounds/desertBackground.png")).convert(), (1280,720))
+		self.background2 = pygame.transform.smoothscale(pygame.image.load(tools.resource_path("resources/images/backgrounds/forestBackground.png")).convert(), (1280,720))
+		self.background3 = pygame.transform.smoothscale(pygame.image.load(tools.resource_path("resources/images/backgrounds/nightBackground.png")).convert(), (1280,720))
 		backgroundList = [self.background0, self.background1, self.background2, self.background3]
 
 		self.backgroundVar = backgroundList[id]

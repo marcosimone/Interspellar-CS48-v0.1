@@ -17,13 +17,14 @@ from heal_beam import Heal
 from flamethrower import Flamethrower
 from snipe import Snipe
 from wimpy import Wimpy
+import tools
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode((1280, 720))
 fpsClock = pygame.time.Clock()
-font = pygame.font.Font('WhiteRabbit.ttf', 24)
-icon = pygame.image.load("images/icon.png").convert_alpha()
+font = pygame.font.Font(tools.resource_path("resources/WhiteRabbit.ttf"), 24)
+icon = pygame.image.load(tools.resource_path("resources/images/icon.png")).convert_alpha()
 sounds = soundboard()
 y = 0
 x = 0
@@ -33,22 +34,22 @@ server_port=0
 my_ip="127.0.0.1"
 shiftLookup={'1':'!', '2':'@', '3':'#', '4':'$', '5':'%', '6':'^', '7':'&', '8':'*', '9':'(', '0':')', ',':'<', '.':'>', '/':'?', ';':':', '\'':'"', '`':'~', '-':'_', '=':'+', '\\':'|'}
 #background stuff
-splash=pygame.image.load("images/liquid_toaster.png").convert_alpha()
-click_continue=pygame.image.load("images/continue.png").convert_alpha()
+splash=pygame.image.load(tools.resource_path("resources/images/liquid_toaster.png")).convert_alpha()
+click_continue=pygame.image.load(tools.resource_path("resources/images/continue.png")).convert_alpha()
 
-logo = pygame.image.load("images/logo.png").convert_alpha()
-stars = pygame.image.load("images/stars.png").convert_alpha()
+logo = pygame.image.load(tools.resource_path("resources/images/logo.png")).convert_alpha()
+stars = pygame.image.load(tools.resource_path("resources/images/stars.png")).convert_alpha()
 stars2 = stars
-hills = pygame.image.load("images/hills.png").convert_alpha()
-lobby_back = pygame.image.load("images/lobby_background.png").convert_alpha()
-clouds = pygame.image.load("images/lobby_clouds.png").convert_alpha()
-mist = pygame.image.load("images/lobby_mist.png").convert_alpha()
-mountains = pygame.image.load("images/lobby_mountains.png").convert_alpha()
+hills = pygame.image.load(tools.resource_path("resources/images/hills.png")).convert_alpha()
+lobby_back = pygame.image.load(tools.resource_path("resources/images/lobby_background.png")).convert_alpha()
+clouds = pygame.image.load(tools.resource_path("resources/images/lobby_clouds.png")).convert_alpha()
+mist = pygame.image.load(tools.resource_path("resources/images/lobby_mist.png")).convert_alpha()
+mountains = pygame.image.load(tools.resource_path("resources/images/lobby_mountains.png")).convert_alpha()
 level = []
 textureSurfaces = []
 #buttons
-back_hover = pygame.image.load("images/buttons/back_hover.png").convert_alpha()
-back_idle = pygame.image.load("images/buttons/back.png").convert_alpha()
+back_hover = pygame.image.load(tools.resource_path("resources/images/buttons/back_hover.png")).convert_alpha()
+back_idle = pygame.image.load(tools.resource_path("resources/images/buttons/back.png")).convert_alpha()
 
 bullets = []
 
@@ -61,7 +62,7 @@ toDraw_players = []
 
 def main():
 
-		pygame.mixer.music.load("sound/music.wav")
+		pygame.mixer.music.load(tools.resource_path("resources/sound/music.wav"))
 		pygame.display.set_icon(icon)
 		#eventHandler(-1)
 		loading=True
@@ -94,13 +95,13 @@ def main():
 		main_menu()
 
 def main_menu():
-		buttons_idle = [pygame.image.load("images/buttons/play.png").convert_alpha(),
-										pygame.image.load("images/buttons/options.png").convert_alpha(),
-																   pygame.image.load("images/buttons/credits.png").convert_alpha()]
+		buttons_idle = [pygame.image.load(tools.resource_path("resources/images/buttons/play.png")).convert_alpha(),
+										pygame.image.load(tools.resource_path("resources/images/buttons/options.png")).convert_alpha(),
+																   pygame.image.load(tools.resource_path("resources/images/buttons/credits.png")).convert_alpha()]
 
-		buttons_hover = [pygame.image.load("images/buttons/play_hover.png").convert_alpha(),
-										 pygame.image.load("images/buttons/options_hover.png").convert_alpha(),
-																		pygame.image.load("images/buttons/credits_hover.png").convert_alpha()]
+		buttons_hover = [pygame.image.load(tools.resource_path("resources/images/buttons/play_hover.png")).convert_alpha(),
+										 pygame.image.load(tools.resource_path("resources/images/buttons/options_hover.png")).convert_alpha(),
+																		pygame.image.load(tools.resource_path("resources/images/buttons/credits_hover.png")).convert_alpha()]
 
 		buttons = [buttons_idle[0], buttons_idle[1], buttons_idle[2]]
 
@@ -173,8 +174,8 @@ def blit():
 def join_server():
 		global y
 		#Box = (surface, text)
-		join_idle = pygame.image.load("images/buttons/join.png").convert_alpha()
-		join_hover = pygame.image.load("images/buttons/join_hover.png").convert_alpha()
+		join_idle = pygame.image.load(tools.resource_path("resources/images/buttons/join.png")).convert_alpha()
+		join_hover = pygame.image.load(tools.resource_path("resources/images/buttons/join_hover.png")).convert_alpha()
 		join = join_idle
 		joinPos = ((screen.get_width() - join.get_width())/2, 500)
 		ipLabel=font.render("IP:", True, Color(255, 255, 255))
@@ -323,32 +324,32 @@ def lobby(players):
 		chat_box[0].fill(Color(255, 255, 255)) 
 		name_box = [pygame.Surface((200, 30)), name] 
 		name_box[0].fill(Color(196, 196, 196))
-		name_label=pygame.image.load("images/buttons/name.png").convert_alpha()
+		name_label=pygame.image.load(tools.resource_path("resources/images/buttons/name.png")).convert_alpha()
 		chatPos = ((screen.get_width()-chat_box[0].get_width())/2,(screen.get_height()-chat_box[0].get_height()-10))
 		namePos = ((screen.get_width()-name_box[0].get_width())/2,10)
 		screen.blit(chat_box[0], chatPos)
 		screen.blit(name_box[0], namePos)
 		focus = chat_box
 
-		team_1_mid = pygame.image.load("images/team_1_mid.png").convert_alpha()
-		team_2_mid = pygame.image.load("images/team_2_mid.png").convert_alpha()
-		team_1_top = pygame.image.load("images/team_1_top_re.png").convert_alpha()#####
-		team_2_top = pygame.image.load("images/team_2_top_re.png").convert_alpha()#####
-		team_1_bot = pygame.image.load("images/team_1_bot_re.png").convert_alpha()
-		team_2_bot = pygame.image.load("images/team_2_bot_re.png").convert_alpha()
-		arrow = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char.png").convert_alpha(), True, False), 
-						 pygame.image.load("images/buttons/lobby_char.png").convert_alpha()]
-		arrow_hover = [pygame.transform.flip(pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha(), True, False),
-								   pygame.image.load("images/buttons/lobby_char_hover.png").convert_alpha()]
-		info_panel=[pygame.image.load("images/buttons/info_panel_dank.png").convert_alpha(),
-								pygame.image.load("images/buttons/info_panel_dark.png").convert_alpha(),
-								pygame.image.load("images/buttons/info_panel_healer.png").convert_alpha(),
-								pygame.image.load("images/buttons/info_panel_gravity.png").convert_alpha()]
+		team_1_mid = pygame.image.load(tools.resource_path("resources/images/team_1_mid.png")).convert_alpha()
+		team_2_mid = pygame.image.load(tools.resource_path("resources/images/team_2_mid.png")).convert_alpha()
+		team_1_top = pygame.image.load(tools.resource_path("resources/images/team_1_top_re.png")).convert_alpha()#####
+		team_2_top = pygame.image.load(tools.resource_path("resources/images/team_2_top_re.png")).convert_alpha()#####
+		team_1_bot = pygame.image.load(tools.resource_path("resources/images/team_1_bot_re.png")).convert_alpha()
+		team_2_bot = pygame.image.load(tools.resource_path("resources/images/team_2_bot_re.png")).convert_alpha()
+		arrow = [pygame.transform.flip(pygame.image.load(tools.resource_path("resources/images/buttons/lobby_char.png")).convert_alpha(), True, False), 
+						 pygame.image.load(tools.resource_path("resources/images/buttons/lobby_char.png")).convert_alpha()]
+		arrow_hover = [pygame.transform.flip(pygame.image.load(tools.resource_path("resources/images/buttons/lobby_char_hover.png")).convert_alpha(), True, False),
+								   pygame.image.load(tools.resource_path("resources/images/buttons/lobby_char_hover.png")).convert_alpha()]
+		info_panel=[pygame.image.load(tools.resource_path("resources/images/buttons/info_panel_dank.png")).convert_alpha(),
+								pygame.image.load(tools.resource_path("resources/images/buttons/info_panel_dark.png")).convert_alpha(),
+								pygame.image.load(tools.resource_path("resources/images/buttons/info_panel_healer.png")).convert_alpha(),
+								pygame.image.load(tools.resource_path("resources/images/buttons/info_panel_gravity.png")).convert_alpha()]
 		team_char_select=[]
-		set=pygame.image.load("images/buttons/set_button.png").convert_alpha()
-		start=pygame.image.load("images/buttons/start.png").convert_alpha()
-		panel=pygame.image.load("images/buttons/char_panel.png").convert_alpha()
-		ready = pygame.image.load("images/ready.png").convert_alpha()
+		set=pygame.image.load(tools.resource_path("resources/images/buttons/set_button.png")).convert_alpha()
+		start=pygame.image.load(tools.resource_path("resources/images/buttons/start.png")).convert_alpha()
+		panel=pygame.image.load(tools.resource_path("resources/images/buttons/char_panel.png")).convert_alpha()
+		ready = pygame.image.load(tools.resource_path("resources/images/ready.png")).convert_alpha()
 		for i in range(0,4):
 				team_char_select.append(arrow[0])
 				team_char_select.append(arrow[1])
@@ -356,8 +357,8 @@ def lobby(players):
 		for i in range(4):
 				names=["dankwiz/", "wiz_atk_", "darkwiz/", "dark_idle_", "healer/","healer_idle_", "dankwiz/", "wiz_atk_"]
 				for j in range(5):
-						anim_string = "images/animations/" + names[2*i] + names[2*i+1] + str(j+1) + ".png"
-						idle_anim.append(pygame.transform.scale(pygame.image.load(anim_string).convert_alpha(), (64, 64)))
+						anim_string = "resources/images/animations/" + names[2*i] + names[2*i+1] + str(j+1) + ".png"
+						idle_anim.append(pygame.transform.scale(pygame.image.load(tools.resource_path(anim_string)).convert_alpha(), (64, 64)))
 		idle_anim_frame=[0,0,0,0]
 		info=-1
 		chat_label=font.render(' chat ', True, Color("#749DCF"), Color(0, 0, 0))
@@ -416,7 +417,7 @@ def lobby(players):
 				screen.blit(start, (1000, 600    ))
 				
 				#(port, name, sprite, team)
-				font=pygame.font.Font('WhiteRabbit.ttf', 24)
+				font=pygame.font.Font(tools.resource_path("resources/WhiteRabbit.ttf"), 24)
 				player_list_1=[]
 				player_list_2=[]
 				for player in players:
@@ -742,18 +743,18 @@ def options():
 	is_music_on = True
 	back = back_idle
 	
-	setting = pygame.image.load("images/settings.png").convert_alpha()
-	music_label = pygame.image.load("images/music_label.png").convert_alpha()
+	setting = pygame.image.load(tools.resource_path("resources/images/settings.png")).convert_alpha()
+	music_label = pygame.image.load(tools.resource_path("resources/images/music_label.png")).convert_alpha()
 	
-	music_toggle_off = pygame.image.load("images/buttons/off.png").convert_alpha() 
-	music_toggle_on = pygame.image.load("images/buttons/on.png").convert_alpha()
-	music_toggle_off_hover = pygame.image.load("images/buttons/off_hover.png").convert_alpha()
-	music_toggle_on_hover = pygame.image.load("images/buttons/on_hover.png").convert_alpha()
+	music_toggle_off = pygame.image.load(tools.resource_path("resources/images/buttons/off.png")).convert_alpha() 
+	music_toggle_on = pygame.image.load(tools.resource_path("resources/images/buttons/on.png")).convert_alpha()
+	music_toggle_off_hover = pygame.image.load(tools.resource_path("resources/images/buttons/off_hover.png")).convert_alpha()
+	music_toggle_on_hover = pygame.image.load(tools.resource_path("resources/images/buttons/on_hover.png")).convert_alpha()
 	music_toggle = music_toggle_on
 	
-	instr = pygame.image.load("images/instructions.png").convert_alpha()
-	kb_ins = pygame.image.load("images/keyboard_ins.png").convert_alpha()
-	m_ins = pygame.image.load("images/mouse_ins.png").convert_alpha()
+	instr = pygame.image.load(tools.resource_path("resources/images/instructions.png")).convert_alpha()
+	kb_ins = pygame.image.load(tools.resource_path("resources/images/keyboard_ins.png")).convert_alpha()
+	m_ins = pygame.image.load(tools.resource_path("resources/images/mouse_ins.png")).convert_alpha()
 	
 	while 1:
 		screen.blit(stars, (0, y/2))
@@ -811,14 +812,14 @@ def options():
 		fpsClock.tick(60)
 
 def credits():
-		walker = [pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_1.png").convert_alpha()),
-						  pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_2.png").convert_alpha()),
-						  pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_3.png").convert_alpha()),
-						  pygame.transform.scale2x(pygame.image.load("images/animations/shadowmage walk_4.png").convert_alpha())]
+		walker = [pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/shadowmage walk_1.png")).convert_alpha()),
+						  pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/shadowmage walk_2.png")).convert_alpha()),
+						  pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/shadowmage walk_3.png")).convert_alpha()),
+						  pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/shadowmage walk_4.png")).convert_alpha())]
 
-		marand = pygame.image.load("images/backgrounds/MarAnd.png").convert_alpha()
-		simkev = pygame.image.load("images/backgrounds/SimKev.png").convert_alpha()
-		ben = pygame.image.load("images/backgrounds/Ben.png").convert_alpha()
+		marand = pygame.image.load(tools.resource_path("resources/images/backgrounds/MarAnd.png")).convert_alpha()
+		simkev = pygame.image.load(tools.resource_path("resources/images/backgrounds/SimKev.png")).convert_alpha()
+		ben = pygame.image.load(tools.resource_path("resources/images/backgrounds/Ben.png")).convert_alpha()
 		back = back_idle
 		global y
 		x = 0
@@ -855,6 +856,8 @@ def credits():
 				pygame.display.update()
 				pygame.display.set_caption("Interspellar fps: " + str(fpsClock.get_fps()))
 				fpsClock.tick(60)
+
+
 
 menu_choices = [join_server, options, credits]
 eventHandler=pygame.mixer.music.play

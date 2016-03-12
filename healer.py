@@ -7,6 +7,7 @@ from player import Player
 import bullet
 from heal_beam import Heal
 from wimpy import Wimpy
+import tools
 
 class Healer(Player):
     
@@ -27,21 +28,21 @@ class Healer(Player):
         self.pos=((int(team)*1200+10), 64)
         self.stand_sprites = []
         for i in range(1,6):
-            string = "images/animations/healer/" + self.reskin + "/healer_idle_" + str(i) + ".png"
-            self.stand_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
-        self.slide_sprite = [pygame.transform.scale2x(pygame.image.load("images/animations/healer/" + self.reskin + "/healer_slide.png")).convert_alpha()]
+            string = "resources/images/animations/healer/" + self.reskin + "/healer_idle_" + str(i) + ".png"
+            self.stand_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
+        self.slide_sprite = [pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/healer/" + self.reskin + "/healer_slide.png"))).convert_alpha()]
         self.walk_sprites = []
         for i in range(1,6):
-            string = "images/animations/healer/" + self.reskin + "/healer_walk_" + str(i) + ".png"
-            self.walk_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/healer/" + self.reskin + "/healer_walk_" + str(i) + ".png"
+            self.walk_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         self.jump_sprites = []
         for i in range(1,13):
-            string = "images/animations/healer/" + self.reskin + "/healer_jump_" + str(i) + ".png"
-            self.jump_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/healer/" + self.reskin + "/healer_jump_" + str(i) + ".png"
+            self.jump_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         self.fall_sprites = []
         for i in range(1,6):
-            string = "images/animations/healer/" + self.reskin + "/healer_idle_" + str(i) + ".png"
-            self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/healer/" + self.reskin + "/healer_idle_" + str(i) + ".png"
+            self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         
         self.name=name
         self.team=team

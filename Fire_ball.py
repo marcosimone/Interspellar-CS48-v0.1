@@ -4,6 +4,7 @@ from array import array
 from math import *
 from soundboard import soundboard
 from bullet import *
+import tools
 
 
 '''Fire_Ball is the standard spell cast by the Dank_Wizard
@@ -23,8 +24,8 @@ class Fire_Ball(Bullet):
         self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
         self.fireball=[]
         for i in range(1,15):
-            name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
-            self.fireball.append(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha())
+            name_str = "resources/images/animations/fireball/fireball_" + str(i) + ".png"
+            self.fireball.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(name_str))).convert_alpha())
             self.fireball[i-1] = pygame.transform.rotate(self.fireball[i-1],self.angle)
         self.pos=(player_pos[0]+16,player_pos[1]+16)
         self.level=level

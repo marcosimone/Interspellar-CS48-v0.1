@@ -6,6 +6,7 @@ from soundboard import soundboard
 from player import Player
 from bullet import Bullet
 from flamethrower import Flamethrower
+import tools
 
 class DankWizard(Player):
     
@@ -30,20 +31,20 @@ class DankWizard(Player):
         else:
             self.color="004c00"
         self.pos=((int(team)*1200+10), 64)
-        self.stand_sprites = [pygame.transform.scale2x(pygame.image.load("images/animations/dankwiz/" +self.color+ "/wizard.png")).convert_alpha()]
-        self.slide_sprite = [pygame.transform.scale2x(pygame.image.load("images/animations/dankwiz/" +self.color+ "/wiz_slide.png")).convert_alpha()]
+        self.stand_sprites = [pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/dankwiz/" +self.color+ "/wizard.png"))).convert_alpha()]
+        self.slide_sprite = [pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/dankwiz/" +self.color+ "/wiz_slide.png"))).convert_alpha()]
         self.walk_sprites = []
         for i in range(1,6):
-            string = "images/animations/dankwiz/" +self.color+ "/wiz_walk_" + str(i) + ".png"
-            self.walk_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/dankwiz/" +self.color+ "/wiz_walk_" + str(i) + ".png"
+            self.walk_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         self.jump_sprites = []
         for i in range(1,13):
-            string = "images/animations/dankwiz/" +self.color+ "/wiz_jump_" + str(i) + ".png"
-            self.jump_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/dankwiz/" +self.color+ "/wiz_jump_" + str(i) + ".png"
+            self.jump_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         self.fall_sprites = []
         for i in range(1,7):
-            string = "images/animations/dankwiz/" +self.color+ "/wiz_fall_" + str(i) + ".png"
-            self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/dankwiz/" +self.color+ "/wiz_fall_" + str(i) + ".png"
+            self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         self.name=name
         self.team=team
         self.level=level

@@ -6,6 +6,7 @@ from soundboard import soundboard
 from bullet import Bullet
 import socket
 import pickle
+import tools
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 class Player:
@@ -22,7 +23,7 @@ class Player:
     team=""
     def __init__(self, screen, sound, level, name, team):
         self.screen=screen
-        self.image = [pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_1.png").convert_alpha()),pygame.transform.scale2x(pygame.image.load("images/animations/floating_blood_2.png").convert_alpha())]
+        self.image = [pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/floating_blood_1.png")).convert_alpha()),pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/floating_blood_2.png")).convert_alpha())]
         self.pos=((int(team)*1200+10), 64)
         self.level=level
         self.sounds=sound

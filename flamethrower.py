@@ -4,6 +4,7 @@ from array import array
 from math import *
 from soundboard import soundboard
 from bullet import *
+import tools
 
 
 """Flamethrower is a cone of fire that has a set
@@ -25,8 +26,8 @@ class Flamethrower(Bullet):
         self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
         self.Flamethrower=[]
         for i in range(1,13):
-            name_str = "images/animations/Flamethrower/" + str(i) + ".png"
-            self.flamethrower.append(pygame.transform.flip(pygame.transform.scale2x(pygame.image.load(name_str)).convert_alpha(), False, True))
+            name_str = "resources/images/animations/Flamethrower/" + str(i) + ".png"
+            self.flamethrower.append(pygame.transform.flip(pygame.transform.scale2x(pygame.image.load(tools.resource_path(name_str))).convert_alpha(), False, True))
             if mouse_pos[0] > player_pos[0]:
                 self.flamethrower[i-1] = pygame.transform.flip(self.flamethrower[i-1], False, True)
             self.flamethrower[i-1] = pygame.transform.rotate(self.flamethrower[i-1],self.angle)

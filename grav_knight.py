@@ -5,6 +5,7 @@ from math import *
 from soundboard import soundboard
 from player import Player
 import bullet
+import tools
 
 class GravityKnight(Player):
     
@@ -27,21 +28,21 @@ class GravityKnight(Player):
         self.pos=player_pos
         self.stand_sprites = []
         for i in range(1,6):
-            string = "images/animations/darkwiz/" + self.color + "/dark_idle_" + str(i) + ".png"
-            self.stand_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
-        self.slide_sprite = [pygame.transform.scale2x(pygame.image.load("images/animations/darkwiz/" + self.color + "/dark_slide.png")).convert_alpha()]
+            string = "resources/images/animations/darkwiz/" + self.color + "/dark_idle_" + str(i) + ".png"
+            self.stand_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
+        self.slide_sprite = [pygame.transform.scale2x(pygame.image.load(tools.resource_path("resources/images/animations/darkwiz/" + self.color + "/dark_slide.png"))).convert_alpha()]
         self.walk_sprites = []
         for i in range(1,6):
-            string = "images/animations/darkwiz/" + self.color + "/dark_walk_" + str(i) + ".png"
-            self.walk_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/darkwiz/" + self.color + "/dark_walk_" + str(i) + ".png"
+            self.walk_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         self.jump_sprites = []
         for i in range(1,13):
-            string = "images/animations/darkwiz/" + self.color + "/dark_jump_" + str(i) + ".png"
-            self.jump_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/darkwiz/" + self.color + "/dark_jump_" + str(i) + ".png"
+            self.jump_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         self.fall_sprites = []
         for i in range(1,6):
-            string = "images/animations/darkwiz/" + self.color + "/dark_fall_" + str(i) + ".png"
-            self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(string)).convert_alpha())
+            string = "resources/images/animations/darkwiz/" + self.color + "/dark_fall_" + str(i) + ".png"
+            self.fall_sprites.append(pygame.transform.scale2x(pygame.image.load(tools.resource_path(string))).convert_alpha())
         
         self.level=level
         self.sounds=sound

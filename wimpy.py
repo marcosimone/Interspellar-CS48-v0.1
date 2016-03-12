@@ -4,6 +4,7 @@ from array import array
 from math import *
 from soundboard import soundboard
 from bullet import *
+import tools
 
 
 """Wimpy is a cone of fire that has a set
@@ -24,8 +25,8 @@ class Wimpy(Bullet):
         self.angle = getAngleBetweenPoints(player_pos[0], mouse_pos[1], mouse_pos[0], player_pos[1])
         self.wimpy=[]
         for i in range(1,15):
-            name_str = "images/animations/fireball/fireball_" + str(i) + ".png"
-            self.wimpy.append(pygame.image.load(name_str).convert_alpha())
+            name_str = "resources/images/animations/fireball/fireball_" + str(i) + ".png"
+            self.wimpy.append(pygame.image.load(tools.resource_path(name_str)).convert_alpha())
             self.wimpy[i-1] = pygame.transform.rotate(self.wimpy[i-1],self.angle)
         self.pos=(player_pos[0]+8,player_pos[1]+16)
         self.level=level
